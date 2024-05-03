@@ -1,7 +1,11 @@
-const RoomCard =()=> {
+const RoomCard =({availability, roomName, occupancy, rate})=> {
     return (
         <div>
-            <h1>Room Card</h1>
+            <span>{availability}</span>
+            <h1>{roomName}</h1>
+            <p>{occupancy}</p>
+            <p>{rate}</p>
+
         </div>
     )
 }
