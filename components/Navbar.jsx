@@ -10,15 +10,7 @@ const navigation = [
   { name: "Home", href: "/", current: true },
   {
     name: "Book",
-    href: "/Book",
-    current: false,
-    children: [
-        { title: "Balcony Room", href: "/rooms/balcony-room" },
-        { title: "Garden Room", href: "/rooms/garden-room" },
-        { title: "Royal Rose Room", href: "/rooms/royal-rose-room" },
-        { title: "Reading Room", href: "/rooms/reading-room" },
-        { title: "Harbor View Room", href: "/rooms/harbor-view-room" },
-    ],
+    href: "/book",
   },
   { name: "About", href: "/About", current: false },
   { name: "Contact", href: "/Contact", current: false },
