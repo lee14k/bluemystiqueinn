@@ -9,19 +9,18 @@ import { useMediaQuery } from "react-responsive";
 const navigation = [
   { name: "Home", href: "/", current: true },
   {
-    name: "About",
-    href: "/",
+    name: "Book",
+    href: "/Book",
     current: false,
     children: [
-      { name: "About", href: "/About" },
-      { name: "Space", href: "/Space" },
-      { name: "Rates", href: "/Rates" },
-      { name: "Location", href: "/Location" },
-      { name: "Preferred Vendors", href: "/PreferredVendors" },
+        { title: "Balcony Room", href: "/rooms/balcony-room" },
+        { title: "Garden Room", href: "/rooms/garden-room" },
+        { title: "Royal Rose Room", href: "/rooms/royal-rose-room" },
+        { title: "Reading Room", href: "/rooms/reading-room" },
+        { title: "Harbor View Room", href: "/rooms/harbor-view-room" },
     ],
   },
-  { name: "Events", href: "/Events", current: false },
-  { name: "Gallery", href: "/Gallery", current: false },
+  { name: "About", href: "/About", current: false },
   { name: "Contact", href: "/Contact", current: false },
 ];
 
