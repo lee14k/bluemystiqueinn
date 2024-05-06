@@ -1,32 +1,39 @@
 // pages/api/test-ics.js
-import { supabase } from '../../utils/supabaseClient';
 import ical from 'node-ical';
 
+function extractBookingDetails(events) {
+    return Object.values(events)
+        .filter(event => event.type === 'VEVENT') // Only process VEVENT types
+        .map(event => ({
+            start_date: event.start ? event.start.toISOString() : null,
+            end_date: event.end ? event.end.toISOString() : null,
+            summary: event.summary || 'No Summary',
+            uid: event.uid
+        }));
+}
+
 export default async function handler(req, res) {
+    // Ensure that only the POST method is allowed
     if (req.method === 'POST') {
         try {
+            // Parse the incoming `.ics` data
             const events = ical.sync.parseICS(req.body);
-            const bookings = Object.values(events).map(event => ({
-                start_date: event.start.toISOString(),
-                end_date: event.end.toISOString(),
-                summary: event.summary,
-                uid: event.uid
-            }));
 
-            // Write bookings to Supabase
-            const { data, error } = await supabase
-                .from('bookings')
-                .upsert(bookings, { returning: 'minimal' }); // 'minimal' avoids returning data and speeds up the query
+            // Extract relevant booking details for debugging
+            const bookings = extractBookingDetails(events);
 
-            if (error) throw error;
+            // Log the extracted bookings for debugging purposes
+            console.log('Parsed Bookings:', bookings);
 
-            res.status(200).json({ message: 'Bookings processed successfully', bookings });
+            // Return the parsed bookings as JSON for verification
+            res.status(200).json({ message: 'Bookings parsed successfully', bookings });
         } catch (error) {
-            console.error('Error processing bookings:', error);
-            res.status(500).json({ error: 'Failed to process bookings', details: error.message });
+            console.error('Error parsing bookings:', error);
+            res.status(500).json({ error: 'Failed to parse bookings', details: error.message });
         }
     } else {
+        // For any method other than POST, return a 405 Method Not Allowed response
         res.setHeader('Allow', ['POST']);
-        res.status(405).end(`Method ${req.method} Not Allowed`);
+        res.status(405).json({ message: `Method ${req.method} Not Allowed` });
     }
 }
