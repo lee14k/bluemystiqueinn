@@ -1,8 +1,17 @@
 import axios from 'axios';
 import { parseICS } from 'node-ical';
 
+// URLs to fetch `.ics` data from
+const airbnbIcalUrls = [
+    'https://www.airbnb.com/calendar/ical/1101512343384815926.ics?s=bb32f23311402755c2e0f6fcca34d32d',
+    'https://www.airbnb.com/calendar/ical/1101626413125793653.ics?s=638266da6c5d6a5b2ca1580e687905a9',
+    'https://www.airbnb.com/calendar/ical/1101602891589896306.ics?s=a5427b26514f7ffb487e24658c2e5a0b',
+    'https://www.airbnb.com/calendar/ical/1101569789363825898.ics?s=289fdd4756bb016c43fbe120eb3890ae',
+    'https://www.airbnb.com/calendar/ical/1101570113624777524.ics?s=6b903e0cdc730694e245fee886dc8204'
+];
+
 // Mapping of iCalendar URLs to room numbers/names
-const airbnbIcalUrls = {
+const calendarToRoomMap = {
     'https://www.airbnb.com/calendar/ical/1101512343384815926.ics?s=bb32f23311402755c2e0f6fcca34d32d': 'Room 1',
     'https://www.airbnb.com/calendar/ical/1101626413125793653.ics?s=638266da6c5d6a5b2ca1580e687905a9': 'Room 2',
     'https://www.airbnb.com/calendar/ical/1101602891589896306.ics?s=a5427b26514f7ffb487e24658c2e5a0b': 'Room 3',
