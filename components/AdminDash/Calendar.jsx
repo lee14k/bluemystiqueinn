@@ -7,27 +7,18 @@ const CalendarComponent = () => {
   const [events, setEvents] = useState([]);
 
   useEffect(() => {
-    axios.get('/api/fetchAirbnbCalendar')
+    // Update the endpoint to wherever your booking data comes from
+    axios.get('/api/fetchBooking')
       .then(response => {
-        const rawData = response.data;
-        const cleanedEvents = [];
+        const bookings = response.data.map(booking => ({
+          start: booking.start_date,
+          end: booking.end_date
+        }));
 
-        rawData.forEach(item => {
-          Object.keys(item).forEach(key => {
-            if (item[key].type === 'VEVENT') {
-              cleanedEvents.push({
-                title: item[key].summary || 'No Title',
-                start: item[key].start,
-                end: item[key].end
-              });
-            }
-          });
-        });
-
-        setEvents(cleanedEvents);
+        setEvents(bookings);
       })
       .catch(error => {
-        console.error('Error fetching calendar events:', error);
+        console.error('Error fetching booking events:', error);
       });
   }, []);
 
