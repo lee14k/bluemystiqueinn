@@ -1,6 +1,6 @@
 import React, { ComponentType, useState } from "react";
 import ReservationList from "@/components/AdminDash/ReservationList";
-import AdminCalendar from "@/components/AdminDash/AdminCalendar"
+import Calendar from "@/components/AdminDash/Calendar"
 import Image from "next/image";
 import { Merriweather } from "next/font/google";
 
@@ -13,7 +13,7 @@ const ParentComponent = () => {
       case "A":
         return <ReservationList />;
       case "B":
-        return <AdminCalendar />;
+        return <Calendar />;
   
     }
   };

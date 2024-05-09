@@ -1,4 +1,4 @@
-import Calendar from "../components/Calendar";
+import Calendar from "../components/AdminDash/Calendar";
 import Navbar from "@/components/Navbar";
 export default function Home() {
   return (
