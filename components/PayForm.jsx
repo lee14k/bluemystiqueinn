@@ -1,7 +1,7 @@
 "use client";
 import { CreditCard, PaymentForm } from "react-square-web-payments-sdk";
 
-export default function PaymentForm() {
+export default function PayForm() {
   const appId = "sq0idp-rWYxPgrlAdLSvzYb8OZw8w";
   const locationId = "LFJC2AEE7NF9E";
 

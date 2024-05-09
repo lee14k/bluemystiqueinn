@@ -1,5 +1,6 @@
 import BookingForm from "@/components/BookingForm"
 import Navbar from "@/components/Navbar"
+import PayForm from "@/components/PayForm"
 export default function Book () {
     return (
         <div>
@@ -9,6 +10,7 @@ export default function Book () {
             <p>We’re so happy to have you! Book your stay here.
 Questions? Send Us a Message.</p>
 <BookingForm/>
+<PayForm/>
         </div>
     )
 }
