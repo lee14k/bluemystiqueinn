@@ -10,7 +10,7 @@ export default function PayForm() {
   return (
     <div>
       <PaymentForm
-        applicationId="sq0idp-rWYxPgrlAdLSvzYb8OZw8w"
+        applicationId="sandbox-sq0idb-U9BPDxZinOKI4wq-jusMbQ"
         cardTokenizeResponseReceived={async (token, verifiedBuyer) => {
           const response = await fetch("/api/pay", {
             method: "POST",
