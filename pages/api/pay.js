@@ -1,5 +1,3 @@
-"use server";
-
 import { Client } from "square";
 import { randomUUID } from "crypto";
 
@@ -12,18 +10,19 @@ const { paymentsApi } = new Client({
   environment: "sandbox",
 });
 
-export async function submitPayment(sourceId) {
-  try {
+export default async function handler(req, res) {
+  if (req.method === "POST") {
     const { result } = await paymentsApi.createPayment({
       idempotencyKey: randomUUID(),
-      sourceId,
+      sourceId: req.body.sourceId,
       amountMoney: {
         currency: "USD",
         amount: 100,
       },
     });
-    return result;
-  } catch (error) {
-    console.log(error);
+    console.log(result);
+    res.status(200).json(result);
+  } else {
+    res.status(500).send();
   }
 }
