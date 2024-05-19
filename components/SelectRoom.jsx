@@ -40,7 +40,7 @@ const SelectRoom = () => {
 
   const fetchBookingData = async () => {
     try {
-      const response = await fetch('/api/fetchBooking');
+      const response = await fetch('/api/bookings');
       const data = await response.json();
       if (response.ok) {
         setBookingData(data);
@@ -53,25 +53,25 @@ const SelectRoom = () => {
   };
 
   const filterAvailableRooms = () => {
-    const available = rooms.filter(room => {
+    const availableRoomsStatus = rooms.map(room => {
       const isBooked = bookingData.some(booking => {
-        if (booking.room_id === room.id) {
+        if (booking.room_name === room.id) {
           const bookedStart = dayjs(booking.start_date);
-          const bookedEnd = dayjs(booking.end_date);
+          const bookedEnd = dayjs(booking.end_date).add(1, 'day'); // Add 1 day to the end date
+     
           return (
-            dateRange[0].isBetween(bookedStart, bookedEnd, null, '[]') ||
-            dateRange[1].isBetween(bookedStart, bookedEnd, null, '[]') ||
-            bookedStart.isBetween(dateRange[0], dateRange[1], null, '[]') ||
-            bookedEnd.isBetween(dateRange[0], dateRange[1], null, '[]')
+            
+            dateRange[0].isBefore(bookedEnd) && dateRange[1].isAfter(bookedStart)
+            
           );
         }
         return false;
       });
 
-      return !isBooked;
+      return { ...room, availability: isBooked ? "Unavailable" : "Available" };
     });
 
-    setAvailableRooms(available);
+    setAvailableRooms(availableRoomsStatus);
   };
 
   return (
@@ -97,7 +97,7 @@ const SelectRoom = () => {
         {availableRooms.map(room => (
           <RoomCard
             key={room.id}
-            availability="Available"
+            availability={room.availability}
             roomName={room.room_name}
             occupancy={room.occupancy}
             rate={room.rate}
