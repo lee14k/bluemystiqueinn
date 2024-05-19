@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 
-.hhbg {
+.hh-bg{
     background-image: url('/bmstok.jpeg');
     height:45rem;
 }

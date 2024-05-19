@@ -37,21 +37,7 @@ const BookingForm = ({ onSubmit }) => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-        <Box mb={2}>
-          <DateRangePicker
-            startText="Start Date"
-            endText="End Date"
-            value={dateRange}
-            onChange={(newRange) => setDateRange(newRange)}
-            renderInput={(startProps, endProps) => (
-              <>
-                <TextField {...startProps} />
-                <Box sx={{ mx: 2 }}>to</Box>
-                <TextField {...endProps} />
-              </>
-            )}
-          />
-        </Box>
+
 
         <button type="submit">Book</button>
       </form>

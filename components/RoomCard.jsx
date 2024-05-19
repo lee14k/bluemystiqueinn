@@ -1,3 +1,4 @@
+import Checkbox from '@mui/material/Checkbox';
 const RoomCard = ({ availability, roomName, occupancy, rate }) => {
     return (
       <div>
@@ -5,6 +6,7 @@ const RoomCard = ({ availability, roomName, occupancy, rate }) => {
         <h1>{roomName}</h1>
         <p>Occupancy: {occupancy}</p>
         <p>Rate: {rate}</p>
+        <Checkbox/>
       </div>
     );
   };
