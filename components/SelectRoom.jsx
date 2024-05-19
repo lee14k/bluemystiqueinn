@@ -15,21 +15,21 @@ const SelectRoom = () => {
 
   useEffect(() => {
     fetchRooms();
+    fetchBookingData();
   }, []);
 
   useEffect(() => {
     if (dateRange[0] && dateRange[1]) {
       filterAvailableRooms();
     }
-  }, [dateRange, bookingData]);
+  }, [dateRange, rooms, bookingData]);
 
   const fetchRooms = async () => {
     try {
-      const response = await fetch('/api/rooms'); // Adjust the endpoint to your actual rooms API
+      const response = await fetch('/api/rooms');
       const roomsData = await response.json();
       if (response.ok) {
         setRooms(roomsData);
-        fetchBookingData(); // Fetch booking data after rooms are fetched
       } else {
         console.error('Error fetching rooms:', roomsData.error);
       }
@@ -40,7 +40,7 @@ const SelectRoom = () => {
 
   const fetchBookingData = async () => {
     try {
-      const response = await fetch('/api/bookings');
+      const response = await fetch('/api/fetchBooking');
       const data = await response.json();
       if (response.ok) {
         setBookingData(data);

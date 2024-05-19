@@ -4,8 +4,8 @@ export default async function handler(req, res) {
   if (req.method === 'GET') {
     try {
       const { data, error } = await supabase
-        .from('booking')
-        .select('*, rooms (id, room_name, occupancy, rate)');
+        .from('rooms')
+        .select('*');
 
       if (error) {
         console.error('Supabase Error:', error);
