@@ -1,18 +1,21 @@
-import React, { useState, useEffect } from "react";
-import { DateRangePicker } from "@mui/x-date-pickers-pro/DateRangePicker";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import TextField from "@mui/material/TextField";
-import Box from "@mui/material/Box";
-import RoomCard from "./RoomCard";
-import BookingForm from "./BookingForm";
-import dayjs from "dayjs";
+import React, { useState, useEffect } from 'react';
+import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import TextField from '@mui/material/TextField';
+import Box from '@mui/material/Box';
+import RoomCard from '../components/RoomCard';
+import dayjs from 'dayjs';
+import { useRouter } from 'next/router';
+import { useBooking } from '../context/BookingContext';
 
 const SelectRoom = () => {
-  const [dateRange, setDateRange] = useState([null, null]);
+  const { selectedDates, setSelectedDates, selectedRoom, setSelectedRoom } = useBooking();
+  const [dateRange, setDateRange] = useState(selectedDates);
   const [rooms, setRooms] = useState([]);
   const [availableRooms, setAvailableRooms] = useState([]);
   const [bookingData, setBookingData] = useState([]);
+  const router = useRouter();
 
   useEffect(() => {
     fetchRooms();
@@ -58,7 +61,7 @@ const SelectRoom = () => {
       const isBooked = bookingData.some(booking => {
         if (booking.room_id === room.id) {
           const bookedStart = dayjs(booking.start_date);
-          const bookedEnd = dayjs(booking.end_date).add(1, 'day'); // Add 1 day to the end date
+          const bookedEnd = dayjs(booking.end_date).add(1, 'day');
           return (
             dateRange[0].isBefore(bookedEnd) && dateRange[1].isAfter(bookedStart)
           );
@@ -72,9 +75,13 @@ const SelectRoom = () => {
     setAvailableRooms(availableRoomsStatus);
   };
 
-  const handleBookingSubmit = (bookingDetails) => {
-    // Handle the booking submission logic here
-    console.log("Booking details submitted:", bookingDetails);
+  const handleProceed = () => {
+    setSelectedDates(dateRange);
+    router.push('/complete-your-booking');
+  };
+
+  const handleRoomSelect = (room) => {
+    setSelectedRoom(room);
   };
 
   return (
@@ -104,9 +111,14 @@ const SelectRoom = () => {
             roomName={room.room_name}
             occupancy={room.occupancy}
             rate={room.rate}
+            onSelect={() => handleRoomSelect(room)}
+            selected={selectedRoom?.id === room.id}
           />
         ))}
       </div>
+      <button className="bg-gray-900 text-white py-2.5 " onClick={handleProceed} disabled={!selectedRoom}>
+        Proceed to Booking
+      </button>
     </div>
   );
 }

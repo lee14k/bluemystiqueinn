@@ -1,28 +1,35 @@
-import React, { useState, useEffect } from "react";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DateRangePicker } from "@mui/x-date-pickers-pro/DateRangePicker";
-import TextField from "@mui/material/TextField";
-import Box from "@mui/material/Box";
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
+import TextField from '@mui/material/TextField';
+import Box from '@mui/material/Box';
+import { useBooking } from '../context/BookingContext';
+import dayjs from 'dayjs';
 
-const BookingForm = ({ onSubmit, selectedDates }) => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [time, setTime] = useState("");
+const BookingForm = () => {
+  const { selectedDates, selectedRoom } = useBooking();
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
   const [dateRange, setDateRange] = useState([null, null]);
 
   useEffect(() => {
-    setDateRange(selectedDates);
+    if (selectedDates[0] && selectedDates[1]) {
+      setDateRange(selectedDates);
+      console.log("Selected Dates: ", selectedDates);
+    }
   }, [selectedDates]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit({
+    // Handle the booking submission logic here
+    console.log({
       name,
       email,
       startDate: dateRange[0],
       endDate: dateRange[1],
-      time,
+      room: selectedRoom
     });
   };
 
@@ -56,6 +63,10 @@ const BookingForm = ({ onSubmit, selectedDates }) => {
             )}
           />
         </Box>
+        <div>
+          <p>Start Date: {dateRange[0] ? dateRange[0].format('YYYY-MM-DD') : 'Not Selected'}</p>
+          <p>End Date: {dateRange[1] ? dateRange[1].format('YYYY-MM-DD') : 'Not Selected'}</p>
+        </div>
         <button type="submit">Book</button>
       </form>
     </LocalizationProvider>
