@@ -5,6 +5,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import RoomCard from "./RoomCard";
+import BookingForm from "./BookingForm";
 import dayjs from "dayjs";
 
 const SelectRoom = () => {
@@ -55,14 +56,11 @@ const SelectRoom = () => {
   const filterAvailableRooms = () => {
     const availableRoomsStatus = rooms.map(room => {
       const isBooked = bookingData.some(booking => {
-        if (booking.room_name === room.id) {
+        if (booking.room_id === room.id) {
           const bookedStart = dayjs(booking.start_date);
           const bookedEnd = dayjs(booking.end_date).add(1, 'day'); // Add 1 day to the end date
-     
           return (
-            
             dateRange[0].isBefore(bookedEnd) && dateRange[1].isAfter(bookedStart)
-            
           );
         }
         return false;
@@ -72,6 +70,11 @@ const SelectRoom = () => {
     });
 
     setAvailableRooms(availableRoomsStatus);
+  };
+
+  const handleBookingSubmit = (bookingDetails) => {
+    // Handle the booking submission logic here
+    console.log("Booking details submitted:", bookingDetails);
   };
 
   return (
