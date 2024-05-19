@@ -116,7 +116,7 @@ const SelectRoom = () => {
           />
         ))}
       </div>
-      <button className="bg-gray-900 text-white py-2.5 " onClick={handleProceed} disabled={!selectedRoom}>
+      <button className="bg-gray-900 text-white py-2.5" onClick={handleProceed} disabled={!selectedRoom}>
         Proceed to Booking
       </button>
     </div>

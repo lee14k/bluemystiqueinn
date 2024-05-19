@@ -13,6 +13,7 @@ const BookingForm = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [dateRange, setDateRange] = useState([null, null]);
+  const [phoneNumber, setPhoneNumber] = useState('');
 
   useEffect(() => {
     if (selectedDates[0] && selectedDates[1]) {
@@ -36,18 +37,7 @@ const BookingForm = () => {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+     
         <Box mb={2}>
           <DateRangePicker
             startText="Start Date"
@@ -66,6 +56,31 @@ const BookingForm = () => {
         <div>
           <p>Start Date: {dateRange[0] ? dateRange[0].format('YYYY-MM-DD') : 'Not Selected'}</p>
           <p>End Date: {dateRange[1] ? dateRange[1].format('YYYY-MM-DD') : 'Not Selected'}</p>
+          <p>Room: {selectedRoom ? selectedRoom.room_name : 'Not Selected'}</p>
+          <input
+          type="text"
+          placeholder="First Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="Last Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <input
+        type="phone"
+        placeholder="Phone Number"
+        value={phoneNumber}
+        onChange={(e) => setPhoneNumber(e.target.value)}
+      />
         </div>
         <button type="submit">Book</button>
       </form>

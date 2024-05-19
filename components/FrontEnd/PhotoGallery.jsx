@@ -1,43 +1,55 @@
 export default function PhotoGallery() {
-    const images = ["/newhsphoto1.jpg", "/newhsphotot2.jpg", "/newhsphoto3.jpg"];
-    const photoRow = [
-      "/newhsphoto4-min.jpg",
-      "/newhsphoto5-min.jpg",
-      "/newhsphoto6-min.jpg",
-      "/hsone-min.jpg",
-      "/hstwo-min.jpg",
-      "/buffet-min.jpg",
-    ];
-  
-    return (
-      <div>
-        <div className="grid grid-cols-3 grid-rows-1">
-          {images.map((image, index) => (
-            <div key={index} className="w-full ">
-              <img
-                src={image}
-                alt={`Gallery ${index + 1}`}
-                className="w-full h-full object-cover"
-              />
-            </div>
-          ))}
-        </div>
-        <div className="flex my-10">
-          {photoRow.map((image, index) => (
-            <div key={index} className="w-full h-72 overflow-hidden">
-              <img
-                src={image}
-                alt={`Gallery ${index + 1}`}
-                className="w-full h-full object-cover"
-              />
-            </div>
-          ))}
-        </div>
-        <p className="text-xl mx-24 other-font">
-          Did you celebrate at Haley Station? Tag us on Facebook and Instagram
-          @haley_station- we’d love to see photos of your special day!
-        </p>
-      </div>
-    );
+
+  return (
+    <div>
+
+
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+  <div class="grid gap-4">
+    <div>
+      <img class="h-auto max-w-full rounded-lg" src="https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image.jpg" alt=""></img>
+    </div>
+    <div>
+      <img class="h-auto max-w-full rounded-lg" src="https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-1.jpg" alt=""></img>
+    </div>
+    <div>
+      <img class="h-auto max-w-full rounded-lg" src="https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-2.jpg" alt=""></img>
+    </div>
+  </div>
+  <div class="grid gap-4">
+    <div>
+      <img class="h-auto max-w-full rounded-lg" src="https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-3.jpg" alt=""></img>
+    </div>
+    <div>
+      <img class="h-auto max-w-full rounded-lg" src="https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-4.jpg" alt=""></img>
+    </div>
+    <div>
+      <img class="h-auto max-w-full rounded-lg" src="https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-5.jpg" alt=""></img>
+    </div>
+  </div>
+  <div class="grid gap-4">
+    <div>
+      <img class="h-auto max-w-full rounded-lg" src="https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-6.jpg" alt=""></img>
+    </div>
+    <div>
+      <img class="h-auto max-w-full rounded-lg" src="https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-7.jpg" alt=""></img>
+    </div>
+    <div>
+      <img class="h-auto max-w-full rounded-lg" src="https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-8.jpg" alt=""></img>
+    </div>
+  </div>
+  <div class="grid gap-4">
+    <div>
+      <img class="h-auto max-w-full rounded-lg" src="https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-9.jpg" alt=""></img>
+    </div>
+    <div>
+      <img class="h-auto max-w-full rounded-lg" src="https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-10.jpg" alt=""></img>
+    </div>
+    <div>
+      <img class="h-auto max-w-full rounded-lg" src="https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-11.jpg" alt=""></img>
+    </div>
+  </div>
+</div>
+    </div>
+  );
   }
-  
