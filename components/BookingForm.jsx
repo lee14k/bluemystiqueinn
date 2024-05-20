@@ -35,9 +35,11 @@ const BookingForm = () => {
 
       if (response.ok) {
         const result = await response.json();
+        console.log("Booking saved successfully:", result);
         router.push(`/payment?bookingId=${result.bookingId}`);
       } else {
-        console.error("Failed to save booking:", await response.text());
+        const errorText = await response.text();
+        console.error("Failed to save booking:", errorText);
       }
     } catch (error) {
       console.error("Error during booking submission:", error);
@@ -47,7 +49,18 @@ const BookingForm = () => {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <form onSubmit={handleSubmit}>
-       
+        <input
+          type="text"
+          placeholder="Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
         <Box mb={2}>
           <TextField
             label="Start Date"
@@ -61,18 +74,6 @@ const BookingForm = () => {
             InputProps={{ readOnly: true }}
           />
         </Box>
-        <input
-          type="text"
-          placeholder="Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
         <button type="submit">Next</button>
       </form>
     </LocalizationProvider>
