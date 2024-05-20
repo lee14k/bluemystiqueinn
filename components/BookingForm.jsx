@@ -1,71 +1,69 @@
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
-import TextField from '@mui/material/TextField';
-import Box from '@mui/material/Box';
-import { useBooking } from '../context/BookingContext';
-import dayjs from 'dayjs';
+import React, { useState } from "react";
+import { useRouter } from "next/router";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import TextField from "@mui/material/TextField";
+import Box from "@mui/material/Box";
+import { useBooking } from "../context/BookingContext";
 
 const BookingForm = () => {
   const { selectedDates, selectedRoom } = useBooking();
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [dateRange, setDateRange] = useState([null, null]);
-  const [phoneNumber, setPhoneNumber] = useState('');
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const router = useRouter();
 
-  useEffect(() => {
-    if (selectedDates[0] && selectedDates[1]) {
-      setDateRange(selectedDates);
-      console.log("Selected Dates: ", selectedDates);
-    }
-  }, [selectedDates]);
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle the booking submission logic here
-    console.log({
+
+    const bookingData = {
       name,
       email,
-      startDate: dateRange[0],
-      endDate: dateRange[1],
-      room: selectedRoom
-    });
+      startDate: selectedDates[0].toISOString(),
+      endDate: selectedDates[1].toISOString(),
+      roomId: selectedRoom.id,
+      paymentStatus: "pending",
+    };
+
+    try {
+      const response = await fetch("/api/bookings", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(bookingData),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        router.push(`/payment?bookingId=${result.bookingId}`);
+      } else {
+        console.error("Failed to save booking:", await response.text());
+      }
+    } catch (error) {
+      console.error("Error during booking submission:", error);
+    }
   };
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <form onSubmit={handleSubmit}>
-     
+       
         <Box mb={2}>
-          <DateRangePicker
-            startText="Start Date"
-            endText="End Date"
-            value={dateRange}
-            onChange={(newRange) => setDateRange(newRange)}
-            renderInput={(startProps, endProps) => (
-              <>
-                <TextField {...startProps} />
-                <Box sx={{ mx: 2 }}>to</Box>
-                <TextField {...endProps} />
-              </>
-            )}
+          <TextField
+            label="Start Date"
+            value={selectedDates[0] ? selectedDates[0].format("YYYY-MM-DD") : ""}
+            InputProps={{ readOnly: true }}
+          />
+          <Box sx={{ mx: 2 }}>to</Box>
+          <TextField
+            label="End Date"
+            value={selectedDates[1] ? selectedDates[1].format("YYYY-MM-DD") : ""}
+            InputProps={{ readOnly: true }}
           />
         </Box>
-        <div>
-          <p>Start Date: {dateRange[0] ? dateRange[0].format('YYYY-MM-DD') : 'Not Selected'}</p>
-          <p>End Date: {dateRange[1] ? dateRange[1].format('YYYY-MM-DD') : 'Not Selected'}</p>
-          <p>Room: {selectedRoom ? selectedRoom.room_name : 'Not Selected'}</p>
-          <input
-          type="text"
-          placeholder="First Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
         <input
           type="text"
-          placeholder="Last Name"
+          placeholder="Name"
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
@@ -75,14 +73,7 @@ const BookingForm = () => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-        <input
-        type="phone"
-        placeholder="Phone Number"
-        value={phoneNumber}
-        onChange={(e) => setPhoneNumber(e.target.value)}
-      />
-        </div>
-        <button type="submit">Book</button>
+        <button type="submit">Next</button>
       </form>
     </LocalizationProvider>
   );

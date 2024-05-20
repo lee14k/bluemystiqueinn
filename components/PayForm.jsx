@@ -1,37 +1,47 @@
+import React from "react";
 import {
   ApplePay,
   GooglePay,
   CreditCard,
   PaymentForm,
-  
 } from "react-square-web-payments-sdk";
 
-export default function PayForm() {
+const PayForm = ({ bookingId, onPaymentSuccess }) => {
   return (
     <div>
       <PaymentForm
         applicationId="sandbox-sq0idb-U9BPDxZinOKI4wq-jusMbQ"
+        locationId="LFJC2AEE7NF9E"
         cardTokenizeResponseReceived={async (token, verifiedBuyer) => {
-          const response = await fetch("/api/pay", {
-            method: "POST",
-            headers: {
-              "Content-type": "application/json",
-            },
-            body: JSON.stringify({
-              sourceId: token.token,
-            }),
-          });
-          console.log(await response.json());
+          try {
+            const response = await fetch("/api/process-payment", {
+              method: "POST",
+              headers: {
+                "Content-type": "application/json",
+              },
+              body: JSON.stringify({
+                sourceId: token.token,
+                bookingId,
+              }),
+            });
+
+            if (response.ok) {
+              onPaymentSuccess();
+            } else {
+              console.error("Payment failed:", await response.text());
+            }
+          } catch (error) {
+            console.error("Error during payment process:", error);
+          }
         }}
         createPaymentRequest={() => ({
           countryCode: "US",
           currencyCode: "USD",
           total: {
-            amount: "1.00",
+            amount: "1.00", // Replace this with the actual amount
             label: "Total",
           },
         })}
-        locationId="LFJC2AEE7NF9E"
       >
         <GooglePay />
         <CreditCard
@@ -49,4 +59,6 @@ export default function PayForm() {
       </PaymentForm>
     </div>
   );
-}
+};
+
+export default PayForm;

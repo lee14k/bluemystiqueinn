@@ -1,21 +1,22 @@
-import { supabase } from '@/utils/supabase';
+import { supabase } from "../../utils/supabaseClient";
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
-    const { name, email, startDate, endDate, roomId, paymentStatus } = req.body;
+    const { bookingId, paymentStatus } = req.body;
 
     try {
       const { data, error } = await supabase
         .from("bookings")
-        .insert([{ name, email, start_date: startDate, end_date: endDate, room_id: roomId, payment_status: paymentStatus }]);
+        .update({ payment_status: paymentStatus })
+        .eq("id", bookingId);
 
       if (error) {
         throw error;
       }
 
-      res.status(200).json({ bookingId: data[0].id });
+      res.status(200).json(data);
     } catch (error) {
-      console.error("Error saving booking:", error);
+      console.error("Error updating payment status:", error);
       res.status(500).json({ error: error.message });
     }
   } else {
@@ -23,4 +24,3 @@ export default async function handler(req, res) {
     res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 }
-
