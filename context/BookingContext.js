@@ -13,8 +13,14 @@ export const BookingProvider = ({ children }) => {
   useEffect(() => {
     const storedDates = JSON.parse(localStorage.getItem('selectedDates'));
     const storedRoom = JSON.parse(localStorage.getItem('selectedRoom'));
+    console.log('Loaded from localStorage:', { storedDates, storedRoom }); // Debug log
     if (storedDates) {
-      setSelectedDates([dayjs(storedDates[0]), dayjs(storedDates[1])]);
+      const parsedDates = [dayjs(storedDates[0]), dayjs(storedDates[1])];
+      if (parsedDates[0].isValid() && parsedDates[1].isValid()) {
+        setSelectedDates(parsedDates);
+      } else {
+        console.error('Invalid dates loaded from localStorage:', parsedDates);
+      }
     }
     if (storedRoom) {
       setSelectedRoom(storedRoom);
@@ -23,11 +29,17 @@ export const BookingProvider = ({ children }) => {
 
   // Save data to local storage when it changes
   useEffect(() => {
-    localStorage.setItem('selectedDates', JSON.stringify(selectedDates));
+    if (selectedDates[0] && selectedDates[1] && selectedDates[0].isValid() && selectedDates[1].isValid()) {
+      localStorage.setItem('selectedDates', JSON.stringify([selectedDates[0].toISOString(), selectedDates[1].toISOString()]));
+      console.log('Saved to localStorage:', { selectedDates }); // Debug log
+    }
   }, [selectedDates]);
 
   useEffect(() => {
-    localStorage.setItem('selectedRoom', JSON.stringify(selectedRoom));
+    if (selectedRoom) {
+      localStorage.setItem('selectedRoom', JSON.stringify(selectedRoom));
+      console.log('Saved to localStorage:', { selectedRoom }); // Debug log
+    }
   }, [selectedRoom]);
 
   return (

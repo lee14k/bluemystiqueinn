@@ -11,7 +11,7 @@ import { useBooking } from '../context/BookingContext';
 
 const SelectRoom = () => {
   const { selectedDates, setSelectedDates, selectedRoom, setSelectedRoom } = useBooking();
-  const [dateRange, setDateRange] = useState(selectedDates);
+  const [dateRange, setDateRange] = useState([dayjs(selectedDates[0]), dayjs(selectedDates[1])]);
   const [rooms, setRooms] = useState([]);
   const [availableRooms, setAvailableRooms] = useState([]);
   const [bookingData, setBookingData] = useState([]);
@@ -27,6 +27,12 @@ const SelectRoom = () => {
       filterAvailableRooms();
     }
   }, [dateRange, rooms, bookingData]);
+
+  useEffect(() => {
+    if (selectedDates[0] && selectedDates[1]) {
+      setDateRange([dayjs(selectedDates[0]), dayjs(selectedDates[1])]);
+    }
+  }, [selectedDates]);
 
   const fetchRooms = async () => {
     try {
