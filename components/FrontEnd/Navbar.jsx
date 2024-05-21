@@ -56,7 +56,7 @@ export default function Navbar() {
                       )}
                     </Disclosure.Button>
                   </div>
-                  <div className="flex flex-1 items-center sm:ml-6 sm:block">
+                  <div className="flex flex-1 items-center  sm:block">
                     <div className="flex space-x-12">
                       {navigation.map((item) => (
                         <div key={item.name}>

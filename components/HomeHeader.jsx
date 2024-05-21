@@ -1,17 +1,19 @@
 import Image from 'next/image';
 const HomeHeader = () => {
     return(
-    <div className='hh-bg' >
+    <div className='hh-bg flex flex-col justify-center items-center' >
         <Image
-        src="/bmlogo.png"
+        src="/bmlogov2.png"
         alt="Blue Mystique Inn logo"
-        width={200}
-        height={200}
+        width={400}
+        height={400}
         />
-        <h2 className="text-2xl">Welcome to</h2>
-        <h1>The Blue Mystique Inn</h1>
-        <h2>Boutique Inn in Manistique, Michigan</h2>
-        <button>Book your Stay</button>
+        <div className='flex flex-col justify-center items-center text-white'>
+        <h2 className="text-2xl my-2">Welcome to</h2>
+        <h1 className='text-8xl my-2'>The Blue Mystique Inn</h1>
+        <h2 className="text-2xl my-2">Boutique Inn in Manistique, Michigan</h2>
+        <button className="text-4xl my-2">Book your Stay</button>
+    </div>
     </div>
     )
 }
