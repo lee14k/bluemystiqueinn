@@ -14,3 +14,4 @@ const AboutFill =()=> {
         </div>
     )
 }
+export default AboutFill;
