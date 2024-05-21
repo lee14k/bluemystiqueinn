@@ -1,17 +1,19 @@
 export default function PhotoGallery() {
   const images = [
-    { src: "/bmstok.jpeg", heightClass: "h-auto" },
-    { src: "/bmstok.jpeg", heightClass: "h-72" },
-    { src: "/bmstok.jpeg", heightClass: "h-auto" },
-    { src: "/bmstok.jpeg", heightClass: "h-72" },
-    { src: "/bmstok.jpeg", heightClass: "h-auto" },
-    { src: "/bmstok.jpeg", heightClass: "h-72" },
-    { src: "/bmstok.jpeg", heightClass: "h-auto" },
-    { src: "/bmstok.jpeg", heightClass: "h-72" },
-    { src: "/bmstok.jpeg", heightClass: "h-auto" },
-    { src: "/bmstok.jpeg", heightClass: "h-72" },
-    { src: "/bmstok.jpeg", heightClass: "h-auto" },
-    { src: "/bmstok.jpeg", heightClass: "h-72" },
+    { src: "/deck-9855.jpg", heightClass: "h-auto" },
+    { src: "/lrbm.jpeg", heightClass: "h-72" },
+    { src: "/risotto-9876.jpg", heightClass: "h-auto" },
+    { src: "/tablesetbm.jpeg", heightClass: "h-72" },
+    { src: "/Table-Spread-8496.jpg", heightClass: "h-auto" },
+    { src: "/bmroom.png", heightClass: "h-auto" },
+    { src: "/bmstuff.png", heightClass: "h-72" },
+    { src: "/foodshot.jpeg", heightClass: "h-auto" },
+    { src: "/roseroom.jpeg", heightClass: "h-72" },
+    { src: "/rroombm.jpeg", heightClass: "h-auto" },
+    { src: "/beachbm.jpeg", heightClass: "h-72" },
+
+
+    
   ];
 
   return (
