@@ -9,16 +9,16 @@ export default async function handler(req, res) {
 
       const { data, error } = await supabase
         .from("booking")
-        .insert([{ guest_name_one: firstName, guest_name_two: lastName, email, start_date: startDate, end_date: endDate, room_name: roomId, payment_status: paymentStatus }]);
-
+        .insert([{ guest_name_one: firstName, guest_name_two: lastName, email, start_date: startDate, end_date: endDate, room_name: roomId, payment_status: paymentStatus }]) .select("*");
+  
         if (error) {
           console.error("Error inserting booking:", error);
           return res.status(500).json({ error: error.message, details: error });
         }
   
         if (!data || data.length === 0) {
-          console.error("No data returned from insert operation");
-          return res.status(500).json({ error: "Insert operation failed, no data returned" });
+          console.warn("No data returned from insert operation");
+          return res.status(200).json({ message: "Insert operation successful, but no data returned" });
         }
   
         console.log("Booking saved successfully:", data);
