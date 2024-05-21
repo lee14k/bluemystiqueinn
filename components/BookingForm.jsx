@@ -8,7 +8,8 @@ import { useBooking } from "../context/BookingContext";
 
 const BookingForm = () => {
   const { selectedDates, selectedRoom } = useBooking();
-  const [name, setName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const router = useRouter();
 
@@ -16,13 +17,16 @@ const BookingForm = () => {
     e.preventDefault();
 
     const bookingData = {
-      name,
+      firstName,
+      lastName,
       email,
       startDate: selectedDates[0].toISOString(),
       endDate: selectedDates[1].toISOString(),
       roomId: selectedRoom.id,
       paymentStatus: "pending",
     };
+
+    console.log("Submitting booking data:", bookingData);
 
     try {
       const response = await fetch("/api/bookings", {
@@ -51,9 +55,15 @@ const BookingForm = () => {
       <form onSubmit={handleSubmit}>
         <input
           type="text"
-          placeholder="Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          placeholder="First Name"
+          value={firstName}
+          onChange={(e) => setFirstName(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="Last Name"
+          value={lastName}
+          onChange={(e) => setLastName(e.target.value)}
         />
         <input
           type="email"
