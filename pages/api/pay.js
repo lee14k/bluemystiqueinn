@@ -1,28 +1,38 @@
-import { Client } from "square";
-import { randomUUID } from "crypto";
+import { Client, Environment } from "square";
 
-BigInt.prototype.toJSON = function () {
-  return this.toString();
-};
-
-const { paymentsApi } = new Client({
+const client = new Client({
+  environment: Environment.Sandbox,
   accessToken: process.env.SQUARE_ACCESS_TOKEN,
-  environment: "sandbox",
 });
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
-    const { result } = await paymentsApi.createPayment({
-      idempotencyKey: randomUUID(),
-      sourceId: req.body.sourceId,
-      amountMoney: {
-        currency: "USD",
-        amount: 100,
-      },
-    });
-    console.log(result);
-    res.status(200).json(result);
+    const { sourceId, amount } = req.body;
+
+    try {
+      console.log("Creating payment with:", { sourceId, amount });
+
+      const response = await client.paymentsApi.createPayment({
+        sourceId,
+        amountMoney: {
+          amount: amount, // amount in cents
+          currency: "USD",
+        },
+        idempotencyKey: new Date().getTime().toString(), // unique identifier for this transaction
+      });
+
+      res.status(200).json(response.result);
+    } catch (error) {
+      console.error("Payment failed:", error);
+      if (error.response) {
+        const errorBody = await error.response.text();
+        console.error("Detailed error response from Square:", errorBody);
+        return res.status(500).json({ error: errorBody });
+      }
+      res.status(500).json({ error: error.message });
+    }
   } else {
-    res.status(500).send();
+    res.setHeader("Allow", ["POST"]);
+    res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 }

@@ -1,12 +1,10 @@
 import React from "react";
-import {
-  ApplePay,
-  GooglePay,
-  CreditCard,
-  PaymentForm,
-} from "react-square-web-payments-sdk";
+import { useRouter } from "next/router";
+import { GooglePay, CreditCard, PaymentForm } from "react-square-web-payments-sdk";
 
 const PayForm = ({ bookingId, onPaymentSuccess }) => {
+  const router = useRouter();
+
   return (
     <div>
       <PaymentForm
@@ -14,6 +12,8 @@ const PayForm = ({ bookingId, onPaymentSuccess }) => {
         locationId="LFJC2AEE7NF9E"
         cardTokenizeResponseReceived={async (token, verifiedBuyer) => {
           try {
+            console.log("Token received:", token.token);
+            
             const response = await fetch("/api/process-payment", {
               method: "POST",
               headers: {
@@ -21,14 +21,18 @@ const PayForm = ({ bookingId, onPaymentSuccess }) => {
               },
               body: JSON.stringify({
                 sourceId: token.token,
-                bookingId,
+                amount: 100, // Replace this with the actual amount in cents
               }),
             });
 
             if (response.ok) {
+              const result = await response.json();
+              console.log("Payment successful:", result);
               onPaymentSuccess();
+              router.push(`/confirmation?bookingId=${bookingId}`);
             } else {
-              console.error("Payment failed:", await response.text());
+              const errorText = await response.text();
+              console.error("Payment failed:", errorText);
             }
           } catch (error) {
             console.error("Error during payment process:", error);
@@ -38,7 +42,7 @@ const PayForm = ({ bookingId, onPaymentSuccess }) => {
           countryCode: "US",
           currencyCode: "USD",
           total: {
-            amount: "1.00", // Replace this with the actual amount
+            amount: "1.00", // Replace this with the actual amount in dollars
             label: "Total",
           },
         })}

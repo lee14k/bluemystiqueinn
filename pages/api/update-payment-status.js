@@ -6,7 +6,7 @@ export default async function handler(req, res) {
 
     try {
       const { data, error } = await supabase
-        .from("bookings")
+        .from("booking")
         .update({ payment_status: paymentStatus })
         .eq("id", bookingId);
 
