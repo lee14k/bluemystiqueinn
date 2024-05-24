@@ -8,12 +8,15 @@ const BookingContext = createContext();
 export const BookingProvider = ({ children }) => {
   const [selectedDates, setSelectedDates] = useState([null, null]);
   const [selectedRoom, setSelectedRoom] = useState(null);
+  const [paymentId, setPaymentId] = useState(null);
 
   // Load data from local storage on mount
   useEffect(() => {
     const storedDates = JSON.parse(localStorage.getItem('selectedDates'));
     const storedRoom = JSON.parse(localStorage.getItem('selectedRoom'));
-    console.log('Loaded from localStorage:', { storedDates, storedRoom }); // Debug log
+    const storedPaymentId = localStorage.getItem('paymentId');
+    console.log('Loaded from localStorage:', { storedDates, storedRoom, storedPaymentId }); // Debug log
+
     if (storedDates) {
       const parsedDates = [dayjs(storedDates[0]), dayjs(storedDates[1])];
       if (parsedDates[0].isValid() && parsedDates[1].isValid()) {
@@ -24,6 +27,9 @@ export const BookingProvider = ({ children }) => {
     }
     if (storedRoom) {
       setSelectedRoom(storedRoom);
+    }
+    if (storedPaymentId) {
+      setPaymentId(storedPaymentId);
     }
   }, []);
 
@@ -42,8 +48,15 @@ export const BookingProvider = ({ children }) => {
     }
   }, [selectedRoom]);
 
+  useEffect(() => {
+    if (paymentId) {
+      localStorage.setItem('paymentId', paymentId);
+      console.log('Saved to localStorage:', { paymentId }); // Debug log
+    }
+  }, [paymentId]);
+
   return (
-    <BookingContext.Provider value={{ selectedDates, setSelectedDates, selectedRoom, setSelectedRoom }}>
+    <BookingContext.Provider value={{ selectedDates, setSelectedDates, selectedRoom, setSelectedRoom, paymentId, setPaymentId }}>
       {children}
     </BookingContext.Provider>
   );

@@ -7,8 +7,9 @@ const HomeHeader = () => {
         alt="Blue Mystique Inn logo"
         width={400}
         height={400}
+        className='text-timer'
         />
-        <div className='flex flex-col justify-center items-center text-white'>
+        <div className='flex flex-col justify-center items-center text-white text-timer'>
         <h2 className="text-2xl my-2">Welcome to</h2>
         <h1 className='text-8xl my-2'>The Blue Mystique Inn</h1>
         <h2 className="text-2xl my-2">Boutique Inn in Manistique, Michigan</h2>

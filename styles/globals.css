@@ -4,6 +4,23 @@
 
 
 .hh-bg{
-    background-image: url('/bmstok.jpeg');
+    background-image: url('/front-0830.jpg');
     height:45rem;
+    background-size: cover;
+    background-position: center bottom;
+    position: relative;
+}
+
+.hh-bg::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.text-timer {
+    z-index: 10;
 }

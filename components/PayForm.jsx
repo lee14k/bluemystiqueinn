@@ -1,9 +1,35 @@
 import React from "react";
 import { useRouter } from "next/router";
 import { GooglePay, CreditCard, PaymentForm } from "react-square-web-payments-sdk";
+import { useBooking } from "../context/BookingContext";
 
-const PayForm = ({ bookingId, onPaymentSuccess }) => {
+const PayForm = ({ bookingId, roomRate, onPaymentSuccess }) => {
   const router = useRouter();
+  const { setPaymentId } = useBooking();
+
+  const handlePaymentSuccess = async (paymentId) => {
+    try {
+      console.log("Updating payment status with bookingId:", bookingId, "and paymentId:", paymentId);
+      const response = await fetch(`/api/update-payment-status`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ bookingId, paymentStatus: "completed" }),
+      });
+
+      if (response.ok) {
+        console.log("Payment status updated successfully");
+        setPaymentId(paymentId);
+        router.push(`/confirmation?paymentId=${paymentId}`);
+      } else {
+        const errorText = await response.text();
+        console.error("Failed to update payment status:", errorText);
+      }
+    } catch (error) {
+      console.error("Error updating payment status:", error);
+    }
+  };
 
   return (
     <div>
@@ -12,8 +38,13 @@ const PayForm = ({ bookingId, onPaymentSuccess }) => {
         locationId="LFJC2AEE7NF9E"
         cardTokenizeResponseReceived={async (token, verifiedBuyer) => {
           try {
-            console.log("Token received:", token.token);
-            
+            const amountMoney = {
+              amount: roomRate, // Ensure this is an integer representing cents
+              currency: "USD"
+            };
+            console.log("Token received:", token);
+            console.log("Amount Money:", amountMoney);
+
             const response = await fetch("/api/process-payment", {
               method: "POST",
               headers: {
@@ -21,18 +52,20 @@ const PayForm = ({ bookingId, onPaymentSuccess }) => {
               },
               body: JSON.stringify({
                 sourceId: token.token,
-                amount: 100, // Replace this with the actual amount in cents
+                amountMoney,
+                idempotencyKey: new Date().getTime().toString() // Unique key for each transaction
               }),
             });
 
+            const result = await response.json();
+            console.log("Payment API response:", result);
+
             if (response.ok) {
-              const result = await response.json();
-              console.log("Payment successful:", result);
+              const paymentId = result.payment.id; // Capture the Square payment ID
+              await handlePaymentSuccess(paymentId);
               onPaymentSuccess();
-              router.push(`/confirmation?bookingId=${bookingId}`);
             } else {
-              const errorText = await response.text();
-              console.error("Payment failed:", errorText);
+              console.error("Payment failed:", result);
             }
           } catch (error) {
             console.error("Error during payment process:", error);
@@ -42,7 +75,7 @@ const PayForm = ({ bookingId, onPaymentSuccess }) => {
           countryCode: "US",
           currencyCode: "USD",
           total: {
-            amount: "1.00", // Replace this with the actual amount in dollars
+            amount: (roomRate / 100).toFixed(2), // Convert room rate to dollars and ensure it's a string
             label: "Total",
           },
         })}
