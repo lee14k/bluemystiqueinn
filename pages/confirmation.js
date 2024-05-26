@@ -4,7 +4,7 @@ import { useBooking } from "../context/BookingContext";
 
 const Confirmation = () => {
   const router = useRouter();
-  const { paymentId } = useBooking();
+  const { paymentId } = router.query;
   const [bookingDetails, setBookingDetails] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -24,6 +24,7 @@ const Confirmation = () => {
 
   const fetchBookingDetails = async (id) => {
     try {
+      console.log("Fetching booking details with paymentId:", id);
       const response = await fetch(`/api/get-booking-details?paymentId=${id}`);
       if (response.ok) {
         const data = await response.json();

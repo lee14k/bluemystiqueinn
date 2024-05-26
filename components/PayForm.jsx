@@ -38,6 +38,8 @@ const PayForm = ({ bookingId, roomRate, onPaymentSuccess }) => {
         locationId="LFJC2AEE7NF9E"
         cardTokenizeResponseReceived={async (token, verifiedBuyer) => {
           try {
+            console.log("Room Rate (cents):", roomRate);
+
             const amountMoney = {
               amount: roomRate, // Ensure this is an integer representing cents
               currency: "USD"
@@ -52,20 +54,21 @@ const PayForm = ({ bookingId, roomRate, onPaymentSuccess }) => {
               },
               body: JSON.stringify({
                 sourceId: token.token,
-                amountMoney,
+                amount: roomRate, // Use the actual room rate in cents
                 idempotencyKey: new Date().getTime().toString() // Unique key for each transaction
               }),
             });
 
-            const result = await response.json();
-            console.log("Payment API response:", result);
-
             if (response.ok) {
+              const result = await response.json();
+              console.log("Payment API response:", result);
+
               const paymentId = result.payment.id; // Capture the Square payment ID
               await handlePaymentSuccess(paymentId);
               onPaymentSuccess();
             } else {
-              console.error("Payment failed:", result);
+              const errorText = await response.text();
+              console.error("Payment failed:", errorText);
             }
           } catch (error) {
             console.error("Error during payment process:", error);
