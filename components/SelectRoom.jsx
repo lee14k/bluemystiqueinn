@@ -130,12 +130,13 @@ const SelectRoom = () => {
       </LocalizationProvider>
       <div>
         {availableRooms.map(room => (
-          <RoomCard
+            <RoomCard
             key={room.id}
             availability={room.availability}
-            roomName={room.room_name}
+            roomName={room.second_name}
             occupancy={room.occupancy}
             rate={room.rate}
+            image={room.image} // Pass the image prop
             onSelect={() => handleRoomSelect(room)}
             selected={selectedRoom?.id === room.id}
           />

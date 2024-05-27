@@ -1,3 +1,4 @@
+import Image from "next/image";
 const AboutFill =()=> {
     return (
         <div className="grid lg:grid-cols-2">
