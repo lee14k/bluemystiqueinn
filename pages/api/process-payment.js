@@ -1,4 +1,5 @@
 import { Client, Environment } from "square";
+import { supabase } from "../../utils/supabase";
 
 const client = new Client({
   environment: Environment.Sandbox,
@@ -7,7 +8,7 @@ const client = new Client({
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
-    const { sourceId, amount } = req.body;
+    const { sourceId, amount, bookingId } = req.body;
 
     try {
       const response = await client.paymentsApi.createPayment({
@@ -18,6 +19,25 @@ export default async function handler(req, res) {
         },
         idempotencyKey: new Date().getTime().toString(), // unique identifier for this transaction
       });
+
+      const paymentId = response.result.payment.id;
+
+      // Log the payment ID and booking ID for debugging
+      console.log('Payment ID:', paymentId);
+      console.log('Booking ID:', bookingId);
+
+      // Update the booking record with the paymentId
+      const { data, error } = await supabase
+        .from("booking")
+        .update({ payment_id: paymentId })
+        .eq("id", bookingId);
+
+      if (error) {
+        throw new Error(`Error updating booking with payment ID: ${error.message}`);
+      }
+
+      // Log the data after updating
+      console.log('Updated booking with payment ID:', data);
 
       // Convert BigInt values to strings
       const result = JSON.parse(

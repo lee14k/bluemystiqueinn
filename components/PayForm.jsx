@@ -14,12 +14,13 @@ const PayForm = ({ bookingId, onPaymentSuccess }) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ bookingId, paymentStatus: "completed" }),
+        body: JSON.stringify({ bookingId, paymentId, paymentStatus: "completed" }), // Include paymentId
       });
 
       if (response.ok) {
         setPaymentId(paymentId);
-        router.push(`/confirmation?paymentId=${paymentId}`);
+        localStorage.setItem("paymentId", paymentId); // Save paymentId to local storage
+        router.push(`/confirmation`);
       } else {
         console.error("Failed to update payment status:", await response.text());
       }
@@ -43,6 +44,7 @@ const PayForm = ({ bookingId, onPaymentSuccess }) => {
               body: JSON.stringify({
                 sourceId: token.token,
                 amount: 180, // Ensure this is a number
+                bookingId, // Send bookingId with the payment request
               }),
             });
 

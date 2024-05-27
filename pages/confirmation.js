@@ -3,27 +3,22 @@ import { useEffect, useState } from "react";
 
 const Confirmation = () => {
   const router = useRouter();
-  const { paymentId } = router.query;
   const [bookingDetails, setBookingDetails] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!router.isReady) {
-      // Router is not ready yet, so wait
-      return;
-    }
-
+    const paymentId = localStorage.getItem("paymentId");
     if (!paymentId) {
-      // Redirect to the home page or an error page if paymentId is not present
+      // Redirect to the home page if paymentId is not present
       router.push('/');
     } else {
       fetchBookingDetails(paymentId);
     }
-  }, [router.isReady, paymentId]);
+  }, []);
 
-  const fetchBookingDetails = async (id) => {
+  const fetchBookingDetails = async (paymentId) => {
     try {
-      const response = await fetch(`/api/get-booking-details?paymentId=${id}`);
+      const response = await fetch(`/api/get-booking-details?paymentId=${paymentId}`);
       if (response.ok) {
         const data = await response.json();
         console.log("Fetched booking details:", data); // Log the fetched booking details
