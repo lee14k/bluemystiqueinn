@@ -10,25 +10,25 @@ export default async function handler(req, res) {
     const { sourceId, amount } = req.body;
 
     try {
-      console.log("Creating payment with:", { sourceId, amount });
-
       const response = await client.paymentsApi.createPayment({
         sourceId,
         amountMoney: {
-          amount: amount, // amount in cents
+          amount: Number(amount), // Ensure amount is a number
           currency: "USD",
         },
         idempotencyKey: new Date().getTime().toString(), // unique identifier for this transaction
       });
 
-      res.status(200).json(response.result);
+      // Convert BigInt values to strings
+      const result = JSON.parse(
+        JSON.stringify(response.result, (_, value) => 
+          typeof value === "bigint" ? value.toString() : value
+        )
+      );
+
+      res.status(200).json(result);
     } catch (error) {
       console.error("Payment failed:", error);
-      if (error.response) {
-        const errorBody = await error.response.json();
-        console.error("Detailed error response from Square:", errorBody);
-        return res.status(500).json({ error: errorBody });
-      }
       res.status(500).json({ error: error.message });
     }
   } else {

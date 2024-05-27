@@ -26,7 +26,7 @@ const SelectRoom = () => {
     if (dateRange[0] && dateRange[1]) {
       filterAvailableRooms();
     }
-  }, [dateRange, rooms, bookingData]);
+  }, [dateRange, rooms, bookingData, selectedDates]);
 
   useEffect(() => {
     if (selectedDates[0] && selectedDates[1]) {
@@ -36,9 +36,10 @@ const SelectRoom = () => {
 
   const fetchRooms = async () => {
     try {
-      const response = await fetch('/api/rooms');
+      const response = await fetch('/api/get-rooms');
       const roomsData = await response.json();
       if (response.ok) {
+        console.log('Rooms data:', JSON.stringify(roomsData, null, 2));
         setRooms(roomsData);
       } else {
         console.error('Error fetching rooms:', roomsData.error);
@@ -50,9 +51,10 @@ const SelectRoom = () => {
 
   const fetchBookingData = async () => {
     try {
-      const response = await fetch('/api/bookings');
+      const response = await fetch('/api/get-bookings');
       const data = await response.json();
       if (response.ok) {
+        console.log('Fetched booking data:', data);
         setBookingData(data);
       } else {
         console.error('Error fetching bookings:', data.error);
@@ -61,24 +63,37 @@ const SelectRoom = () => {
       console.error('Error fetching bookings:', error);
     }
   };
-
   const filterAvailableRooms = () => {
-    const availableRoomsStatus = rooms.map(room => {
+    console.log('Filtering available rooms');
+    console.log('Selected date range:', dateRange);
+    console.log('Booking data:', bookingData);
+    
+    const newAvailableRooms = rooms.map(room => {
       const isBooked = bookingData.some(booking => {
-        if (booking.room_id === room.id) {
+        if (booking.room_name === room.id) {
           const bookedStart = dayjs(booking.start_date);
-          const bookedEnd = dayjs(booking.end_date).add(1, 'day');
-          return (
-            dateRange[0].isBefore(bookedEnd) && dateRange[1].isAfter(bookedStart)
+          const bookedEnd = dayjs(booking.end_date);
+          const selectedStart = dayjs(dateRange[0]).startOf('day');
+          const selectedEnd = dayjs(dateRange[1]).startOf('day');
+          console.log(`Checking room ${room.id} between ${selectedStart.format()} and ${selectedEnd.format()}`);
+          console.log(`Booking from ${bookedStart.format()} to ${bookedEnd.format()}`);
+          
+          const isUnavailable = (
+            (selectedStart.isSame(bookedStart) || selectedStart.isAfter(bookedStart)) &&
+            (selectedEnd.isSame(bookedEnd) || selectedEnd.isBefore(bookedEnd))
           );
+          
+          console.log(`Room ${room.id} is ${isUnavailable ? 'unavailable' : 'available'}`);
+          return isUnavailable;
         }
         return false;
       });
-
+  
       return { ...room, availability: isBooked ? "Unavailable" : "Available" };
     });
-
-    setAvailableRooms(availableRoomsStatus);
+  
+    console.log('New available rooms:', newAvailableRooms);
+    setAvailableRooms(newAvailableRooms);
   };
 
   const handleProceed = () => {
@@ -88,6 +103,7 @@ const SelectRoom = () => {
 
   const handleRoomSelect = (room) => {
     setSelectedRoom(room);
+    setAvailableRooms([...availableRooms]);
   };
 
   return (
@@ -98,7 +114,10 @@ const SelectRoom = () => {
             startText="Start Date"
             endText="End Date"
             value={dateRange}
-            onChange={(newRange) => setDateRange(newRange)}
+            onChange={(newRange) => {
+              setDateRange(newRange);
+              console.log('Selected date range:', newRange);
+            }}
             renderInput={(startProps, endProps) => (
               <>
                 <TextField {...startProps} />

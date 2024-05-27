@@ -1,6 +1,5 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { useBooking } from "../context/BookingContext";
 
 const Confirmation = () => {
   const router = useRouter();
@@ -9,25 +8,25 @@ const Confirmation = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const storedPaymentId = localStorage.getItem('paymentId');
-
     if (!router.isReady) {
+      // Router is not ready yet, so wait
       return;
     }
 
-    if (!paymentId && !storedPaymentId) {
+    if (!paymentId) {
+      // Redirect to the home page or an error page if paymentId is not present
       router.push('/');
     } else {
-      fetchBookingDetails(paymentId || storedPaymentId);
+      fetchBookingDetails(paymentId);
     }
   }, [router.isReady, paymentId]);
 
   const fetchBookingDetails = async (id) => {
     try {
-      console.log("Fetching booking details with paymentId:", id);
       const response = await fetch(`/api/get-booking-details?paymentId=${id}`);
       if (response.ok) {
         const data = await response.json();
+        console.log("Fetched booking details:", data); // Log the fetched booking details
         setBookingDetails(data);
       } else {
         console.error("Failed to fetch booking details:", await response.text());
@@ -39,12 +38,8 @@ const Confirmation = () => {
     }
   };
 
-  if (loading) {
+  if (loading || !bookingDetails) {
     return <div>Loading...</div>;
-  }
-
-  if (!bookingDetails) {
-    return <div>No booking details found.</div>;
   }
 
   return (

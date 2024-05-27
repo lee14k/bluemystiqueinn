@@ -3,7 +3,7 @@ import Checkbox from '@mui/material/Checkbox';
 
 const RoomCard = ({ availability, roomName, occupancy, rate, onSelect, selected }) => {
   return (
-    <div className={`room-card ${selected ? 'selected' : ''}`} onClick={onSelect}>
+    <div key={`${roomName}-${availability}`} className={`room-card ${selected ? 'selected' : ''}`} onClick={onSelect}>
       <span>{availability}</span>
       <h1>{roomName}</h1>
       <p>Occupancy: {occupancy}</p>
