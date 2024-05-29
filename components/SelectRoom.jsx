@@ -11,7 +11,6 @@ import { useBooking } from '../context/BookingContext';
 
 const SelectRoom = () => {
   const { selectedDates, setSelectedDates, selectedRoom, setSelectedRoom } = useBooking();
-  //destructuring values from booking context
   const [dateRange, setDateRange] = useState([dayjs(selectedDates[0]), dayjs(selectedDates[1])]);
   const [rooms, setRooms] = useState([]);
   const [availableRooms, setAvailableRooms] = useState([]);
@@ -22,29 +21,24 @@ const SelectRoom = () => {
     fetchRooms();
     fetchBookingData();
   }, []);
-  //this fetches rooms and booking data when the component mounts
 
   useEffect(() => {
     if (dateRange[0] && dateRange[1]) {
       filterAvailableRooms();
     }
-  }, [dateRange, rooms, bookingData, selectedDates]);
-//recalculate available rooms when date range, rooms, or booking data changes
-//second argument is dependency array, controls when this should run. this is saying to run if the date range, rooms, booking data, or selected dates change
+  }, [dateRange, rooms, bookingData]);
+
   useEffect(() => {
     if (selectedDates[0] && selectedDates[1]) {
       setDateRange([dayjs(selectedDates[0]), dayjs(selectedDates[1])]);
     }
   }, [selectedDates]);
 
-
-
   const fetchRooms = async () => {
     try {
       const response = await fetch('/api/get-rooms');
       const roomsData = await response.json();
       if (response.ok) {
-        console.log('Rooms data:', JSON.stringify(roomsData, null, 2));
         setRooms(roomsData);
       } else {
         console.error('Error fetching rooms:', roomsData.error);
@@ -59,7 +53,6 @@ const SelectRoom = () => {
       const response = await fetch('/api/get-bookings');
       const data = await response.json();
       if (response.ok) {
-        console.log('Fetched booking data:', data);
         const completedBookings = data.filter(booking => booking.payment_status === 'completed');
         setBookingData(completedBookings);
       } else {
@@ -71,27 +64,12 @@ const SelectRoom = () => {
   };
 
   const filterAvailableRooms = () => {
-    console.log('Filtering available rooms');
-    console.log('Selected date range:', dateRange);
-    console.log('Booking data:', bookingData);
-
     const newAvailableRooms = rooms.map(room => {
       const isBooked = bookingData.some(booking => {
         if (booking.room_name === room.id) {
           const bookedStart = dayjs(booking.start_date);
-          const bookedEnd = dayjs(booking.end_date);
-          const selectedStart = dayjs(dateRange[0]).startOf('day');
-          const selectedEnd = dayjs(dateRange[1]).startOf('day');
-          console.log(`Checking room ${room.id} between ${selectedStart.format()} and ${selectedEnd.format()}`);
-          console.log(`Booking from ${bookedStart.format()} to ${bookedEnd.format()}`);
-
-          const isUnavailable = (
-            (selectedStart.isBetween(bookedStart, bookedEnd, null, '[)') || selectedEnd.isBetween(bookedStart, bookedEnd, null, '[)')) ||
-            (bookedStart.isBetween(selectedStart, selectedEnd, null, '[)') || bookedEnd.isBetween(selectedStart, selectedEnd, null, '[)'))
-          );
-
-          console.log(`Room ${room.id} is ${isUnavailable ? 'unavailable' : 'available'}`);
-          return isUnavailable;
+          const bookedEnd = dayjs(booking.end_date).add(1, 'day');
+          return dateRange[0].isBefore(bookedEnd) && dateRange[1].isAfter(bookedStart);
         }
         return false;
       });
@@ -99,7 +77,6 @@ const SelectRoom = () => {
       return { ...room, availability: isBooked ? "Unavailable" : "Available" };
     });
 
-    console.log('New available rooms:', newAvailableRooms);
     setAvailableRooms(newAvailableRooms);
   };
 
@@ -110,7 +87,6 @@ const SelectRoom = () => {
 
   const handleRoomSelect = (room) => {
     setSelectedRoom(room);
-    setAvailableRooms([...availableRooms]);
   };
 
   return (
@@ -123,7 +99,6 @@ const SelectRoom = () => {
             value={dateRange}
             onChange={(newRange) => {
               setDateRange(newRange);
-              console.log('Selected date range:', newRange);
             }}
             renderInput={(startProps, endProps) => (
               <>

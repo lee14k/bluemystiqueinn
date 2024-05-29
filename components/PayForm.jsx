@@ -4,14 +4,14 @@ import { GooglePay, CreditCard, PaymentForm } from "react-square-web-payments-sd
 import { useBooking } from "../context/BookingContext";
 import { supabase } from '../utils/supabase'; // Adjust the import path as needed
 
-const PayForm = ({ roomId, onPaymentSuccess }) => {
+const PayForm = ({ onPaymentSuccess }) => {
   const router = useRouter();
-  const { setPaymentId } = useBooking();
+  const { selectedRoom, setPaymentId } = useBooking();
   const [rate, setRate] = useState(null);
 
   useEffect(() => {
-    if (!roomId) {
-      console.error("roomId is undefined");
+    if (!selectedRoom) {
+      console.error("selectedRoom is undefined");
       return;
     }
 
@@ -19,7 +19,7 @@ const PayForm = ({ roomId, onPaymentSuccess }) => {
       const { data, error } = await supabase
         .from('rooms')
         .select('rate')
-        .eq('id', roomId)
+        .eq('id', selectedRoom.id)
         .single();
 
       if (error) {
@@ -30,7 +30,7 @@ const PayForm = ({ roomId, onPaymentSuccess }) => {
     };
 
     fetchRate();
-  }, [roomId]);
+  }, [selectedRoom]);
 
   const handlePaymentSuccess = async (paymentId) => {
     try {
@@ -39,7 +39,7 @@ const PayForm = ({ roomId, onPaymentSuccess }) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ roomId, paymentId, paymentStatus: "completed" }),
+        body: JSON.stringify({ bookingId: selectedRoom.id, paymentId, paymentStatus: "completed" }),
       });
 
       if (response.ok) {
@@ -74,7 +74,7 @@ const PayForm = ({ roomId, onPaymentSuccess }) => {
               body: JSON.stringify({
                 sourceId: token.token,
                 amount: rate * 100, // Amount in cents
-                roomId,
+                roomId: selectedRoom.id, // Send roomId with the payment request
               }),
             });
 
