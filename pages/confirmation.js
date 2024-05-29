@@ -1,5 +1,7 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import Navbar from "@/components/FrontEnd/Navbar";
+import Footer from "@/components/FrontEnd/Footer";
 
 const Confirmation = () => {
   const router = useRouter();
@@ -39,6 +41,7 @@ const Confirmation = () => {
 
   return (
     <div>
+      <Navbar/>
       <h1>Booking Confirmation</h1>
       <p>Booking ID: {bookingDetails.id}</p>
       <p>First Name: {bookingDetails.first_name}</p>
@@ -48,6 +51,7 @@ const Confirmation = () => {
       <p>End Date: {new Date(bookingDetails.end_date).toLocaleDateString()}</p>
       <p>Room ID: {bookingDetails.room_id}</p>
       <p>Payment Status: {bookingDetails.payment_status}</p>
+      <Footer/>
     </div>
   );
 };

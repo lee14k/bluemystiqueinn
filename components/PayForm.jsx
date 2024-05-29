@@ -1,11 +1,33 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { GooglePay, CreditCard, PaymentForm } from "react-square-web-payments-sdk";
 import { useBooking } from "../context/BookingContext";
+import { createClient } from '@supabase/supabase-js';
 
-const PayForm = ({ bookingId, onPaymentSuccess }) => {
+const supabase = createClient('your-supabase-url', 'your-supabase-key');
+
+const PayForm = ({ roomId, onPaymentSuccess }) => {
   const router = useRouter();
   const { setPaymentId } = useBooking();
+  const [rate, setRate] = useState(null);
+
+  useEffect(() => {
+    const fetchRate = async () => {
+      const { data, error } = await supabase
+        .from('rooms')
+        .select('rate')
+        .eq('id', roomId)
+        .single();
+
+      if (error) {
+        console.error('Error fetching room rate:', error);
+      } else {
+        setRate(data.rate);
+      }
+    };
+
+    fetchRate();
+  }, [roomId]);
 
   const handlePaymentSuccess = async (paymentId) => {
     try {
@@ -14,12 +36,12 @@ const PayForm = ({ bookingId, onPaymentSuccess }) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ bookingId, paymentId, paymentStatus: "completed" }), // Include paymentId
+        body: JSON.stringify({ roomId, paymentId, paymentStatus: "completed" }),
       });
 
       if (response.ok) {
         setPaymentId(paymentId);
-        localStorage.setItem("paymentId", paymentId); // Save paymentId to local storage
+        localStorage.setItem("paymentId", paymentId);
         router.push(`/confirmation`);
       } else {
         console.error("Failed to update payment status:", await response.text());
@@ -29,8 +51,13 @@ const PayForm = ({ bookingId, onPaymentSuccess }) => {
     }
   };
 
+  if (rate === null) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div>
+      <h3>Total Price: ${rate}</h3>
       <PaymentForm
         applicationId="sandbox-sq0idb-U9BPDxZinOKI4wq-jusMbQ"
         locationId="LFJC2AEE7NF9E"
@@ -43,15 +70,15 @@ const PayForm = ({ bookingId, onPaymentSuccess }) => {
               },
               body: JSON.stringify({
                 sourceId: token.token,
-                amount: 180, // Ensure this is a number
-                bookingId, // Send bookingId with the payment request
+                amount: rate * 100, // Amount in cents
+                roomId,
               }),
             });
 
             if (response.ok) {
               const result = await response.json();
               console.log("Payment successful:", result);
-              const paymentId = result.payment.id; // Capture the Square payment ID
+              const paymentId = result.payment.id;
               await handlePaymentSuccess(paymentId);
               onPaymentSuccess();
             } else {
@@ -66,7 +93,7 @@ const PayForm = ({ bookingId, onPaymentSuccess }) => {
           countryCode: "US",
           currencyCode: "USD",
           total: {
-            amount: "1", // Replace this with the actual amount in dollars
+            amount: (rate / 100).toFixed(2),
             label: "Total",
           },
         })}
