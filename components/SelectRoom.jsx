@@ -11,6 +11,7 @@ import { useBooking } from '../context/BookingContext';
 
 const SelectRoom = () => {
   const { selectedDates, setSelectedDates, selectedRoom, setSelectedRoom } = useBooking();
+  //destructuring values from booking context
   const [dateRange, setDateRange] = useState([dayjs(selectedDates[0]), dayjs(selectedDates[1])]);
   const [rooms, setRooms] = useState([]);
   const [availableRooms, setAvailableRooms] = useState([]);
@@ -21,18 +22,22 @@ const SelectRoom = () => {
     fetchRooms();
     fetchBookingData();
   }, []);
+  //this fetches rooms and booking data when the component mounts
 
   useEffect(() => {
     if (dateRange[0] && dateRange[1]) {
       filterAvailableRooms();
     }
   }, [dateRange, rooms, bookingData, selectedDates]);
-
+//recalculate available rooms when date range, rooms, or booking data changes
+//second argument is dependency array, controls when this should run. this is saying to run if the date range, rooms, booking data, or selected dates change
   useEffect(() => {
     if (selectedDates[0] && selectedDates[1]) {
       setDateRange([dayjs(selectedDates[0]), dayjs(selectedDates[1])]);
     }
   }, [selectedDates]);
+
+
 
   const fetchRooms = async () => {
     try {
