@@ -2,9 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { GooglePay, CreditCard, PaymentForm } from "react-square-web-payments-sdk";
 import { useBooking } from "../context/BookingContext";
-import { createClient } from '@supabase/supabase-js';
-
-const supabase = createClient('your-supabase-url', 'your-supabase-key');
+import { supabase } from '../utils/supabase'; // Adjust the import path as needed
 
 const PayForm = ({ roomId, onPaymentSuccess }) => {
   const router = useRouter();
@@ -12,6 +10,11 @@ const PayForm = ({ roomId, onPaymentSuccess }) => {
   const [rate, setRate] = useState(null);
 
   useEffect(() => {
+    if (!roomId) {
+      console.error("roomId is undefined");
+      return;
+    }
+
     const fetchRate = async () => {
       const { data, error } = await supabase
         .from('rooms')
@@ -93,7 +96,7 @@ const PayForm = ({ roomId, onPaymentSuccess }) => {
           countryCode: "US",
           currencyCode: "USD",
           total: {
-            amount: (rate / 100).toFixed(2),
+            amount: rate.toFixed(2),
             label: "Total",
           },
         })}

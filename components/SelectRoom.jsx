@@ -55,7 +55,8 @@ const SelectRoom = () => {
       const data = await response.json();
       if (response.ok) {
         console.log('Fetched booking data:', data);
-        setBookingData(data);
+        const completedBookings = data.filter(booking => booking.payment_status === 'completed');
+        setBookingData(completedBookings);
       } else {
         console.error('Error fetching bookings:', data.error);
       }
@@ -63,11 +64,12 @@ const SelectRoom = () => {
       console.error('Error fetching bookings:', error);
     }
   };
+
   const filterAvailableRooms = () => {
     console.log('Filtering available rooms');
     console.log('Selected date range:', dateRange);
     console.log('Booking data:', bookingData);
-    
+
     const newAvailableRooms = rooms.map(room => {
       const isBooked = bookingData.some(booking => {
         if (booking.room_name === room.id) {
@@ -77,21 +79,21 @@ const SelectRoom = () => {
           const selectedEnd = dayjs(dateRange[1]).startOf('day');
           console.log(`Checking room ${room.id} between ${selectedStart.format()} and ${selectedEnd.format()}`);
           console.log(`Booking from ${bookedStart.format()} to ${bookedEnd.format()}`);
-          
+
           const isUnavailable = (
-            (selectedStart.isSame(bookedStart) || selectedStart.isAfter(bookedStart)) &&
-            (selectedEnd.isSame(bookedEnd) || selectedEnd.isBefore(bookedEnd))
+            (selectedStart.isBetween(bookedStart, bookedEnd, null, '[)') || selectedEnd.isBetween(bookedStart, bookedEnd, null, '[)')) ||
+            (bookedStart.isBetween(selectedStart, selectedEnd, null, '[)') || bookedEnd.isBetween(selectedStart, selectedEnd, null, '[)'))
           );
-          
+
           console.log(`Room ${room.id} is ${isUnavailable ? 'unavailable' : 'available'}`);
           return isUnavailable;
         }
         return false;
       });
-  
+
       return { ...room, availability: isBooked ? "Unavailable" : "Available" };
     });
-  
+
     console.log('New available rooms:', newAvailableRooms);
     setAvailableRooms(newAvailableRooms);
   };
@@ -130,7 +132,7 @@ const SelectRoom = () => {
       </LocalizationProvider>
       <div>
         {availableRooms.map(room => (
-            <RoomCard
+          <RoomCard
             key={room.id}
             availability={room.availability}
             roomName={room.second_name}
