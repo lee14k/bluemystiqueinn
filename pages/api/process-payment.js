@@ -10,6 +10,15 @@ export default async function handler(req, res) {
   if (req.method === "POST") {
     const { sourceId, amount, bookingId } = req.body;
 
+    // Log the incoming request body for debugging
+    console.log("Received request body:", req.body);
+
+    // Ensure bookingId is defined and is a number
+    if (!bookingId || isNaN(bookingId)) {
+      console.error("Invalid bookingId:", bookingId);
+      return res.status(400).json({ error: "Invalid bookingId" });
+    }
+
     try {
       const response = await client.paymentsApi.createPayment({
         sourceId,
