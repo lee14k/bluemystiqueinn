@@ -4,16 +4,18 @@ import { GooglePay, CreditCard, PaymentForm } from "react-square-web-payments-sd
 import { useBooking } from "../context/BookingContext";
 import { supabase } from '../utils/supabase'; // Adjust the import path as needed
 
-const PayForm = ({ onPaymentSuccess }) => {
+const PayForm = ({ bookingId, onPaymentSuccess }) => {
   const router = useRouter();
   const { selectedRoom, setPaymentId } = useBooking();
   const [rate, setRate] = useState(null);
 
   useEffect(() => {
-    if (!selectedRoom) {
-      console.error("selectedRoom is undefined");
+    if (!selectedRoom || !selectedRoom.id) {
+      console.error("selectedRoom is undefined or has no id");
       return;
     }
+
+    console.log("Selected Room ID:", selectedRoom.id);
 
     const fetchRate = async () => {
       const { data, error } = await supabase
@@ -34,12 +36,13 @@ const PayForm = ({ onPaymentSuccess }) => {
 
   const handlePaymentSuccess = async (paymentId) => {
     try {
+      console.log("Updating payment status for booking ID:", bookingId, "with payment ID:", paymentId);
       const response = await fetch(`/api/update-payment-status`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ bookingId: selectedRoom.id, paymentId, paymentStatus: "completed" }),
+        body: JSON.stringify({ bookingId, paymentId, paymentStatus: "completed" }),
       });
 
       if (response.ok) {
@@ -66,6 +69,7 @@ const PayForm = ({ onPaymentSuccess }) => {
         locationId="LFJC2AEE7NF9E"
         cardTokenizeResponseReceived={async (token, verifiedBuyer) => {
           try {
+            console.log("Booking ID before payment:", bookingId); // Log the booking ID before making the API call
             const response = await fetch("/api/process-payment", {
               method: "POST",
               headers: {
@@ -74,7 +78,7 @@ const PayForm = ({ onPaymentSuccess }) => {
               body: JSON.stringify({
                 sourceId: token.token,
                 amount: rate * 100, // Amount in cents
-                roomId: selectedRoom.id, // Send roomId with the payment request
+                bookingId, // Send bookingId with the payment request
               }),
             });
 
