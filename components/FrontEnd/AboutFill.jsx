@@ -21,6 +21,7 @@ const AboutFill = () => {
           meeting you and having you experience that “on the water state of
           mind” feeling.
         </p>
+        <div className="mx-12">
         <Image src="/lizsig.png" alt="Elizabeth" width={200} height={200} />{" "}
         <Link href="/book">
           {" "}
@@ -28,6 +29,7 @@ const AboutFill = () => {
             Book your Stay
           </button>
         </Link>{" "}
+        </div>
       </div>
       <div className="">
         <div className="flex relative w-full h-full">

@@ -12,7 +12,7 @@ export default function PhotoGallery() {
     { src: "/foodshot.jpeg", heightClass: "h-auto" },
     { src: "/roseroom.jpeg", heightClass: "h-72" },
     { src: "/ribs.jpeg", heightClass: "h-auto" },
-    { src: "/beachbm.jpeg", heightClass: "h-72" },
+    { src: "/keks.jpeg", heightClass: "h-72" },
     { src: "/rroombm.jpeg", heightClass: "h-64" },
 
 

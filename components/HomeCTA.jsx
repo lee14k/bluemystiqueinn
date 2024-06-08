@@ -21,11 +21,13 @@ const HomeCTA = () => {
             color touring, or enjoying snow sports, relax and make yourself at
             home.
           </p>
-          <Link href="/book">
-            <button className="bg-white rounded-2xl px-12 py-2 mx-12 text-xl">
+            <button className="bg-white rounded-2xl px-12 py-2 mx-16 my-10 text-xl">
+            <Link href="/book">
+
               Book your stay
+              </Link>
+
             </button>
-          </Link>
         </div>
       </div>
       <div className="relative w-full h-full">
