@@ -4,7 +4,7 @@ const RoomCard = ({ roomName, occupancy, rate, image, onSelect, selected, availa
   return (
     <div className={`room-card ${selected ? 'selected' : ''}`} onClick={onSelect}>
       <div className="image-container" style={{ backgroundImage: `url(${image})` }}>
-        <h2 className="room-name">{roomName}</h2>
+        <h2 className="room-name text-6xl">{roomName}</h2>
       </div>
       <p>Occupancy: {occupancy}</p>
       <p>Rate: ${rate}</p>

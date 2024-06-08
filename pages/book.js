@@ -8,13 +8,14 @@ export default function Book() {
   return (
     <div>
       <Navbar />
-
-      <h1 className={`text-6xl mx-24 ${della.className}`}>Book your Stay</h1>
-      <p>
-        We’re so happy to have you! Book your stay here. Questions? Send Us a
-        Message.
-      </p>
-      <SelectRoom/>
+      <div className="flex flex-col justify-center items-center my-24">
+        <h1 className={`text-6xl mx-24 ${della.className}`}>Book your Stay</h1>
+        <p>
+          We’re so happy to have you! Book your stay here. Questions? Send Us a
+          Message.
+        </p>
+      </div>
+      <SelectRoom />
     </div>
   );
 }
