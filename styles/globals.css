@@ -24,3 +24,12 @@
 .text-timer {
     z-index: 10;
 }
+
+.footerwrapper {
+    background-image: url('/bmfoot.png');
+    height: 25rem;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: right bottom;
+    border: solid red 10px;
+}
