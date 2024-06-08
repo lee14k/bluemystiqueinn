@@ -1,10 +1,10 @@
 import AdminNav from '../../components/AdminDash/AdminNav';
-import ReservationPageFill from '../../components/AdminDash/ReservationPageFill';
+import ReservationsPageFill from '../../components/AdminDash/ReservationsPageFill';
 export default function AdminHome() {
     return (
      <div>
       <AdminNav/>
-      <ReservationPageFill/>
+      <ReservationsPageFill/>
      </div>
     );
   }

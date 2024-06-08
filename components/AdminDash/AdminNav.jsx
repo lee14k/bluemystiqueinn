@@ -1,12 +1,14 @@
+import Link from 'next/link';
+
 const AdminNav = () => {
     return (
         <nav className="admin-nav">
         <ul>
             <li>
-            <Link to="/admin/">Dashboard</Link>
+            <Link href="/admin/">Dashboard</Link>
             </li>
             <li>
-            <Link to="/admin/ReservationsPageFill">Reservations</Link>
+            <Link href="/admin/reservations">Reservations</Link>
             </li>
         </ul>
         </nav>

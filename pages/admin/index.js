@@ -4,7 +4,6 @@ export default function AdminHome() {
     return (
      <div>
       <AdminNav/>
-      <MainScreen/>
      </div>
     );
   }

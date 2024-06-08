@@ -9,7 +9,7 @@ const BookingList = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('/api/bookings');
+        const response = await fetch('/api/adminDisplay');
         const result = await response.json();
         if (!response.ok) {
           throw new Error(result.error);
@@ -29,7 +29,7 @@ const BookingList = () => {
 
   return (
     <div>
-      <h1>Bookings Table Data</h1>
+      <h1>Bookings</h1>
       <table>
         <thead>
           <tr>
@@ -37,15 +37,19 @@ const BookingList = () => {
             <th>Column 1</th>
             <th>Column 2</th>
             <th>Column 3</th>
+            <th>Column 3</th>
+
           </tr>
         </thead>
         <tbody>
           {data.map((item) => (
             <tr key={item.id}>
               {/* Replace with your actual column names */}
-              <td>{item.column1}</td>
-              <td>{item.column2}</td>
-              <td>{item.column3}</td>
+              <td>{item.start_date}</td>
+              <td>{item.end_date}</td>
+              <td>{item.room_name}</td>
+              <td>{item.email}</td>
+
             </tr>
           ))}
         </tbody>
@@ -54,4 +58,4 @@ const BookingList = () => {
   );
 };
 
-export default BookingsTable;
+export default BookingList;
