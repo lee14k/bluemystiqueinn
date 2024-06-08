@@ -60,8 +60,23 @@ const BookingForm = () => {
   };
 
   return (
+    <div>
     <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <Box mb={2}>
+          <TextField
+            label="Start Date"
+            value={selectedDates[0] ? selectedDates[0].format("YYYY-MM-DD") : ""}
+            InputProps={{ readOnly: true }}
+          />
+          <Box sx={{ mx: 2 }}>to</Box>
+          <TextField
+            label="End Date"
+            value={selectedDates[1] ? selectedDates[1].format("YYYY-MM-DD") : ""}
+            InputProps={{ readOnly: true }}
+          />
+        </Box>
       <form onSubmit={handleSubmit}>
+        <h1>Contact Information</h1>
         <input
           type="text"
           placeholder="First Name"
@@ -93,19 +108,7 @@ const BookingForm = () => {
           onChange={(e) => setEmail(e.target.value)}
         />
 
-        <Box mb={2}>
-          <TextField
-            label="Start Date"
-            value={selectedDates[0] ? selectedDates[0].format("YYYY-MM-DD") : ""}
-            InputProps={{ readOnly: true }}
-          />
-          <Box sx={{ mx: 2 }}>to</Box>
-          <TextField
-            label="End Date"
-            value={selectedDates[1] ? selectedDates[1].format("YYYY-MM-DD") : ""}
-            InputProps={{ readOnly: true }}
-          />
-        </Box>
+    <h1>Address Information</h1>
 
         <div>
           <label>
@@ -144,6 +147,7 @@ const BookingForm = () => {
         <button type="submit">Next</button>
       </form>
     </LocalizationProvider>
+    </div>
   );
 };
 
