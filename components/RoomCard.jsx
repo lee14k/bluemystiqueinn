@@ -1,10 +1,11 @@
-// RoomCard.js
 import React from 'react';
 
 const RoomCard = ({ roomName, occupancy, rate, image, onSelect, selected, availability, onDetails }) => {
   return (
     <div className={`room-card ${selected ? 'selected' : ''}`} onClick={onSelect}>
-      <img src={image} alt={roomName} />
+      <div className="image-container">
+        <img src={image} alt={roomName} />
+      </div>
       <h2>{roomName}</h2>
       <p>Occupancy: {occupancy}</p>
       <p>Rate: ${rate}</p>
@@ -20,11 +21,20 @@ const RoomCard = ({ roomName, occupancy, rate, image, onSelect, selected, availa
           cursor: pointer;
         }
         .room-card.selected {
-          border-color: blue;
+          border: 6px solid #06b6d4;
+        }
+        .image-container {
+          width: 40%;
+          height: 15rem; /* Fixed height for all images */
+          overflow: hidden;
+          display: flex;
+          justify-content: center;
+          align-items: center;
         }
         .room-card img {
           width: 100%;
-          height: 1rem;
+          height: 100%;
+          object-fit: cover; /* Ensures image covers the container without distortion */
         }
         .unavailable {
           color: red;
