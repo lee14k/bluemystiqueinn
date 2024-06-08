@@ -12,7 +12,6 @@ export default async function handler(req, res) {
         throw error;
       }
 
-      console.log("Fetched booking data:", data);
 
       if (data && data.length > 0) {
         res.status(200).json(data);

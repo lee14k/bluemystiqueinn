@@ -8,6 +8,10 @@ import RoomCard from '../components/RoomCard';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
 import { useBooking } from '../context/BookingContext';
+import Modal from '@mui/material/Modal';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import CardMedia from '@mui/material/CardMedia';
 
 const SelectRoom = () => {
   const { selectedDates, setSelectedDates, selectedRoom, setSelectedRoom } = useBooking();
@@ -16,6 +20,10 @@ const SelectRoom = () => {
   const [availableRooms, setAvailableRooms] = useState([]);
   const [bookingData, setBookingData] = useState([]);
   const router = useRouter();
+  const [selectedRoomDetails, setSelectedRoomDetails] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
+
+
 
   useEffect(() => {
     fetchRooms();
@@ -89,9 +97,15 @@ const SelectRoom = () => {
     setSelectedRoom(room);
   };
 
-const handleDetails=(room)=> {
+  const handleDetails = (room) => {
+    setSelectedRoomDetails(room);
+    setModalOpen(true);
+  };
 
-}
+  const handleClose = () => {
+    setModalOpen(false);
+    setSelectedRoomDetails(null);
+  };
 
   return (
     <div>
@@ -126,14 +140,59 @@ const handleDetails=(room)=> {
             onSelect={() => handleRoomSelect(room)}
             selected={selectedRoom?.id === room.id}
             onDetails={() => handleDetails(room)}
-          />
-        ))}
+            />
+          ))}
+        </div>
+        <button className="bg-gray-900 text-white py-2.5" onClick={handleProceed} disabled={!selectedRoom}>
+          Proceed to Booking
+        </button>
+  
+        <Modal
+          open={modalOpen}
+          onClose={handleClose}
+          aria-labelledby="room-details-title"
+          aria-describedby="room-details-description"
+        >
+          <Box sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 400,
+            bgcolor: 'background.paper',
+            border: '2px solid #000',
+            boxShadow: 24,
+            p: 4,
+          }}>
+            {selectedRoomDetails && (
+              <>
+                <Typography id="room-details-title" variant="h6" component="h2">
+                  {selectedRoomDetails.second_name}
+                </Typography>
+                <CardMedia
+                  component="img"
+                  height="140"
+                  image={selectedRoomDetails.image}
+                  alt={selectedRoomDetails.second_name}
+                />
+                <Typography id="room-details-description" sx={{ mt: 2 }}>
+                  Occupancy: {selectedRoomDetails.occupancy}
+                </Typography>
+                <Typography id="room-details-rate" sx={{ mt: 2 }}>
+                  Rate: ${selectedRoomDetails.rate}
+                </Typography>
+                <Typography id="room-details-rate" sx={{ mt: 2 }}>
+                  Amenities: {selectedRoomDetails.amenities}
+                </Typography>
+                <Button onClick={handleClose} variant="contained" color="primary" sx={{ mt: 2 }}>
+                  Close
+                </Button>
+              </>
+            )}
+          </Box>
+        </Modal>
       </div>
-      <button className="bg-gray-900 text-white py-2.5" onClick={handleProceed} disabled={!selectedRoom}>
-        Proceed to Booking
-      </button>
-    </div>
-  );
-}
-
-export default SelectRoom;
+    );
+  }
+  
+  export default SelectRoom;
