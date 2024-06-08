@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@auth0/nextjs-auth0": "^3.5.0",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@fontsource/roboto": "^5.0.13",
@@ -22,6 +23,7 @@
     "@mui/x-date-pickers-pro": "^7.3.2",
     "@mui/x-license": "^7.2.0",
     "@supabase/supabase-js": "^2.42.0",
+    "auth0": "^4.4.0",
     "axios": "^1.6.8",
     "dayjs": "^1.11.11",
     "framer-motion": "^11.1.7",

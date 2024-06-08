@@ -5,19 +5,7 @@ import Image from "next/image";
 import { Merriweather } from "next/font/google";
 
 const merriweather = Merriweather({ weight: "400", subsets: ["latin"] });
-const ParentComponent = () => {
-  const [activeComponent, setActiveComponent] = useState("");
-
-  const renderComponent = () => {
-    switch (activeComponent) {
-      case "A":
-        return <ReservationList />;
-      case "B":
-        return <Calendar />;
-  
-    }
-  };
-
+const ReservationsPageFill = () => {
   return (
     <div className={merriweather.className}>
     <div className="mt-12">
@@ -47,4 +35,4 @@ const ParentComponent = () => {
   );
 };
 
-export default ParentComponent;
+export default ReservationsPageFill;
