@@ -53,10 +53,10 @@ const Confirmation = () => {
           Payment successful
         </h1>
         <p className="mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
-          Thanks for ordering
+          Thank you for booking
         </p>
         <p className="mt-2 text-base text-gray-500">
-          We appreciate your booking request, we’re currently processing it. So
+          We appreciate your reservation request, we’re currently processing it. So
           hang tight and we’ll send you confirmation very soon!
         </p>{" "}
         <dl className="mt-16 text-lg font-medium grid grid-cols-5">
@@ -87,7 +87,6 @@ const Confirmation = () => {
             </dd>
           </div>
         </dl>
-        <p>Room ID: {bookingDetails.room_id}</p>
         <Footer />
       </div>
     </>
