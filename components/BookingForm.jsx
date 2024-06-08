@@ -11,6 +11,10 @@ const BookingForm = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
+  const [secondGuest, setSecondGuest] = useState(false);
+  const [secondFirstName, setSecondFirstName] = useState("");
+  const [secondLastName, setSecondLastName] = useState("");
+  const [secondEmail, setSecondEmail] = useState("");
   const router = useRouter();
 
   const handleSubmit = async (e) => {
@@ -24,6 +28,11 @@ const BookingForm = () => {
       endDate: selectedDates[1].toISOString(),
       roomId: selectedRoom.id,
       paymentStatus: "pending",
+      secondGuest: secondGuest ? {
+        firstName: secondFirstName,
+        lastName: secondLastName,
+        email: secondEmail,
+      } : null,
     };
 
     console.log("Submitting booking data:", bookingData);
@@ -71,6 +80,19 @@ const BookingForm = () => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
+         <input
+          type="email"
+          placeholder="Phone Number"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+         <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+
         <Box mb={2}>
           <TextField
             label="Start Date"
@@ -84,6 +106,41 @@ const BookingForm = () => {
             InputProps={{ readOnly: true }}
           />
         </Box>
+
+        <div>
+          <label>
+            <input
+              type="checkbox"
+              checked={secondGuest}
+              onChange={(e) => setSecondGuest(e.target.checked)}
+            />
+            Will a second guest be coming?
+          </label>
+        </div>
+
+        {secondGuest && (
+          <div>
+            <input
+              type="text"
+              placeholder="Second Guest First Name"
+              value={secondFirstName}
+              onChange={(e) => setSecondFirstName(e.target.value)}
+            />
+            <input
+              type="text"
+              placeholder="Second Guest Last Name"
+              value={secondLastName}
+              onChange={(e) => setSecondLastName(e.target.value)}
+            />
+            <input
+              type="email"
+              placeholder="Second Guest Email"
+              value={secondEmail}
+              onChange={(e) => setSecondEmail(e.target.value)}
+            />
+          </div>
+        )}
+
         <button type="submit">Next</button>
       </form>
     </LocalizationProvider>
