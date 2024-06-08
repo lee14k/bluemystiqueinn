@@ -1,7 +1,7 @@
 // RoomCard.js
 import React from 'react';
 
-const RoomCard = ({ roomName, occupancy, rate, image, onSelect, selected, availability }) => {
+const RoomCard = ({ roomName, occupancy, rate, image, onSelect, selected, availability, onDetails }) => {
   return (
     <div className={`room-card ${selected ? 'selected' : ''}`} onClick={onSelect}>
       <img src={image} alt={roomName} />
@@ -11,6 +11,7 @@ const RoomCard = ({ roomName, occupancy, rate, image, onSelect, selected, availa
       <p className={availability === 'Unavailable' ? 'unavailable' : 'available'}>
         {availability}
       </p>
+      <button onClick={onDetails}>Details</button>
       <style jsx>{`
         .room-card {
           border: 1px solid #ccc;

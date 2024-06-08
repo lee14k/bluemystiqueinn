@@ -89,6 +89,10 @@ const SelectRoom = () => {
     setSelectedRoom(room);
   };
 
+const handleDetails=(room)=> {
+
+}
+
   return (
     <div>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -121,6 +125,7 @@ const SelectRoom = () => {
             image={room.image} // Pass the image prop
             onSelect={() => handleRoomSelect(room)}
             selected={selectedRoom?.id === room.id}
+            onDetails={() => handleDetails(room)}
           />
         ))}
       </div>
