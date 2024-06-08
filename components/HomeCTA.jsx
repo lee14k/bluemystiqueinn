@@ -1,12 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Della_Respira } from "next/font/google";
+const della = Della_Respira({ subsets: ["latin"], weight: "400" });
 
 const HomeCTA = () => {
   return (
-    <div className="grid grid-cols-2 bg-sky-200 py-12">
+    <div className="grid grid-cols-2 bg-sky-200 py-24">
       <div className="flex items-center justify-center mx-12">
         <div>
-          <h1 className="text-6xl mx-24 text-center">
+          <h1 className={`text-6xl  text-center ${della.className}`}>
             Lakeside Luxury with Cozy Comfort
           </h1>
           <p className="my-8 text-xl mx-12">
@@ -20,7 +22,7 @@ const HomeCTA = () => {
             home.
           </p>
           <Link href="/book">
-            <button className="bg-white rounded-2xl px-12 py-2 mx-12">
+            <button className="bg-white rounded-2xl px-12 py-2 mx-12 text-xl">
               Book your stay
             </button>
           </Link>

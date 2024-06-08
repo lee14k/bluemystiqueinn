@@ -6,11 +6,15 @@ export default function PhotoGallery() {
     { src: "/tablesetbm.jpeg", heightClass: "h-72" },
     { src: "/Table-Spread-8496.jpg", heightClass: "h-auto" },
     { src: "/bmroom.png", heightClass: "h-auto" },
+    { src: "/beachbm.jpeg", heightClass: "h-40" },
+
     { src: "/bmstuff.png", heightClass: "h-72" },
     { src: "/foodshot.jpeg", heightClass: "h-auto" },
     { src: "/roseroom.jpeg", heightClass: "h-72" },
-    { src: "/rroombm.jpeg", heightClass: "h-auto" },
+    { src: "/ribs.jpeg", heightClass: "h-auto" },
     { src: "/beachbm.jpeg", heightClass: "h-72" },
+    { src: "/rroombm.jpeg", heightClass: "h-64" },
+
 
 
     

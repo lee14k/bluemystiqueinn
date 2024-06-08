@@ -5,9 +5,9 @@ const della = Della_Respira({ subsets: ["latin"], weight: "400" });
 const AboutFill = () => {
   return (
     <div className="grid lg:grid-cols-2 bg-orange-100 py-24">
-      <div className="mx-24">
-        <h1 className={`text-6xl ${della.className}`}>About the Innkeeper</h1>
-        <p className="">
+      <div lassName="flex items-center justify-center mx-12">
+        <h1 className={`text-6xl mx-24 ${della.className}`}>About the Innkeeper</h1>
+        <p className="my-8 text-xl mx-12">
           Hello and welcome, I am Elizabeth, your host, and the owner of The
           Blue Mystique Inn. I love to travel and am excited to share with you
           my favorite spot on the map, Manistique, Michigan. I am dedicated to
@@ -29,9 +29,10 @@ const AboutFill = () => {
           </button>
         </Link>{" "}
       </div>
-      <div className="grid grid-cols-1">
-        <div>
-          <Image src="/bmliz.png" alt="Elizabeth" width={400} height={400} />
+      <div className="">
+        <div className="flex relative w-full h-full">
+          <Image src="/bmliz.png" alt="Elizabeth" width={700} height={500} className="" />
+
         </div>
       </div>
     </div>

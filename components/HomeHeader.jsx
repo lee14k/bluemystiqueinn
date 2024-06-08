@@ -6,7 +6,7 @@ const della = Della_Respira({ subsets: ['latin'], weight: '400' });
 const HomeHeader = () => {
 
     return (
-        <div className={`hh-bg flex flex-col justify-center items-center ${della.className}`}>
+        <div className={`hh-bg flex flex-col justify-center items-center  ${della.className}`}>
             <Image
                 src="/bmlogov2.png"
                 alt="Blue Mystique Inn logo"
