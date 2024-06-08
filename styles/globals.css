@@ -28,8 +28,7 @@
 .footerwrapper {
     background-image: url('/bmfoot.png');
     height: 25rem;
-    background-size: contain;
+    background-size: 40%; /* Increase the size of the background image */
     background-repeat: no-repeat;
-    background-position: right bottom;
-    border: solid red 10px;
+    background-position: right center;
 }
