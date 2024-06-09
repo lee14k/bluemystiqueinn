@@ -8,16 +8,7 @@ const client = new Client({
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
-    const { sourceId, amount, bookingId, roomId, numberOfDays } = req.body;
-
-    // Log the incoming request body for debugging
-    console.log("Received request body:", req.body);
-
-    // Ensure bookingId is defined and is a number
-    if (!bookingId || isNaN(bookingId)) {
-      console.error("Invalid bookingId:", bookingId);
-      return res.status(400).json({ error: "Invalid bookingId" });
-    }
+    const { amount, bookingId, roomId, numberOfDays } = req.body;
 
     try {
       // Fetch the room details from the database
@@ -82,9 +73,6 @@ export default async function handler(req, res) {
       if (error) {
         throw new Error(`Error updating booking with payment link: ${error.message}`);
       }
-
-      // Log the data after updating
-      console.log("Updated booking with payment link:", data);
 
       res.status(200).json({ paymentLink });
     } catch (error) {

@@ -98,7 +98,7 @@ const BookingForm = () => {
             InputProps={{ readOnly: true }}
           />
         </Box>
-        <form onSubmit={handleSubmit} className="flex flex-col max-w-lg mx-auto p-6 bg-white shadow-md rounded-lg">
+        <form onSubmit={handleSubmit} className="flex flex-col lg:w-full mx-auto p-6 bg-white shadow-md rounded-lg">
           <h1 className="text-2xl font-bold mb-4">Contact Information</h1>
           
           <input
