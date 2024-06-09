@@ -72,13 +72,14 @@ export default async function handler(req, res) {
       });
 
       const paymentLink = paymentLinkResponse.result.paymentLink.url;
+      const paymentId = paymentLinkResponse.result.paymentLink.id;
 
       console.log("Created payment link:", paymentLink);
 
-      // Update the booking record with the paymentLink
+      // Update the booking record with the paymentLink and paymentId
       const { data, error } = await supabase
         .from("booking")
-        .update({ payment_link: paymentLink })
+        .update({ payment_link: paymentLink, payment_id: paymentId })
         .eq("id", bookingId);
 
       if (error) {
