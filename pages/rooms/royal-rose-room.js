@@ -9,4 +9,4 @@ const RoyalRose = () => {
     );
 };
 
-export default ReadingRoom;
+export default RoyalRose;
