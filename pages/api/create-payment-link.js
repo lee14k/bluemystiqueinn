@@ -22,12 +22,14 @@ export default async function handler(req, res) {
         throw new Error(`Error fetching room data: ${roomError.message}`);
       }
 
+      console.log("Fetched room data:", roomData);
+
       const lineItems = [
         {
           name: `Room ${roomData.name}`,
           quantity: String(numberOfDays),
           basePriceMoney: {
-            amount: roomData.rate,
+            amount: roomData.rate * 100, // amount in cents
             currency: "USD",
           },
           taxes: [
@@ -40,29 +42,31 @@ export default async function handler(req, res) {
         },
       ];
 
-      const order = {
-        idempotencyKey: new Date().getTime().toString(),
-        order: {
-          locationId: process.env.SQUARE_LOCATION_ID,
-          lineItems,
-          state: "OPEN",
-        },
-      };
+      console.log("Constructed line items:", lineItems);
 
-      // Create the order
-      const orderResponse = await client.ordersApi.createOrder(order);
-      const orderId = orderResponse.result.order.id;
+      if (lineItems.length === 0) {
+        throw new Error("Line items are empty. Please check the room details and number of days.");
+      }
 
-      // Create a payment link
+      // Create a payment link using quick_pay
       const paymentLinkResponse = await client.checkoutApi.createPaymentLink({
         idempotencyKey: new Date().getTime().toString(),
-        orderId,
+        quickPay: {
+          name: `Room Booking: ${roomData.name}`,
+          priceMoney: {
+            amount: amount, // amount already in cents
+            currency: "USD"
+          },
+          locationId: process.env.SQUARE_LOCATION_ID,
+        },
         checkoutOptions: {
           askForShippingAddress: false,
         },
       });
 
       const paymentLink = paymentLinkResponse.result.paymentLink.url;
+
+      console.log("Created payment link:", paymentLink);
 
       // Update the booking record with the paymentLink
       const { data, error } = await supabase

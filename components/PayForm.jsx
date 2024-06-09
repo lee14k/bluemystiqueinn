@@ -8,10 +8,12 @@ const PayForm = ({ bookingId, onPaymentSuccess }) => {
   const { selectedRoom, setPaymentId, selectedDates } = useBooking();
   const [rate, setRate] = useState(null);
   const [paymentLink, setPaymentLink] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!selectedRoom || !selectedRoom.id) {
       console.error("selectedRoom is undefined or has no id");
+      setLoading(false); // Stop loading if there's an error
       return;
     }
 
@@ -26,8 +28,10 @@ const PayForm = ({ bookingId, onPaymentSuccess }) => {
 
       if (error) {
         console.error('Error fetching room rate:', error);
+        setLoading(false); // Stop loading if there's an error
       } else {
         setRate(data.rate);
+        setLoading(false); // Stop loading when the rate is fetched
       }
     };
 
@@ -42,6 +46,7 @@ const PayForm = ({ bookingId, onPaymentSuccess }) => {
 
     try {
       const numberOfDays = Math.max(1, Math.round((new Date(selectedDates[1]) - new Date(selectedDates[0])) / (1000 * 60 * 60 * 24)));
+      const totalAmount = rate * numberOfDays * 100; // Convert to cents
 
       const response = await fetch("/api/create-payment-link", {
         method: "POST",
@@ -49,7 +54,7 @@ const PayForm = ({ bookingId, onPaymentSuccess }) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          amount: rate * numberOfDays,
+          amount: totalAmount,
           bookingId,
           roomId: selectedRoom.id,
           numberOfDays,
@@ -73,7 +78,7 @@ const PayForm = ({ bookingId, onPaymentSuccess }) => {
     }
   }, [rate]);
 
-  if (rate === null) {
+  if (loading) {
     return <div>Loading...</div>;
   }
 

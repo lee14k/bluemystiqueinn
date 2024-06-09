@@ -34,7 +34,7 @@ export default async function handler(req, res) {
           zip_code: zipCode,
           start_date: startDate,
           end_date: endDate,
-          room_id: roomId,
+          room_name: roomId,
           payment_status: paymentStatus,
           second_guest_first_name: secondGuest?.firstName || null,
           second_guest_last_name: secondGuest?.lastName || null,

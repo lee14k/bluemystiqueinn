@@ -66,7 +66,7 @@ const BookingForm = () => {
     console.log("Submitting booking data:", bookingData);
 
     try {
-      const response = await fetch("/api/bookings", {
+      const response = await fetch("/api/create-booking", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
