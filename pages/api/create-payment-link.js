@@ -14,7 +14,7 @@ export default async function handler(req, res) {
       // Fetch the room details from the database
       const { data: roomData, error: roomError } = await supabase
         .from("rooms")
-        .select("*")
+        .select("second_name, rate")
         .eq("id", roomId)
         .single();
 
@@ -24,9 +24,16 @@ export default async function handler(req, res) {
 
       console.log("Fetched room data:", roomData);
 
+      const roomName = roomData.second_name;
+      console.log("Room name:", roomName);
+
+      if (!roomName) {
+        throw new Error("Room name is undefined. Please check the room data.");
+      }
+
       const lineItems = [
         {
-          name: `Room ${roomData.name}`,
+          name: `Room ${roomData.second_name}`,
           quantity: String(numberOfDays),
           basePriceMoney: {
             amount: roomData.rate * 100, // amount in cents
@@ -48,11 +55,11 @@ export default async function handler(req, res) {
         throw new Error("Line items are empty. Please check the room details and number of days.");
       }
 
-      // Create a payment link using quick_pay
+      // Create a payment link using quickPay
       const paymentLinkResponse = await client.checkoutApi.createPaymentLink({
         idempotencyKey: new Date().getTime().toString(),
         quickPay: {
-          name: `Room Booking: ${roomData.name}`,
+          name: `Room Booking: ${roomName}`,
           priceMoney: {
             amount: amount, // amount already in cents
             currency: "USD"

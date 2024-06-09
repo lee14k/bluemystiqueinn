@@ -1,5 +1,6 @@
 import React from 'react';
-
+import { Della_Respira } from "next/font/google";
+const della = Della_Respira({ subsets: ["latin"], weight: "400" });
 const RoomCard = ({ roomName, occupancy, rate, image, onSelect, selected, availability, onDetails }) => {
   const isAvailable = availability === 'Available';
 
@@ -14,7 +15,7 @@ const RoomCard = ({ roomName, occupancy, rate, image, onSelect, selected, availa
       }}
     >
       <div className="image-container" style={{ backgroundImage: `url(${image})` }}>
-        <h2 className="room-name text-6xl">{roomName}</h2>
+        <h2 className={`room-name text-6xl text-center ${della.className}`}>{roomName}</h2>
       </div>
       <p>Rate: ${rate}</p>
       <p className={availability === 'Unavailable' ? 'unavailable' : 'available'}>
