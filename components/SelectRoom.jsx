@@ -101,7 +101,9 @@ const SelectRoom = () => {
   };
 
   const handleRoomSelect = (room) => {
-    setSelectedRoom(room);
+    if (room.availability === "Available") {
+      setSelectedRoom(room);
+    }
   };
 
   const handleDetails = (room) => {
@@ -143,7 +145,7 @@ const SelectRoom = () => {
             roomName={room.second_name}
             occupancy={room.occupancy}
             rate={room.rate}
-            image={room.image} // Pass the image prop
+            image={room.image}
             onSelect={() => handleRoomSelect(room)}
             selected={selectedRoom?.id === room.id}
             onDetails={() => handleDetails(room)}

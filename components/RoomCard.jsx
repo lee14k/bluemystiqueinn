@@ -1,8 +1,18 @@
 import React from 'react';
 
 const RoomCard = ({ roomName, occupancy, rate, image, onSelect, selected, availability, onDetails }) => {
+  const isAvailable = availability === 'Available';
+
   return (
-    <div className={`room-card ${selected ? 'selected' : ''}`} onClick={onSelect}>
+    <div
+      className={`room-card ${selected ? 'selected' : ''}`}
+      onClick={isAvailable ? onSelect : null}
+      style={{
+        backgroundColor: isAvailable ? 'white' : 'lightgray',
+        cursor: isAvailable ? 'pointer' : 'not-allowed',
+        opacity: isAvailable ? 1 : 0.5,
+      }}
+    >
       <div className="image-container" style={{ backgroundImage: `url(${image})` }}>
         <h2 className="room-name text-6xl">{roomName}</h2>
       </div>
@@ -10,13 +20,14 @@ const RoomCard = ({ roomName, occupancy, rate, image, onSelect, selected, availa
       <p className={availability === 'Unavailable' ? 'unavailable' : 'available'}>
         {availability}
       </p>
-      <button onClick={onDetails}>Details</button>
+      <button onClick={(e) => { e.stopPropagation(); onDetails(); }} disabled={!isAvailable}>
+        Details
+      </button>
       <style jsx>{`
         .room-card {
           border: 1px solid #ccc;
           padding: 16px;
           margin: 8px;
-          cursor: pointer;
           text-align: center;
         }
         .room-card.selected {
