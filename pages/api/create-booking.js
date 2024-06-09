@@ -2,18 +2,43 @@ import { supabase } from "../../utils/supabase";
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
-    const { name, email, startDate, endDate, roomId } = req.body;
+    const {
+      firstName,
+      lastName,
+      email,
+      phoneNumber,
+      country,
+      state,
+      city,
+      streetAddress,
+      zipCode,
+      startDate,
+      endDate,
+      roomId,
+      paymentStatus,
+      secondGuest,
+    } = req.body;
 
     try {
       const { data, error } = await supabase
         .from("booking")
         .insert({
-          guest_name_one: name,
-          email,
+          first_name: firstName,
+          last_name: lastName,
+          email: email,
+          phone_number: phoneNumber,
+          country: country,
+          state: state,
+          city: city,
+          street_address: streetAddress,
+          zip_code: zipCode,
           start_date: startDate,
           end_date: endDate,
-          room_name: roomId,
-          payment_status: "pending",
+          room_id: roomId,
+          payment_status: paymentStatus,
+          second_guest_first_name: secondGuest?.firstName || null,
+          second_guest_last_name: secondGuest?.lastName || null,
+          second_guest_email: secondGuest?.email || null,
         })
         .select("id")
         .single();
