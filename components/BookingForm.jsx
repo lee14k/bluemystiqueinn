@@ -66,7 +66,7 @@ const BookingForm = () => {
   };
 
   return (
-    <div  className="flex flex-col justify-center items-center">
+    <div  className="flex flex-col justify-center items-center w-full">
       <h1 className="text-4xl my-12">Complete your booking details</h1>
     <LocalizationProvider dateAdapter={AdapterDayjs}>
           <Box mb={2} className="flex justify-center items-center">
@@ -82,8 +82,8 @@ const BookingForm = () => {
             InputProps={{ readOnly: true }}
           />
         </Box>
-        <form onSubmit={handleSubmit} className="flex flex-col p-6 bg-white shadow-md rounded-lg">
-  <h1 className="text-2xl font-bold mb-4">Contact Information</h1>
+        <form onSubmit={handleSubmit} className="flex flex-col  p-6 bg-white shadow-md rounded-lg w-full">
+  <h1 className="text-2xl font-bold mb-4 flex justify-center items-center">Contact Information</h1>
   
   <input
     type="text"
@@ -114,7 +114,7 @@ const BookingForm = () => {
     className="mb-4 p-2 border border-gray-300 rounded"
   />
 
-  <h1 className="text-2xl font-bold mb-4">Address Information</h1>
+  <h1 className="text-2xl font-bold mb-4 flex justify-center items-center">Address Information</h1>
   
   <input
     type="text"
@@ -190,7 +190,7 @@ const BookingForm = () => {
     </div>
   )}
 
-  <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-200">
+  <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-200 w-1/3">
     Next
   </button>
 </form>
