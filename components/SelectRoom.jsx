@@ -166,26 +166,26 @@ const SelectRoom = () => {
             onDetails={() => handleDetails(room)}
           />
         ))}
-        <div>
+        <div className="flex flex-col gap-4">
          <button
-        className="text-5xl h-1/2 w-full my-2 text-sky-900 my-2 bg-sky-300 rounded-2xl px-12 py-2 text-neutral-800 flex justify-center items-center"
+        className="text-5xl h-1/3 w-full my-2 text-sky-900 my-2 bg-sky-300 rounded-2xl px-12 py-2 text-neutral-800 flex justify-center items-center"
         onClick={handleProceed}
         disabled={!selectedRoom}
       >
         Proceed to Booking
       </button>
-      <div className="bg-gray-100 p-4 rounded mb-4">
-        <div className="flex justify-between mb-2">
-          <span className="font-bold">Subtotal:</span>
-          <span>${subtotal.toFixed(2)}</span>
+      <div className="bg-sky-100 p-8 mb-4 h-1/2 flex flex-col justify-center  rounded-2xl">
+        <div className="flex justify-between mb-2 ">
+          <span className="font-bold text-3xl">Subtotal:</span>
+          <span className="text-3xl">${subtotal.toFixed(2)}</span>
         </div>
         <div className="flex justify-between mb-2">
-          <span className="font-bold">Sales Tax (6%):</span>
-          <span>${(subtotal * 0.06).toFixed(2)}</span>
+          <span className="font-bold text-2xl ">Sales Tax (6%):</span>
+          <span className="text-xl">${(subtotal * 0.06).toFixed(2)}</span>
         </div>
-        <div className="flex justify-between font-bold text-lg">
-          <span>Total:</span>
-          <span>${total.toFixed(2)}</span>
+        <div className="flex justify-between font-bold text-lg pt-10">
+          <span className="text-4xl">Total:</span>
+          <span className="text-4xl">${total.toFixed(2)}</span>
         </div>
         </div>
       </div>

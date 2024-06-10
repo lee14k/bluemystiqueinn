@@ -3,6 +3,7 @@ import Navbar from "@/components/FrontEnd/Navbar";
 import PayForm from "@/components/PayForm";
 import SelectRoom from "@/components/SelectRoom";
 import { Della_Respira } from "next/font/google";
+import Footer from "@/components/FrontEnd/Footer";
 const della = Della_Respira({ subsets: ["latin"], weight: "400" });
 import Link from "next/link";
 export default function Book() {
@@ -31,6 +32,7 @@ export default function Book() {
         </div>
       </div>
       <SelectRoom />
+      <Footer/>
     </div>
   );
 }

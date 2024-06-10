@@ -34,7 +34,7 @@ export default function Navbar() {
       {isMobile ? (
         <NavMobile />
       ) : (
-        <Disclosure as="nav" className="pt-12 text-4xl bg-sky-200 ">
+        <Disclosure as="nav" className="py-12 text-4xl bg-sky-200 ">
           {({ open }) => (
             <>
               <div className="flex justify-center pt-8">

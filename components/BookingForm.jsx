@@ -6,6 +6,7 @@ import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import { useBooking } from "../context/BookingContext";
 import dayjs from "dayjs";
+import Footer from "./FrontEnd/Footer";
 
 const BookingForm = () => {
   const { selectedDates, selectedRoom } = useBooking();
@@ -212,7 +213,7 @@ const BookingForm = () => {
             </div>
           )}
 
-          <div className="bg-gray-100 p-4 rounded mb-4">
+          <div className="bg-sky-100 p-4 rounded mb-4">
             <div className="flex justify-between mb-2">
               <span className="font-bold">Subtotal:</span>
               <span>${subtotal.toFixed(2)}</span>
@@ -233,6 +234,8 @@ const BookingForm = () => {
         </form>
       </LocalizationProvider>
     </div>
+
+
   );
 };
 

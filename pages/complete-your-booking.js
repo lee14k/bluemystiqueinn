@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import BookingForm from "@/components/BookingForm";
 import Navbar from "@/components/FrontEnd/Navbar";
 import { useBooking } from "../context/BookingContext";
+import Footer from "@/components/FrontEnd/Footer";
 
 export default function CompleteYourBooking() {
   const { selectedDates, selectedRoom } = useBooking();
@@ -19,6 +20,7 @@ export default function CompleteYourBooking() {
     <div>
       <Navbar />
       {selectedDates && selectedRoom ? <BookingForm /> : <div>Loading...</div>}
+      <Footer/>
     </div>
   );
 }
