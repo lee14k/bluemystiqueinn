@@ -166,55 +166,59 @@ const SelectRoom = () => {
         aria-labelledby="room-details-title"
         aria-describedby="room-details-description"
       >
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: 400,
-            bgcolor: "background.paper",
-            border: "2px solid #000",
-            boxShadow: 24,
-            p: 4,
-          }}
-        >
-          {selectedRoomDetails && (
-            <>
-              <Typography id="room-details-title" variant="h6" component="h2">
-                {selectedRoomDetails.second_name}
-              </Typography>
-              <CardMedia
-                component="img"
-                height="140"
-                image={selectedRoomDetails.image}
-                alt={selectedRoomDetails.second_name}
-              />
-              <Typography id="room-details-description" sx={{ mt: 2 }}>
-                Occupancy: {selectedRoomDetails.occupancy}
-              </Typography>
-              <Typography id="room-details-rate" sx={{ mt: 2 }}>
-                Rate: ${selectedRoomDetails.rate}
-              </Typography>
-              <Typography id="room-details-rate" sx={{ mt: 2 }}>
-                Amenities:
-                <ul>
-                  {selectedRoomDetails.amenities.map((amenity, index) => (
-                    <li key={index}>{amenity}</li>
-                  ))}
-                </ul>
-              </Typography>
-              <Button
-                onClick={handleClose}
-                variant="contained"
-                color="primary"
-                sx={{ mt: 2 }}
-              >
-                Close
-              </Button>
-            </>
-          )}
-        </Box>
+      <Box
+  sx={{
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 500,  // Increase width
+    bgcolor: "background.paper",
+    border: "2px solid #000",
+    boxShadow: 24,
+    p: 4,
+
+  }}
+>
+  {selectedRoomDetails && (
+    <>
+      <Typography id="room-details-title" variant="h6" component="h2">
+        {selectedRoomDetails.second_name}
+      </Typography>
+      <CardMedia
+        component="img"
+        height="140"
+        image={selectedRoomDetails.image}
+        alt={selectedRoomDetails.second_name}
+      />
+      <Typography id="room-details-description" sx={{ mt: 2 }}>
+        Occupancy: {selectedRoomDetails.occupancy}
+      </Typography>
+      <Typography id="room-details-rate" sx={{ mt: 2 }}>
+        Description: {selectedRoomDetails.room_description}
+      </Typography>
+      <Typography id="room-details-rate" sx={{ mt: 2 }}>
+        Rate: ${selectedRoomDetails.rate}
+      </Typography>
+      <Typography id="room-details-rate" sx={{ mt: 2 }}>
+        Amenities:
+        <ul>
+          {selectedRoomDetails.amenities.map((amenity, index) => (
+            <li key={index}>{amenity}</li>
+          ))}
+        </ul>
+      </Typography>
+      <Button
+        onClick={handleClose}
+        variant="contained"
+        color="primary"
+        sx={{ mt: 2 }}
+      >
+        Close
+      </Button>
+    </>
+  )}
+</Box>
       </Modal>
     </div>
   );

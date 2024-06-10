@@ -93,13 +93,7 @@ const PayForm = ({ bookingId, onPaymentSuccess }) => {
 
   return (
     <div>
-      <h3>Total Price: ${(rate * (selectedDates.length > 1 ? Math.max(1, Math.round((new Date(selectedDates[1]) - new Date(selectedDates[0])) / (1000 * 60 * 60 * 24))) : 1)).toFixed(2)}</h3>
-      <button
-        onClick={handleCreatePaymentLink}
-        className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-200"
-      >
-        Proceed to Payment
-      </button>
+  
     </div>
   );
 };
