@@ -43,7 +43,7 @@ export default async function handler(req, res) {
             {
               name: "Sales Tax",
               percentage: "6",
-              scope: "LINE_ITEM",
+              scope: "ORDER",
             },
           ],
         },
@@ -52,24 +52,26 @@ export default async function handler(req, res) {
       console.log("Constructed line items:", lineItems);
 
       if (lineItems.length === 0) {
-        throw new Error("Line items are empty. Please check the room details and number of days.");
+        throw new Error(
+          "Line items are empty. Please check the room details and number of days."
+        );
       }
 
       // Create a payment link using quickPay
       const paymentLinkResponse = await client.checkoutApi.createPaymentLink({
         idempotencyKey: new Date().getTime().toString(),
-        quickPay: {
+        order: {
           name: `Room Booking: ${roomName}`,
           priceMoney: {
             amount: amount, // amount already in cents
-            currency: "USD"
+            currency: "USD",
           },
           locationId: process.env.SQUARE_LOCATION_ID,
+          lineItems: lineItems,
         },
         checkoutOptions: {
           askForShippingAddress: false,
           redirectUrl: `${process.env.REDIRECT_URL}?bookingId=${bookingId}`,
-
         },
       });
 
@@ -85,7 +87,9 @@ export default async function handler(req, res) {
         .eq("id", bookingId);
 
       if (error) {
-        throw new Error(`Error updating booking with payment link: ${error.message}`);
+        throw new Error(
+          `Error updating booking with payment link: ${error.message}`
+        );
       }
 
       res.status(200).json({ paymentLink });
