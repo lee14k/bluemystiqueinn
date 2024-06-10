@@ -1,4 +1,5 @@
 import { supabase } from "../../utils/supabase";
+import axios from 'axios';
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
@@ -23,7 +24,7 @@ export default async function handler(req, res) {
           // Fetch the booking using the orderId
           const { data: bookingData, error: bookingError } = await supabase
             .from("booking")
-            .select("id, room_name, payment_status")
+            .select("id, room_id, payment_status, email, first_name, last_name, start_date, end_date, room_name")
             .eq("order_id", orderId)
             .single();
 
@@ -39,7 +40,7 @@ export default async function handler(req, res) {
             return res.status(200).json({ success: true, error: "Booking not found" });
           }
 
-          const { id: bookingId, room_id: roomId, payment_status } = bookingData;
+          const { id: bookingId, room_id: roomId, payment_status, email, first_name, last_name, start_date, end_date, room_name } = bookingData;
 
           console.log("Booking ID:", bookingId);
           console.log("Room ID:", roomId);
@@ -63,6 +64,28 @@ export default async function handler(req, res) {
             return res.status(200).json({ success: true, error: "Error updating booking" });
           }
           console.log("Booking updated successfully:", updatedBooking);
+
+          // Prepare booking details for the email
+          const bookingDetails = {
+            id: bookingId,
+            first_name,
+            last_name,
+            email,
+            start_date,
+            end_date,
+            room_name,
+          };
+
+          // Send confirmation emails
+          try {
+            await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/sendEmail`, {
+              email,
+              bookingDetails,
+            });
+            console.log("Emails sent successfully");
+          } catch (emailError) {
+            console.error("Error sending email:", emailError);
+          }
 
           res.status(200).json({ success: true });
         } else {
