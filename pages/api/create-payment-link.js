@@ -68,6 +68,8 @@ export default async function handler(req, res) {
         },
         checkoutOptions: {
           askForShippingAddress: false,
+          redirectUrl: `${process.env.REDIRECT_URL}?bookingId=${bookingId}`,
+
         },
       });
 
