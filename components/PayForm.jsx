@@ -58,6 +58,10 @@ const PayForm = ({ bookingId, onPaymentSuccess }) => {
           bookingId,
           roomId: selectedRoom.id,
           numberOfDays,
+          metadata: {
+            bookingId,
+            roomId: selectedRoom.id
+          }
         }),
       });
 
