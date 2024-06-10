@@ -137,7 +137,7 @@ const SelectRoom = () => {
           />
         </Box>
       </LocalizationProvider>
-      <div>
+      <div className="grid grid-cols-2">
         {availableRooms.map((room) => (
           <RoomCard
             key={room.id}
