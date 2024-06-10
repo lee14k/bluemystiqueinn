@@ -26,6 +26,8 @@ const SelectRoom = () => {
   const router = useRouter();
   const [selectedRoomDetails, setSelectedRoomDetails] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [subtotal, setSubtotal] = useState(0);
+  const [total, setTotal] = useState(0);
 
   useEffect(() => {
     fetchRooms();
@@ -43,6 +45,16 @@ const SelectRoom = () => {
       setDateRange([dayjs(selectedDates[0]), dayjs(selectedDates[1])]);
     }
   }, [selectedDates]);
+
+  useEffect(() => {
+    if (selectedRoom && dateRange[0] && dateRange[1]) {
+      const days = dateRange[1].diff(dateRange[0], "day");
+      const subtotalAmount = days * selectedRoom.rate;
+      const totalAmount = subtotalAmount * 1.06;
+      setSubtotal(subtotalAmount);
+      setTotal(totalAmount);
+    }
+  }, [selectedRoom, dateRange]);
 
   const fetchRooms = async () => {
     try {
@@ -64,7 +76,9 @@ const SelectRoom = () => {
       const data = await response.json();
       if (response.ok) {
         const completedBookings = data.filter(
-          (booking) => booking.payment_status === "confirmed" || booking.payment_status === "completed"
+          (booking) =>
+            booking.payment_status === "confirmed" ||
+            booking.payment_status === "completed"
         );
         setBookingData(completedBookings);
       } else {
@@ -126,6 +140,7 @@ const SelectRoom = () => {
             value={dateRange}
             onChange={(newRange) => {
               setDateRange(newRange);
+              setSelectedDates(newRange); // Update selectedDates when date range changes
             }}
             renderInput={(startProps, endProps) => (
               <>
@@ -137,7 +152,7 @@ const SelectRoom = () => {
           />
         </Box>
       </LocalizationProvider>
-      <div className="grid grid-cols-2">
+      <div className="grid lg:grid-cols-2">
         {availableRooms.map((room) => (
           <RoomCard
             key={room.id}
@@ -151,75 +166,90 @@ const SelectRoom = () => {
             onDetails={() => handleDetails(room)}
           />
         ))}
-      </div>
-      <button
-        className="bg-gray-900 text-white py-2.5"
+        <div>
+         <button
+        className="text-5xl h-1/2 w-full my-2 text-sky-900 my-2 bg-sky-300 rounded-2xl px-12 py-2 text-neutral-800 flex justify-center items-center"
         onClick={handleProceed}
         disabled={!selectedRoom}
       >
         Proceed to Booking
       </button>
-
+      <div className="bg-gray-100 p-4 rounded mb-4">
+        <div className="flex justify-between mb-2">
+          <span className="font-bold">Subtotal:</span>
+          <span>${subtotal.toFixed(2)}</span>
+        </div>
+        <div className="flex justify-between mb-2">
+          <span className="font-bold">Sales Tax (6%):</span>
+          <span>${(subtotal * 0.06).toFixed(2)}</span>
+        </div>
+        <div className="flex justify-between font-bold text-lg">
+          <span>Total:</span>
+          <span>${total.toFixed(2)}</span>
+        </div>
+        </div>
+      </div>
+      </div>
+     
       <Modal
-        open={modalOpen}
-        onClose={handleClose}
-        aria-labelledby="room-details-title"
-        aria-describedby="room-details-description"
-      >
-      <Box
-  sx={{
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: 500,  // Increase width
-    bgcolor: "background.paper",
-    border: "2px solid #000",
-    boxShadow: 24,
-    p: 4,
-
-  }}
+  open={modalOpen}
+  onClose={handleClose}
+  aria-labelledby="room-details-title"
+  aria-describedby="room-details-description"
 >
-  {selectedRoomDetails && (
-    <>
-      <Typography id="room-details-title" variant="h6" component="h2">
-        {selectedRoomDetails.second_name}
-      </Typography>
-      <CardMedia
-        component="img"
-        height="140"
-        image={selectedRoomDetails.image}
-        alt={selectedRoomDetails.second_name}
-      />
-      <Typography id="room-details-description" sx={{ mt: 2 }}>
-        Occupancy: {selectedRoomDetails.occupancy}
-      </Typography>
-      <Typography id="room-details-rate" sx={{ mt: 2 }}>
-        Description: {selectedRoomDetails.room_description}
-      </Typography>
-      <Typography id="room-details-rate" sx={{ mt: 2 }}>
-        Rate: ${selectedRoomDetails.rate}
-      </Typography>
-      <Typography id="room-details-rate" sx={{ mt: 2 }}>
-        Amenities:
-        <ul>
-          {selectedRoomDetails.amenities.map((amenity, index) => (
-            <li key={index}>{amenity}</li>
-          ))}
-        </ul>
-      </Typography>
-      <Button
-        onClick={handleClose}
-        variant="contained"
-        color="primary"
-        sx={{ mt: 2 }}
-      >
-        Close
-      </Button>
-    </>
-  )}
-</Box>
-      </Modal>
+  <Box
+    sx={{
+      position: "absolute",
+      top: "50%",
+      left: "50%",
+      transform: "translate(-50%, -50%)",
+      width: { xs: '90%', sm: 400, md: 500 }, // Responsive width
+      bgcolor: "background.paper",
+      border: "2px solid #000",
+      boxShadow: 24,
+      p: { xs: 2, md: 4 }, // Responsive padding
+    }}
+  >
+    {selectedRoomDetails && (
+      <>
+        <Typography id="room-details-title" variant="h6" component="h2">
+          {selectedRoomDetails.second_name}
+        </Typography>
+        <CardMedia
+          component="img"
+          height="140"
+          image={selectedRoomDetails.image}
+          alt={selectedRoomDetails.second_name}
+        />
+        <Typography id="room-details-description" sx={{ mt: 2 }}>
+          Occupancy: {selectedRoomDetails.occupancy}
+        </Typography>
+        <Typography id="room-details-rate" sx={{ mt: 2 }}>
+          Description: {selectedRoomDetails.room_description}
+        </Typography>
+        <Typography id="room-details-rate" sx={{ mt: 2 }}>
+          Rate: ${selectedRoomDetails.rate}
+        </Typography>
+        <Typography id="room-details-rate" sx={{ mt: 2 }}>
+          Amenities:
+          <ul>
+            {selectedRoomDetails.amenities.map((amenity, index) => (
+              <li key={index}>{amenity}</li>
+            ))}
+          </ul>
+        </Typography>
+        <Button
+          onClick={handleClose}
+          variant="contained"
+          color="primary"
+          sx={{ mt: 2 }}
+        >
+          Close
+        </Button>
+      </>
+    )}
+  </Box>
+</Modal>
     </div>
   );
 };

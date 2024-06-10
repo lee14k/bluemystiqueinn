@@ -17,11 +17,11 @@ const RoomCard = ({ roomName, occupancy, rate, image, onSelect, selected, availa
       <div className="image-container" style={{ backgroundImage: `url(${image})` }}>
         <h2 className={`room-name text-6xl text-center ${della.className}`}>{roomName}</h2>
       </div>
-      <p className='text-2xl'>${rate} per night</p>
-      <p className={availability === 'Unavailable' ? 'unavailable' : 'available'}>
+      <p className='text-3xl mt-2'>${rate} per night</p>
+      <p className={`${availability === 'Unavailable' ? 'unavailable' : 'available'} text-2xl`}>
         {availability}
       </p>
-      <button className='' onClick={(e) => { e.stopPropagation(); onDetails(); }} disabled={!isAvailable}>
+      <button className="text-2xl my-2 text-sky-950 my-2 bg-sky-300 rounded-2xl px-12 py-2 text-neutral-800 rounded-2xl px-12 py-2 text-neutral-800" onClick={(e) => { e.stopPropagation(); onDetails(); }} disabled={!isAvailable}>
         Details
       </button>
       <style jsx>{`
