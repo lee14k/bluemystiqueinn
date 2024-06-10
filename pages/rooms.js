@@ -30,7 +30,6 @@ export default function Rooms() {
   };
 
   const handleDetails = (room) => {
-    // Implement the logic for showing room details, such as opening a modal
     console.log("Room details:", room);
   };
 
@@ -53,6 +52,7 @@ export default function Rooms() {
           onSelect={() => handleRoomSelect(room)}
           selected={selectedRoom?.id === room.id}
           onDetails={() => handleDetails(room)}
+          availability="Available" // Always show as available
         />
       ))}
       <Footer />
