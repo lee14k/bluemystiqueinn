@@ -33,19 +33,12 @@ export default async function handler(req, res) {
 
       const lineItems = [
         {
-          name: `Room ${roomData.second_name}`,
+          name: `Room ${roomName}`,
           quantity: String(numberOfDays),
           basePriceMoney: {
             amount: roomData.rate * 100, // amount in cents
             currency: "USD",
           },
-          taxes: [
-            {
-              name: "Sales Tax",
-              percentage: "6",
-              scope: "ORDER",
-            },
-          ],
         },
       ];
 
@@ -57,17 +50,18 @@ export default async function handler(req, res) {
         );
       }
 
-      // Create a payment link using quickPay
+      // Create a payment link
       const paymentLinkResponse = await client.checkoutApi.createPaymentLink({
         idempotencyKey: new Date().getTime().toString(),
         order: {
-          name: `Room Booking: ${roomName}`,
-          priceMoney: {
-            amount: amount, // amount already in cents
-            currency: "USD",
-          },
           locationId: process.env.SQUARE_LOCATION_ID,
           lineItems: lineItems,
+          taxes: [
+            {
+              name: 'state',
+              percentage: '6',
+            },
+          ],
         },
         checkoutOptions: {
           askForShippingAddress: false,
