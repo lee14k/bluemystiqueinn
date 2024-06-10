@@ -93,7 +93,7 @@ const SelectRoom = () => {
 
   const fetchUnavailabilityData = async () => {
     try {
-      const response = await fetch("/api/get-unavailability");
+      const response = await fetch("/api/unavailability");
       const data = await response.json();
       if (response.ok) {
         setUnavailabilityData(data);
