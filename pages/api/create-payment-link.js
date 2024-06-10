@@ -42,7 +42,7 @@ export default async function handler(req, res) {
           taxes: [
             {
               name: "Sales Tax",
-              percentage: "6.00",
+              percentage: "6",
               scope: "LINE_ITEM",
             },
           ],
