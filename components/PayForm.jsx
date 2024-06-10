@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useBooking } from "../context/BookingContext";
 import { supabase } from '../utils/supabase'; // Adjust the import path as needed
+import { ClipLoader } from "react-spinners"; // Import the ClipLoader from react-spinners
 
 const PayForm = ({ bookingId, onPaymentSuccess }) => {
   const router = useRouter();
@@ -83,7 +84,11 @@ const PayForm = ({ bookingId, onPaymentSuccess }) => {
   }, [rate]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <ClipLoader size={50} color={"#123abc"} loading={loading} />
+      </div>
+    );
   }
 
   if (paymentLink) {
@@ -93,7 +98,6 @@ const PayForm = ({ bookingId, onPaymentSuccess }) => {
 
   return (
     <div>
-  
     </div>
   );
 };

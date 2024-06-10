@@ -5,9 +5,9 @@ const della = Della_Respira({ subsets: ["latin"], weight: "400" });
 const AboutFill = () => {
   return (
     <div className="grid lg:grid-cols-2 bg-orange-100 py-24">
-      <div className="flex flex-col items-center justify-center mx-12">
+      <div className="flex flex-col  mx-12">
         <h1 className={`text-6xl mx-12 ${della.className}`}>About the Innkeeper</h1>
-        <p className="my-8 text-xl mx-12">
+        <p className="my-8 text-2xl mx-12">
           Hello and welcome, I am Elizabeth, your host, and the owner of The
           Blue Mystique Inn. I love to travel and am excited to share with you
           my favorite spot on the map, Manistique, Michigan. I am dedicated to
@@ -21,19 +21,21 @@ const AboutFill = () => {
           meeting you and having you experience that “on the water state of
           mind” feeling.
         </p>
-        <div className="">
-        <Image src="/lizsig.png" alt="Elizabeth" width={200} height={200} />{" "}
+        <div className="mx-12">
+        <Image src="/lizsig.png" alt="signature" width={200} height={200} />{" "}
         <Link href="/book">
           {" "}
-          <button className="text-xl text-sky-900 my-2 bg-sky-300 rounded-2xl px-12 py-2 text-neutral-800">
+          <div className={`${della.className}`}>
+          <button className="text-4xl text-sky-900 my-2 bg-sky-300 rounded-2xl px-12 py-2 text-neutral-800">
             Book your Stay
           </button>
+          </div>
         </Link>{" "}
         </div>
       </div>
-      <div className="">
+      <div >
         <div className="flex relative w-full h-full">
-          <Image src="/bmliz.png" alt="Elizabeth" width={700} height={500} className="rounded-3xl" />
+          <Image src="/bmliz.png" alt="Elizabeth" width={800} height={500} className="rounded-3xl" />
 
         </div>
       </div>
