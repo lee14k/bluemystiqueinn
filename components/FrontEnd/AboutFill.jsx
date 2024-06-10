@@ -33,7 +33,7 @@ const AboutFill = () => {
       </div>
       <div className="">
         <div className="flex relative w-full h-full">
-          <Image src="/bmliz.png" alt="Elizabeth" width={700} height={500} className="" />
+          <Image src="/bmliz.png" alt="Elizabeth" width={700} height={500} className="rounded-3xl" />
 
         </div>
       </div>
