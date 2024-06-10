@@ -20,6 +20,7 @@ const SelectRoom = () => {
     dayjs(selectedDates[0]),
     dayjs(selectedDates[1]),
   ]);
+  const [unavailabilityData, setUnavailabilityData] = useState([]);
   const [rooms, setRooms] = useState([]);
   const [availableRooms, setAvailableRooms] = useState([]);
   const [bookingData, setBookingData] = useState([]);
@@ -32,6 +33,7 @@ const SelectRoom = () => {
   useEffect(() => {
     fetchRooms();
     fetchBookingData();
+    fetchUnavailabilityData();
   }, []);
 
   useEffect(() => {
@@ -88,7 +90,19 @@ const SelectRoom = () => {
       console.error("Error fetching bookings:", error);
     }
   };
-
+  const fetchUnavailabilityData = async () => {
+    try {
+      const response = await fetch("/api/unavailability");
+      const data = await response.json();
+      if (response.ok) {
+        setUnavailabilityData(data);
+      } else {
+        console.error("Error fetching unavailability data:", data.error);
+      }
+    } catch (error) {
+      console.error("Error fetching unavailability data:", error);
+    }
+  };
   const filterAvailableRooms = () => {
     const newAvailableRooms = rooms.map((room) => {
       const isBooked = bookingData.some((booking) => {
@@ -102,7 +116,17 @@ const SelectRoom = () => {
         }
         return false;
       });
-
+      const isUnavailable = unavailabilityData.some((unavailable) => {
+        if (unavailable.room_id === room.id) {
+          const unavailableStart = dayjs(unavailable.start_date);
+          const unavailableEnd = dayjs(unavailable.end_date);
+          return (
+            dateRange[0].isBefore(unavailableEnd) &&
+            dateRange[1].isAfter(unavailableStart)
+          );
+        }
+        return false;
+      });
       return { ...room, availability: isBooked ? "Unavailable" : "Available" };
     });
 
