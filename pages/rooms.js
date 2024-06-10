@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import RoomCard from "@/components/RoomCard";
 import Footer from "@/components/FrontEnd/Footer";
 import Navbar from "@/components/FrontEnd/Navbar";
-import { useState } from "react";
-import { useEffect } from "react";
 
 export default function Rooms() {
   const [rooms, setRooms] = useState([]);
