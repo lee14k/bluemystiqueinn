@@ -14,6 +14,9 @@ export default async function handler(req, res) {
       // Handle different event types
       if (event.type === "payment.updated") {
         const payment = event.data.object;
+        const status = payment.status;
+
+        console.log("Payment status:", status);
 
         if (payment.status === "COMPLETED") {
           // Update the booking record in the database
