@@ -28,13 +28,13 @@ export default function Navbar() {
   };
 
   return (
-    <div className="text-3xl">
+    <div className="">
       {" "}
       {/* Added a surrounding div */}
       {isMobile ? (
         <NavMobile />
       ) : (
-        <Disclosure as="nav" className="pt-12 bg-white fancy-font ">
+        <Disclosure as="nav" className="pt-12 text-4xl bg-sky-200 ">
           {({ open }) => (
             <>
               <div className="flex justify-center pt-8">
@@ -70,22 +70,10 @@ export default function Navbar() {
                             </span>
                           ) : (
                             <Link href={item.href}>
-                              <span className="text-3xl">{item.name}</span>
+                              <span className="text-4xl">{item.name}</span>
                             </Link>
                           )}
-                          {item.children && activeDropdown === item.name && (
-                            <div className="absolute z-10 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-                              <div className="py-1">
-                                {item.children.map((subItem) => (
-                                  <Link key={subItem.name} href={subItem.href}>
-                                    <span className="block px-4 py-2 text-sm hover:bg-gray-100 text-xl">
-                                      {subItem.name}
-                                    </span>
-                                  </Link>
-                                ))}
-                              </div>
-                            </div>
-                          )}
+                        
                         </div>
                       ))}
                     </div>
