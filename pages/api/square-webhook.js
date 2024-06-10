@@ -24,7 +24,7 @@ export default async function handler(req, res) {
           // Fetch the booking using the orderId
           const { data: bookingData, error: bookingError } = await supabase
             .from("booking")
-            .select("id, room_id, payment_status, email, first_name, last_name, start_date, end_date, room_name")
+            .select("id, payment_status, email, first_name, last_name, start_date, end_date, room_name")
             .eq("order_id", orderId)
             .single();
 
