@@ -208,6 +208,8 @@ const SelectRoom = () => {
       border: "2px solid #000",
       boxShadow: 24,
       p: { xs: 2, md: 4 }, // Responsive padding
+      maxHeight: { xs: '80vh', md: '90vh' }, // Max height for scrollable content
+      overflowY: 'auto', // Enable vertical scrolling
     }}
   >
     {selectedRoomDetails && (
