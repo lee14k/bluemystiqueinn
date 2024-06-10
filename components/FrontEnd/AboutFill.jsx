@@ -17,7 +17,7 @@ const AboutFill = () => {
           relax and celebrate your time away from home. I enjoy meeting new
           people and look forward to introducing you to this wonderful community
           I have called home for many years. On the lighter side, I love top
-          hats, music, art, and the movie Groundhog Day. I look forward to
+          hats, music, art, and the movie <em>Groundhog Day.</em> I look forward to
           meeting you and having you experience that “on the water state of
           mind” feeling.
         </p>
