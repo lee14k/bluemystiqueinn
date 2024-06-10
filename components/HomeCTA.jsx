@@ -11,7 +11,7 @@ const HomeCTA = () => {
           <h1 className={`text-6xl  text-center ${della.className}`}>
             Lakeside Luxury with Cozy Comfort
           </h1>
-          <p className="my-8 text-xl mx-12">
+          <p className="my-8 text-2xl mx-12">
             The Blue Mystique Inn is a beautiful, 5-bedroom historic home in
             downtown Manistique - the heart of the Upper Peninsula. Built in the
             early 1900's, the recently renovated home is central to many of the

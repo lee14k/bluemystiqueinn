@@ -15,10 +15,10 @@ const HomeHeader = () => {
                 className="text-timer"
             />
             <div className="flex flex-col justify-center items-center text-white text-timer">
-                <h2 className="text-2xl my-2">Welcome to</h2>
-                <h1 className="text-8xl my-2">The Blue Mystique Inn</h1>
-                <h2 className="text-2xl my-2">Boutique Inn in Manistique, Michigan</h2>
-                <Link href="/book"> <button className="text-4xl my-2 bg-white rounded-2xl px-12 py-2 text-neutral-800">
+                <h2 className="text-4xl my-4">Welcome to</h2>
+                <h1 className="text-8xl my-4">The Blue Mystique Inn</h1>
+                <h2 className="text-4xl my-4">Boutique Inn in Manistique, Michigan</h2>
+                <Link href="/book"> <button className="text-6xl my-2 bg-white rounded-2xl px-12 py-4 text-neutral-800">
                     Book your Stay
                 </button></Link>
                
