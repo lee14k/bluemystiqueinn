@@ -64,7 +64,7 @@ const SelectRoom = () => {
       const data = await response.json();
       if (response.ok) {
         const completedBookings = data.filter(
-          (booking) => booking.payment_status === "completed" || booking.payment_id
+          (booking) => booking.payment_status === "confirmed" || booking.payment_status === "completed"
         );
         setBookingData(completedBookings);
       } else {

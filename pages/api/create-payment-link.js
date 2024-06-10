@@ -22,11 +22,7 @@ export default async function handler(req, res) {
         throw new Error(`Error fetching room data: ${roomError.message}`);
       }
 
-      console.log("Fetched room data:", roomData);
-
       const roomName = roomData.second_name;
-      console.log("Room name:", roomName);
-
       if (!roomName) {
         throw new Error("Room name is undefined. Please check the room data.");
       }
@@ -41,14 +37,6 @@ export default async function handler(req, res) {
           },
         },
       ];
-
-      console.log("Constructed line items:", lineItems);
-
-      if (lineItems.length === 0) {
-        throw new Error(
-          "Line items are empty. Please check the room details and number of days."
-        );
-      }
 
       // Create a payment link
       const paymentLinkResponse = await client.checkoutApi.createPaymentLink({
@@ -70,20 +58,19 @@ export default async function handler(req, res) {
       });
 
       const paymentLink = paymentLinkResponse.result.paymentLink.url;
-      const paymentId = paymentLinkResponse.result.paymentLink.id;
+      const orderId = paymentLinkResponse.result.paymentLink.orderId;
 
-      console.log("Created payment link:", paymentLink);
+      console.log(`Payment link created: ${paymentLink}`);
+      console.log(`Order ID: ${orderId}`);
 
-      // Update the booking record with the paymentLink and paymentId
+      // Update the booking record with the paymentLink and orderId
       const { data, error } = await supabase
         .from("booking")
-        .update({ payment_link: paymentLink, payment_id: paymentId })
+        .update({ payment_link: paymentLink, order_id: orderId })
         .eq("id", bookingId);
 
       if (error) {
-        throw new Error(
-          `Error updating booking with payment link: ${error.message}`
-        );
+        throw new Error(`Error updating booking with payment link: ${error.message}`);
       }
 
       res.status(200).json({ paymentLink });

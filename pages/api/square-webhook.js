@@ -6,7 +6,6 @@ export default async function handler(req, res) {
     const body = req.body;
 
     try {
-      // Parse the webhook event
       const event = body;
       console.log("Webhook event received:", event);
 
@@ -17,47 +16,53 @@ export default async function handler(req, res) {
         console.log("Payment status:", status);
 
         if (status === "COMPLETED") {
-          const paymentId = payment.id;
+          const orderId = payment.order_id;
 
-          console.log("Payment ID:", paymentId);
+          console.log("Order ID:", orderId);
 
-          // Fetch booking ID and room ID using payment ID
+          // Fetch the booking using the orderId
           const { data: bookingData, error: bookingError } = await supabase
             .from("booking")
-            .select("id, room_name")
-            .eq("payment_id", paymentId)
+            .select("id, room_name, payment_status")
+            .eq("order_id", orderId)
             .single();
 
-          if (bookingError || !bookingData) {
-            throw new Error(`Booking not found or error fetching booking: ${bookingError?.message}`);
+          if (bookingError) {
+            console.error(`Error fetching booking: ${bookingError.message}`);
+            // Acknowledge the event to stop retries, but log the issue
+            return res.status(200).json({ success: true, error: "Booking not found" });
           }
 
-          const { id: bookingId, room_id: roomId } = bookingData;
+          if (!bookingData) {
+            console.error("Booking not found with the provided order ID.");
+            // Acknowledge the event to stop retries, but log the issue
+            return res.status(200).json({ success: true, error: "Booking not found" });
+          }
+
+          const { id: bookingId, room_id: roomId, payment_status } = bookingData;
 
           console.log("Booking ID:", bookingId);
           console.log("Room ID:", roomId);
+          console.log("Current Payment Status:", payment_status);
+
+          // Check if the booking is already confirmed to avoid redundant updates
+          if (payment_status === "confirmed") {
+            console.log("Booking is already confirmed, no update necessary.");
+            return res.status(200).json({ success: true });
+          }
 
           // Update the booking record in Supabase
           const { data: updatedBooking, error: updateBookingError } = await supabase
-            .from("bookings")
+            .from("booking")
             .update({ payment_status: "confirmed" })
             .eq("id", bookingId);
 
           if (updateBookingError) {
-            throw new Error(`Error updating booking: ${updateBookingError.message}`);
+            console.error(`Error updating booking: ${updateBookingError.message}`);
+            // Acknowledge the event to stop retries, but log the issue
+            return res.status(200).json({ success: true, error: "Error updating booking" });
           }
           console.log("Booking updated successfully:", updatedBooking);
-
-          // Mark the room as unavailable
-          const { data: updatedRoom, error: updateRoomError } = await supabase
-            .from("rooms")
-            .update({ available: false })
-            .eq("id", roomId);
-
-          if (updateRoomError) {
-            throw new Error(`Error updating room: ${updateRoomError.message}`);
-          }
-          console.log("Room marked as unavailable:", updatedRoom);
 
           res.status(200).json({ success: true });
         } else {
@@ -65,7 +70,8 @@ export default async function handler(req, res) {
           res.status(200).json({ success: true });
         }
       } else {
-        res.status(400).json({ error: "Invalid event type" });
+        console.log("Invalid event type");
+        res.status(200).json({ success: true, error: "Invalid event type" });
       }
     } catch (error) {
       console.error("Error processing webhook:", error);
