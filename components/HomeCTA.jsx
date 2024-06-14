@@ -5,7 +5,7 @@ const della = Della_Respira({ subsets: ["latin"], weight: "400" });
 
 const HomeCTA = () => {
   return (
-    <div className="grid grid-cols-2 bg-sky-200 py-24">
+    <div className="grid lg:grid-cols-2 bg-sky-200 py-24">
       <div className="flex items-center justify-center mx-12">
         <div>
           <h1 className={`text-6xl  text-center ${della.className}`}>

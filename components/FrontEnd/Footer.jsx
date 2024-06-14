@@ -4,7 +4,8 @@ import Link from "next/link";
 const della = Della_Respira({ subsets: ["latin"], weight: "400" });
 const Footer = () => {
   return (
-    <div className={`footerwrapper bg-orange-50 flex flex-col justify-center  `}>
+    <div className="">
+    <div className={`footerwrapper bg-orange-50 grid lg:flex lg:flex-col justify-center  `}>
       <div className="mx-24" >
         <h1 className={`${della.className} text-6xl`}>Blue Mystique Inn</h1>
         <p className="text-3xl">230 Arbutus St, Manistique, MI 49854</p>
@@ -16,7 +17,7 @@ const Footer = () => {
         </Link>
       </div>
       </div>
-     
+      </div>
     </div>
   );
 };
