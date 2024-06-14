@@ -47,7 +47,26 @@ export default async function handler(req, res) {
         console.error("Error creating booking:", error);
         return res.status(500).json({ error: error.message });
       }
+      if (dinner) {
+        const { type, time } = dinner;
+        const { error: dinnerError } = await supabase
+          .from('food')
+          .insert([{ booking_id: data.id, type, time }]);
 
+        if (dinnerError) {
+          throw dinnerError;
+        }
+      }
+      if (cheese) {
+        const { type, time } = cheese;
+        const { error: cheeseError } = await supabase
+          .from('food')
+          .insert([{ booking_id: data.id, type, time }]);
+
+        if (cheeseError) {
+          throw cheeseError;
+        }
+      }
       res.status(200).json({ bookingId: data.id });
     } catch (error) {
       console.error("Error creating booking:", error);

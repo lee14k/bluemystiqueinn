@@ -7,6 +7,7 @@ import Box from "@mui/material/Box";
 import { useBooking } from "../context/BookingContext";
 import dayjs from "dayjs";
 import Footer from "./FrontEnd/Footer";
+import DinnerModal from "./DinnerModal"; // Import the new DinnerModal component
 
 const BookingForm = () => {
   const { selectedDates, selectedRoom } = useBooking();
@@ -25,6 +26,9 @@ const BookingForm = () => {
   const [secondEmail, setSecondEmail] = useState("");
   const [subtotal, setSubtotal] = useState(0);
   const [total, setTotal] = useState(0);
+  const [showDinnerModal, setShowDinnerModal] = useState(false);
+  const [dinner, setDinner] = useState(false);
+  const [dinnerDetails, setDinnerDetails] = useState({ type: "", time: "" });
   const router = useRouter();
 
   useEffect(() => {
@@ -32,7 +36,7 @@ const BookingForm = () => {
     console.log("Selected Room:", selectedRoom);
 
     if (selectedDates.length === 2 && selectedRoom) {
-      const days = dayjs(selectedDates[1]).diff(dayjs(selectedDates[0]), 'day');
+      const days = dayjs(selectedDates[1]).diff(dayjs(selectedDates[0]), "day");
       const subtotalAmount = days * selectedRoom.rate;
       const totalAmount = subtotalAmount * 1.06;
       setSubtotal(subtotalAmount);
@@ -57,11 +61,14 @@ const BookingForm = () => {
       endDate: selectedDates[1].toISOString(),
       roomId: selectedRoom.id,
       paymentStatus: "pending",
-      secondGuest: secondGuest ? {
-        firstName: secondFirstName,
-        lastName: secondLastName,
-        email: secondEmail,
-      } : null,
+      secondGuest: secondGuest
+        ? {
+            firstName: secondFirstName,
+            lastName: secondLastName,
+            email: secondEmail,
+          }
+        : null,
+      dinner: dinner ? dinnerDetails : null,
     };
 
     console.log("Submitting booking data:", bookingData);
@@ -88,6 +95,15 @@ const BookingForm = () => {
     }
   };
 
+  const handleDinnerYes = () => {
+    setDinner(true);
+    setShowDinnerModal(false);
+  };
+
+  const handleDinnerClose = () => {
+    setShowDinnerModal(false);
+  };
+
   return (
     <div className="flex flex-col justify-center items-center">
       <h1 className="text-4xl my-12">Complete your booking details</h1>
@@ -95,19 +111,26 @@ const BookingForm = () => {
         <Box mb={2} className="flex justify-center items-center">
           <TextField
             label="Start Date"
-            value={selectedDates[0] ? selectedDates[0].format("YYYY-MM-DD") : ""}
+            value={
+              selectedDates[0] ? selectedDates[0].format("YYYY-MM-DD") : ""
+            }
             InputProps={{ readOnly: true }}
           />
           <Box sx={{ mx: 2 }}>to</Box>
           <TextField
             label="End Date"
-            value={selectedDates[1] ? selectedDates[1].format("YYYY-MM-DD") : ""}
+            value={
+              selectedDates[1] ? selectedDates[1].format("YYYY-MM-DD") : ""
+            }
             InputProps={{ readOnly: true }}
           />
         </Box>
-        <form onSubmit={handleSubmit} className="flex flex-col lg:w-full mx-auto p-6 bg-white shadow-md rounded-lg">
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col lg:w-full mx-auto p-6 bg-white shadow-md rounded-lg"
+        >
           <h1 className="text-2xl font-bold mb-4">Contact Information</h1>
-          
+
           <input
             type="text"
             placeholder="First Name"
@@ -138,7 +161,7 @@ const BookingForm = () => {
           />
 
           <h1 className="text-2xl font-bold mb-4">Address Information</h1>
-          
+
           <input
             type="text"
             placeholder="Country"
@@ -212,6 +235,49 @@ const BookingForm = () => {
               />
             </div>
           )}
+          <div className="flex gap-12">
+          <div className="mb-4">
+            <button
+              type="button"
+              className="bg-green-500 text-4xl text-white py-2 px-4 rounded hover:bg-green-600 transition duration-200"
+              onClick={() => setShowDinnerModal(true)}
+            >
+              Add Dinner Option
+            </button>
+          </div>
+          <div className="mb-4">
+            <button
+              type="button"
+              className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 transition duration-200 text-4xl"
+              onClick={() => setShowDinnerModal(true)}
+            >
+              Add Charcuterie Board
+            </button>
+          </div>
+          </div>
+      
+          {dinner && (
+            <div className="flex flex-col mb-4">
+              <input
+                type="text"
+                placeholder="Dinner Type"
+                value={dinnerDetails.type}
+                onChange={(e) =>
+                  setDinnerDetails({ ...dinnerDetails, type: e.target.value })
+                }
+                className="mb-4 p-2 border border-gray-300 rounded"
+              />
+              <input
+                type="text"
+                placeholder="Dinner Time"
+                value={dinnerDetails.time}
+                onChange={(e) =>
+                  setDinnerDetails({ ...dinnerDetails, time: e.target.value })
+                }
+                className="mb-4 p-2 border border-gray-300 rounded"
+              />
+            </div>
+          )}
 
           <div className="bg-sky-100 p-4 rounded mb-4">
             <div className="flex justify-between mb-2">
@@ -228,14 +294,20 @@ const BookingForm = () => {
             </div>
           </div>
 
-          <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-200">
+          <button
+            type="submit"
+            className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-200"
+          >
             Next
           </button>
         </form>
       </LocalizationProvider>
+      <DinnerModal
+        open={showDinnerModal}
+        onClose={handleDinnerClose}
+        onYes={handleDinnerYes}
+      />
     </div>
-
-
   );
 };
 
