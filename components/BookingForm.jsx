@@ -6,8 +6,7 @@ import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import { useBooking } from "../context/BookingContext";
 import dayjs from "dayjs";
-import Footer from "./FrontEnd/Footer";
-import DinnerModal from "./DinnerModal"; // Import the new DinnerModal component
+import DinnerModal from "./DinnerModal"; // Update this import
 
 const BookingForm = () => {
   const { selectedDates, selectedRoom } = useBooking();
@@ -24,30 +23,71 @@ const BookingForm = () => {
   const [secondFirstName, setSecondFirstName] = useState("");
   const [secondLastName, setSecondLastName] = useState("");
   const [secondEmail, setSecondEmail] = useState("");
+  const [additionalCost, setAdditionalCost] = useState(0);
   const [subtotal, setSubtotal] = useState(0);
   const [total, setTotal] = useState(0);
   const [showDinnerModal, setShowDinnerModal] = useState(false);
+  const [showCharcuterieModal, setShowCharcuterieModal] = useState(false);
   const [dinner, setDinner] = useState(false);
-  const [dinnerDetails, setDinnerDetails] = useState({ type: "", time: "" });
-  const [showCheeseModal, setShowCheeseModal] = useState(false);
-  const [cheese, setCheese] = useState(false);
+  const [isDinnerSelected, setIsDinnerSelected] = useState(false);
+const [isCharcuterieSelected, setIsCharcuterieSelected] = useState(false);
+
+  const [dinnerDetails, setDinnerDetails] = useState({
+    allergies: "",
+    preferences: "",
+    specialOccasion: "",
+    time: "",
+  });
+  const [charcuterie, setCharcuterie] = useState(false);
+  const [charcuterieDetails, setCharcuterieDetails] = useState({
+    allergies: "",
+    preferences: "",
+    specialOccasion: "",
+    time: "",
+  });
+  const [highlightFields, setHighlightFields] = useState(false); // New state for highlighting fields
+  const [formErrors, setFormErrors] = useState({}); // New state for form errors
   const router = useRouter();
 
   useEffect(() => {
-    console.log("Selected Dates:", selectedDates);
-    console.log("Selected Room:", selectedRoom);
-
     if (selectedDates.length === 2 && selectedRoom) {
       const days = dayjs(selectedDates[1]).diff(dayjs(selectedDates[0]), "day");
       const subtotalAmount = days * selectedRoom.rate;
-      const totalAmount = subtotalAmount * 1.06;
       setSubtotal(subtotalAmount);
-      setTotal(totalAmount);
     }
   }, [selectedDates, selectedRoom]);
 
+  useEffect(() => {
+    let additionalCostAmount = 0;
+    if (isDinnerSelected) {
+      additionalCostAmount += 100 * (secondGuest ? 2 : 1);
+    }
+    if (isCharcuterieSelected) {
+      additionalCostAmount += 40;
+    }
+    setAdditionalCost(additionalCostAmount);
+    const totalAmount = (subtotal + additionalCostAmount) * 1.06; // Apply tax to combined subtotal and additional cost
+    setTotal(totalAmount);
+  }, [subtotal, isDinnerSelected, isCharcuterieSelected, secondGuest]);
+  
+  const validateForm = () => {
+    const errors = {};
+    if (!firstName) errors.firstName = "First name is required";
+    if (!lastName) errors.lastName = "Last name is required";
+    if (!email) errors.email = "Email is required";
+    if (dinner) {
+      if (!dinnerDetails.time) errors.dinnerTime = "Dinner time is required";
+    }
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validateForm()) {
+      setHighlightFields(true);
+      return;
+    }
 
     const bookingData = {
       firstName,
@@ -71,9 +111,8 @@ const BookingForm = () => {
           }
         : null,
       dinner: dinner ? dinnerDetails : null,
+      charcuterie: charcuterie ? charcuterieDetails : null,
     };
-
-    console.log("Submitting booking data:", bookingData);
 
     try {
       const response = await fetch("/api/create-booking", {
@@ -86,7 +125,6 @@ const BookingForm = () => {
 
       if (response.ok) {
         const result = await response.json();
-        console.log("Booking saved successfully:", result);
         router.push(`/payment?bookingId=${result.bookingId}`);
       } else {
         const errorText = await response.text();
@@ -97,13 +135,38 @@ const BookingForm = () => {
     }
   };
 
-  const handleDinnerYes = () => {
+  const handleDinnerYes = (details) => {
     setDinner(true);
+    setIsDinnerSelected(true);
+    setDinnerDetails(details);
     setShowDinnerModal(false);
+  };
+  
+  const handleDinnerNo = () => {
+    setDinner(false);
+    setIsDinnerSelected(false);
+    setShowDinnerModal(false);
+  };
+  
+  const handleCharcuterieYes = (details) => {
+    setCharcuterie(true);
+    setIsCharcuterieSelected(true);
+    setCharcuterieDetails(details);
+    setShowCharcuterieModal(false);
+  };
+  
+  const handleCharcuterieNo = () => {
+    setCharcuterie(false);
+    setIsCharcuterieSelected(false);
+    setShowCharcuterieModal(false);
   };
 
   const handleDinnerClose = () => {
     setShowDinnerModal(false);
+  };
+
+  const handleCharcuterieClose = () => {
+    setShowCharcuterieModal(false);
   };
 
   return (
@@ -138,22 +201,37 @@ const BookingForm = () => {
             placeholder="First Name"
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
-            className="mb-4 p-2 border border-gray-300 rounded"
+            className={`mb-4 p-2 border border-gray-300 rounded ${
+              highlightFields && formErrors.firstName ? "border-red-500" : ""
+            }`}
           />
+          {highlightFields && formErrors.firstName && (
+            <span className="text-red-500">{formErrors.firstName}</span>
+          )}
           <input
             type="text"
             placeholder="Last Name"
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
-            className="mb-4 p-2 border border-gray-300 rounded"
+            className={`mb-4 p-2 border border-gray-300 rounded ${
+              highlightFields && formErrors.lastName ? "border-red-500" : ""
+            }`}
           />
+          {highlightFields && formErrors.lastName && (
+            <span className="text-red-500">{formErrors.lastName}</span>
+          )}
           <input
             type="email"
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="mb-4 p-2 border border-gray-300 rounded"
+            className={`mb-4 p-2 border border-gray-300 rounded ${
+              highlightFields && formErrors.email ? "border-red-500" : ""
+            }`}
           />
+          {highlightFields && formErrors.email && (
+            <span className="text-red-500">{formErrors.email}</span>
+          )}
           <input
             type="text"
             placeholder="Phone Number"
@@ -237,35 +315,59 @@ const BookingForm = () => {
               />
             </div>
           )}
-          <div className="flex gap-12">
+
           <div className="mb-4">
             <button
               type="button"
-              className="bg-green-500 text-4xl text-white py-2 px-4 rounded hover:bg-green-600 transition duration-200"
+              className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 transition duration-200"
               onClick={() => setShowDinnerModal(true)}
             >
               Add Dinner Option
             </button>
-          </div>
-          <div className="mb-4">
             <button
               type="button"
-              className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 transition duration-200 text-4xl"
-              onClick={() => setShowDinnerModal(true)}
+              className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 transition duration-200 ml-4"
+              onClick={() => setShowCharcuterieModal(true)}
             >
-              Add Charcuterie Board
+              Add Charcuterie Option
             </button>
           </div>
-          </div>
-      
+
           {dinner && (
             <div className="flex flex-col mb-4">
               <input
                 type="text"
-                placeholder="Dinner Type"
-                value={dinnerDetails.type}
+                placeholder="Allergies"
+                value={dinnerDetails.allergies}
                 onChange={(e) =>
-                  setDinnerDetails({ ...dinnerDetails, type: e.target.value })
+                  setDinnerDetails({
+                    ...dinnerDetails,
+                    allergies: e.target.value,
+                  })
+                }
+                className="mb-4 p-2 border border-gray-300 rounded"
+              />
+              <input
+                type="text"
+                placeholder="Preferences"
+                value={dinnerDetails.preferences}
+                onChange={(e) =>
+                  setDinnerDetails({
+                    ...dinnerDetails,
+                    preferences: e.target.value,
+                  })
+                }
+                className="mb-4 p-2 border border-gray-300 rounded"
+              />
+              <input
+                type="text"
+                placeholder="Special Occasion"
+                value={dinnerDetails.specialOccasion}
+                onChange={(e) =>
+                  setDinnerDetails({
+                    ...dinnerDetails,
+                    specialOccasion: e.target.value,
+                  })
                 }
                 className="mb-4 p-2 border border-gray-300 rounded"
               />
@@ -276,6 +378,66 @@ const BookingForm = () => {
                 onChange={(e) =>
                   setDinnerDetails({ ...dinnerDetails, time: e.target.value })
                 }
+                className={`mb-4 p-2 border border-gray-300 rounded ${
+                  highlightFields && formErrors.dinnerTime
+                    ? "border-red-500"
+                    : ""
+                }`}
+              />
+              {highlightFields && formErrors.dinnerTime && (
+                <span className="text-red-500">{formErrors.dinnerTime}</span>
+              )}
+            </div>
+          )}
+
+          {charcuterie && (
+            <div className="flex flex-col mb-4">
+              <input
+                type="text"
+                placeholder="Allergies"
+                value={charcuterieDetails.allergies}
+                onChange={(e) =>
+                  setCharcuterieDetails({
+                    ...charcuterieDetails,
+                    allergies: e.target.value,
+                  })
+                }
+                className="mb-4 p-2 border border-gray-300 rounded"
+              />
+              <input
+                type="text"
+                placeholder="Preferences"
+                value={charcuterieDetails.preferences}
+                onChange={(e) =>
+                  setCharcuterieDetails({
+                    ...charcuterieDetails,
+                    preferences: e.target.value,
+                  })
+                }
+                className="mb-4 p-2 border border-gray-300 rounded"
+              />
+              <input
+                type="text"
+                placeholder="Special Occasion"
+                value={charcuterieDetails.specialOccasion}
+                onChange={(e) =>
+                  setCharcuterieDetails({
+                    ...charcuterieDetails,
+                    specialOccasion: e.target.value,
+                  })
+                }
+                className="mb-4 p-2 border border-gray-300 rounded"
+              />
+              <input
+                type="text"
+                placeholder="Dinner Time"
+                value={charcuterieDetails.time}
+                onChange={(e) =>
+                  setCharcuterieDetails({
+                    ...charcuterieDetails,
+                    time: e.target.value,
+                  })
+                }
                 className="mb-4 p-2 border border-gray-300 rounded"
               />
             </div>
@@ -285,10 +447,24 @@ const BookingForm = () => {
             <div className="flex justify-between mb-2">
               <span className="font-bold">Subtotal:</span>
               <span>${subtotal.toFixed(2)}</span>
+              {additionalCost > 0 && (
+                <div className="flex justify-between mb-2">
+                  <span className="font-bold">Additional Cost:</span>
+                  <span>${additionalCost.toFixed(2)}</span>
+                </div>
+              )}{" "}
             </div>
             <div className="flex justify-between mb-2">
               <span className="font-bold">Sales Tax (6%):</span>
-              <span>${(subtotal * 0.06).toFixed(2)}</span>
+              <span>
+                $
+                {(
+                  (subtotal +
+                    (dinner ? 100 * (secondGuest ? 2 : 1) : 0) +
+                    (charcuterie ? 40 : 0)) *
+                  0.06
+                ).toFixed(2)}
+              </span>
             </div>
             <div className="flex justify-between font-bold text-lg">
               <span>Total:</span>
@@ -308,6 +484,11 @@ const BookingForm = () => {
         open={showDinnerModal}
         onClose={handleDinnerClose}
         onYes={handleDinnerYes}
+      />
+      <DinnerModal
+        open={showCharcuterieModal}
+        onClose={handleCharcuterieClose}
+        onYes={handleCharcuterieYes}
       />
     </div>
   );

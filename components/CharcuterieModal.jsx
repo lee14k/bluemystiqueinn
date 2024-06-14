@@ -6,8 +6,8 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 
-const DinnerModal = ({ open, onClose, onYes }) => {
-  const [dinnerDetails, setDinnerDetails] = useState({
+const CharcuterieModal = ({ open, onClose, onYes }) => {
+  const [CharcuterieDetails, setDinnerDetails] = useState({
     allergies: "",
     preferences: "",
     specialOccasion: "",
@@ -16,11 +16,11 @@ const DinnerModal = ({ open, onClose, onYes }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setDinnerDetails((prev) => ({ ...prev, [name]: value }));
+    setCharcuterieDetails((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleYes = () => {
-    onYes(dinnerDetails);
+    onYes(CharcuterieDetails);
     onClose();
   };
 
@@ -28,12 +28,12 @@ const DinnerModal = ({ open, onClose, onYes }) => {
     <Modal open={open} onClose={onClose}>
       <Box className="bg-white p-6 rounded shadow-md max-w-sm mx-auto mt-20">
         <h2 className="text-2xl mb-4">
-          Would you like dinner with your reservation?
+          Would you like a charcuterie board with your reservation?
         </h2>
         <TextField
           label="Allergies"
           name="allergies"
-          value={dinnerDetails.allergies}
+          value={CharcuterieDetails.allergies}
           onChange={handleChange}
           fullWidth
           className="mb-4"
@@ -41,7 +41,7 @@ const DinnerModal = ({ open, onClose, onYes }) => {
         <TextField
           label="Preferences"
           name="preferences"
-          value={dinnerDetails.preferences}
+          value={CharcuterieDetails.preferences}
           onChange={handleChange}
           fullWidth
           className="mb-4"
@@ -49,15 +49,7 @@ const DinnerModal = ({ open, onClose, onYes }) => {
         <TextField
           label="Special Occasion"
           name="specialOccasion"
-          value={dinnerDetails.specialOccasion}
-          onChange={handleChange}
-          fullWidth
-          className="mb-4"
-        />
-        <TextField
-          label="Dinner Time"
-          name="time"
-          value={dinnerDetails.time}
+          value={CharcuterieDetails.specialOccasion}
           onChange={handleChange}
           fullWidth
           className="mb-4"
@@ -75,4 +67,4 @@ const DinnerModal = ({ open, onClose, onYes }) => {
   );
 };
 
-export default DinnerModal;
+export default CharcuterieModal;
