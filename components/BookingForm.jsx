@@ -29,6 +29,8 @@ const BookingForm = () => {
   const [showDinnerModal, setShowDinnerModal] = useState(false);
   const [dinner, setDinner] = useState(false);
   const [dinnerDetails, setDinnerDetails] = useState({ type: "", time: "" });
+  const [showCheeseModal, setShowCheeseModal] = useState(false);
+  const [cheese, setCheese] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
