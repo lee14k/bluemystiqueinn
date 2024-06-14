@@ -30,7 +30,7 @@ const BookingForm = () => {
   const [showCharcuterieModal, setShowCharcuterieModal] = useState(false);
   const [dinner, setDinner] = useState(false);
   const [isDinnerSelected, setIsDinnerSelected] = useState(false);
-const [isCharcuterieSelected, setIsCharcuterieSelected] = useState(false);
+  const [isCharcuterieSelected, setIsCharcuterieSelected] = useState(false);
 
   const [dinnerDetails, setDinnerDetails] = useState({
     allergies: "",
@@ -69,7 +69,7 @@ const [isCharcuterieSelected, setIsCharcuterieSelected] = useState(false);
     const totalAmount = (subtotal + additionalCostAmount) * 1.06; // Apply tax to combined subtotal and additional cost
     setTotal(totalAmount);
   }, [subtotal, isDinnerSelected, isCharcuterieSelected, secondGuest]);
-  
+
   const validateForm = () => {
     const errors = {};
     if (!firstName) errors.firstName = "First name is required";
@@ -110,9 +110,17 @@ const [isCharcuterieSelected, setIsCharcuterieSelected] = useState(false);
             email: secondEmail,
           }
         : null,
+    };
+
+    const foodData = {
       dinner: dinner ? dinnerDetails : null,
       charcuterie: charcuterie ? charcuterieDetails : null,
+      allergies: dinnerDetails.allergies,
+      preferences: dinnerDetails.preferences,
+      specialOccasion: dinnerDetails.specialOccasion,
     };
+
+    const requestData = { bookingData, foodData };
 
     try {
       const response = await fetch("/api/create-booking", {
@@ -120,7 +128,7 @@ const [isCharcuterieSelected, setIsCharcuterieSelected] = useState(false);
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(bookingData),
+        body: JSON.stringify(requestData),
       });
 
       if (response.ok) {
@@ -141,20 +149,20 @@ const [isCharcuterieSelected, setIsCharcuterieSelected] = useState(false);
     setDinnerDetails(details);
     setShowDinnerModal(false);
   };
-  
+
   const handleDinnerNo = () => {
     setDinner(false);
     setIsDinnerSelected(false);
     setShowDinnerModal(false);
   };
-  
+
   const handleCharcuterieYes = (details) => {
     setCharcuterie(true);
     setIsCharcuterieSelected(true);
     setCharcuterieDetails(details);
     setShowCharcuterieModal(false);
   };
-  
+
   const handleCharcuterieNo = () => {
     setCharcuterie(false);
     setIsCharcuterieSelected(false);

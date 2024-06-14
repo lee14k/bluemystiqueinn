@@ -2,55 +2,93 @@ import { supabase } from "../../utils/supabase";
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
-    const {
-      firstName,
-      lastName,
-      email,
-      phoneNumber,
-      country,
-      state,
-      city,
-      streetAddress,
-      zipCode,
-      startDate,
-      endDate,
-      roomId,
-      paymentStatus,
-      secondGuest,
-    } = req.body;
+    const { bookingData, foodData } = req.body;
 
     try {
-      const { data, error } = await supabase
+      // Insert the booking data
+      const { data: booking, error: bookingError } = await supabase
         .from("booking")
         .insert({
-          first_name: firstName,
-          last_name: lastName,
-          email: email,
-          phone_number: phoneNumber,
-          country: country,
-          state: state,
-          city: city,
-          street_address: streetAddress,
-          zip_code: zipCode,
-          start_date: startDate,
-          end_date: endDate,
-          room_name: roomId,
-          payment_status: paymentStatus,
-          second_guest_first_name: secondGuest?.firstName || null,
-          second_guest_last_name: secondGuest?.lastName || null,
-          second_guest_email: secondGuest?.email || null,
+          first_name: bookingData.firstName,
+          last_name: bookingData.lastName,
+          email: bookingData.email,
+          phone_number: bookingData.phoneNumber,
+          country: bookingData.country,
+          state: bookingData.state,
+          city: bookingData.city,
+          street_address: bookingData.streetAddress,
+          zip_code: bookingData.zipCode,
+          start_date: bookingData.startDate,
+          end_date: bookingData.endDate,
+          room_name: bookingData.roomId,
+          payment_status: bookingData.paymentStatus,
+          second_guest_first_name: bookingData.secondGuest?.firstName || null,
+          second_guest_last_name: bookingData.secondGuest?.lastName || null,
+          second_guest_email: bookingData.secondGuest?.email || null,
         })
         .select("id")
         .single();
 
-      if (error) {
-        console.error("Error creating booking:", error);
-        return res.status(500).json({ error: error.message });
+      if (bookingError) {
+        console.error("Error creating booking:", bookingError);
+        return res.status(500).json({ error: bookingError.message });
       }
 
-      res.status(200).json({ bookingId: data.id });
+      const bookingId = booking.id;
+
+      // Insert the dinner data if provided
+      if (foodData.dinner) {
+        const { allergies, preferences, specialOccasion, time } =
+          foodData.dinner;
+        const { error: dinnerError } = await supabase
+          .from("guest_dining")
+          .insert([
+            {
+              booking_id: bookingId,
+              guest_name: `${bookingData.firstName} ${bookingData.lastName}`,
+              allergies,
+              preferences,
+              special_occasion: specialOccasion,
+              dinner_time: time,
+              room_id: bookingData.roomId,
+              charcuterie: false, // default to false for dinner
+            },
+          ]);
+
+        if (dinnerError) {
+          console.error("Dinner Error:", dinnerError);
+          throw dinnerError;
+        }
+      }
+
+      // Insert the charcuterie data if provided
+      if (foodData.charcuterie) {
+        const { allergies, preferences, specialOccasion, time } =
+          foodData.charcuterie;
+        const { error: charcuterieError } = await supabase
+          .from("guest_dining")
+          .insert([
+            {
+              booking_id: bookingId,
+              guest_name: `${bookingData.firstName} ${bookingData.lastName}`,
+              allergies,
+              preferences,
+              special_occasion: specialOccasion,
+              dinner_time: time,
+              room_id: bookingData.roomId,
+              charcuterie: true, // set to true for charcuterie
+            },
+          ]);
+
+        if (charcuterieError) {
+          console.error("Charcuterie Error:", charcuterieError);
+          throw charcuterieError;
+        }
+      }
+
+      res.status(200).json({ bookingId });
     } catch (error) {
-      console.error("Error creating booking:", error);
+      console.error("General Error:", error);
       res.status(500).json({ error: error.message });
     }
   } else {

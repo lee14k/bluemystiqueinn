@@ -4,8 +4,9 @@ import Navbar from '@/components/FrontEnd/Navbar';
 import { useUser } from "@auth0/nextjs-auth0/client";
 
 export default function AdminHome() {
-  const { user, loading } = useUser();
-
+  const { user, error, isLoading } = useUser();
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>{error.message}</div>;
     return (
      <div>
             <Navbar/>
