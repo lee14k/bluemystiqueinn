@@ -9,12 +9,12 @@ LicenseInfo.setLicenseKey(process.env.NEXT_PUBLIC_MUI_X_LICENSE_KEY);
 
 export default function App({ Component, pageProps }) {
   return (
-    <UserProvider>
-      <BookingProvider>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
+    <BookingProvider>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <UserProvider loginUrl="/api/auth/login">
           <Component {...pageProps} />
-        </LocalizationProvider>
-      </BookingProvider>
-    </UserProvider>
+        </UserProvider>
+      </LocalizationProvider>
+    </BookingProvider>
   );
 }

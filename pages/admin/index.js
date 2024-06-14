@@ -1,17 +1,34 @@
-import MainScreen from '@/components/AdminDash/MainScreen';
-import AdminNav from '@/components/AdminDash/AdminNav';
-import Navbar from '@/components/FrontEnd/Navbar';
-import { useUser } from "@auth0/nextjs-auth0/client";
+import MainScreen from "@/components/AdminDash/MainScreen";
+import AdminNav from "@/components/AdminDash/AdminNav";
+import Navbar from "@/components/FrontEnd/Navbar";
+import { useUser, withPageAuthRequired } from "@auth0/nextjs-auth0/client";
+import { useRouter } from "next/router";
 
-export default function AdminHome() {
+function Admin() {
   const { user, error, isLoading } = useUser();
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>{error.message}</div>;
-    return (
-     <div>
-            <Navbar/>
+  const router = useRouter();
 
-      <AdminNav/>
-     </div>
-    );
+  if (isLoading) {
+    return <div>Loading...</div>;
   }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
+
+  if (!user) {
+    // Optional: Redirect to login page if not authenticated
+    router.push("/api/auth/login");
+    return null;
+  }
+
+  return (
+    <div>
+      <Navbar />
+      <AdminNav />
+      <MainScreen />
+    </div>
+  );
+}
+
+export default withPageAuthRequired(Admin);
