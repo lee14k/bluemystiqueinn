@@ -12,14 +12,21 @@ const FoodCTA = () => {
             Gourmet dining experiences in Manistique, Michigan
           </h1>
           <p className="my-8 text-2xl mx-12">
-            The Blue Mystique Inn is a beautiful, 5-bedroom historic home in
-            downtown Manistique - the heart of the Upper Peninsula. Built in the
-            early 1900's, the recently renovated home is central to many of the
-            UP's attractions - including Big Springs and Pictured Rocks - and
-            just steps away from parks, trails, dining, shopping, and nightlife,
-            After you're done hiking, biking, swimming, waterfall hunting, fall
-            color touring, or enjoying snow sports, relax and make yourself at
-            home.
+            Discover the refined ambiance and exceptional dining at the Blue
+            Mystique Inn in Manistique. This stunning venue offers the perfect
+            setting for your next gathering, whether it's a special event or a
+            business meeting. Chef Joshua will work closely with you to custom
+            design a mouthwatering menu that caters to your tastes and
+            preferences, ensuring an unforgettable culinary experience for you
+            and your guests. When you host your event at the Blue Mystique Inn,
+            you'll have exclusive access to the entire property, providing an
+            unparalleled level of privacy and sophistication. The elegant
+            surroundings, coupled with the exquisite cuisine, create an upscale
+            catered dining experience that will leave a lasting impression on
+            your guests. Don't miss the opportunity to elevate your next
+            gathering to new heights. Book your event at the Blue Mystique Inn
+            today and prepare to be enchanted by the sheer elegance and culinary
+            excellence that await you.
           </p>
           <div className={`${della.className}`}>
             <button className="bg-white rounded-2xl px-12 py-2 mx-16 my-10 text-4xl">
@@ -30,7 +37,7 @@ const FoodCTA = () => {
       </div>
       <div className="relative w-full h-full">
         <Image
-          src="/Blue-Mystique-8487.jpg"
+          src="/ribgs.jpeg"
           alt="Blue Mystique Inn Room"
           layout="fill"
           objectFit="cover"

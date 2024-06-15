@@ -2,8 +2,9 @@ import AdminNav from "../../components/AdminDash/AdminNav";
 import ReservationsPageFill from "../../components/AdminDash/ReservationsPageFill";
 import Navbar from "@/components/FrontEnd/Navbar";
 import DinnerTable from "@/components/AdminDash/DinnerTable";
+import { withPageAuthRequired } from "@auth0/nextjs-auth0";
 
-export default function AdminHome() {
+const Dinner=()=> {
   return (
     <div>
       <Navbar />
@@ -12,3 +13,5 @@ export default function AdminHome() {
     </div>
   );
 }
+
+export default withPageAuthRequired(AdminHome);

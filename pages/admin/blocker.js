@@ -3,8 +3,8 @@ import AdminNav from '../../components/AdminDash/AdminNav';
 import ReservationsPageFill from '../../components/AdminDash/ReservationsPageFill';
 import Navbar from '@/components/FrontEnd/Navbar';
 import DateBlockCalendar from '@/components/AdminDash/DateBlockCalendar';
-
-export default function AdminHome() {
+import { withPageAuthRequired } from '@auth0/nextjs-auth0';
+const Blocker=()=> {
     return (
      <div>
             <Navbar/>
@@ -15,3 +15,5 @@ export default function AdminHome() {
      </div>
     );
   }
+
+  export default withPageAuthRequired(Blocker);
