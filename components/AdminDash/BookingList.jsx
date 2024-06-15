@@ -1,5 +1,5 @@
 // components/BookingsTable.js
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
 const BookingList = () => {
   const [data, setData] = useState([]);
@@ -9,7 +9,7 @@ const BookingList = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('/api/adminDisplay');
+        const response = await fetch("/api/adminDisplay");
         const result = await response.json();
         if (!response.ok) {
           throw new Error(result.error);
@@ -26,7 +26,10 @@ const BookingList = () => {
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
-
+  const formatDate = (dateString) => {
+    const options = { year: "numeric", month: "long", day: "numeric" };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  };
   return (
     <div>
       <h1>Bookings</h1>
@@ -34,22 +37,40 @@ const BookingList = () => {
         <thead>
           <tr>
             {/* Replace with your actual column names */}
-            <th>Column 1</th>
-            <th>Column 2</th>
-            <th>Column 3</th>
-            <th>Column 3</th>
-
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+              Start Date
+            </th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+              End Date
+            </th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+              Room Name
+            </th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+              Guest Name
+            </th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+              Guest Email
+            </th>
           </tr>
         </thead>
         <tbody>
           {data.map((item) => (
             <tr key={item.id}>
               {/* Replace with your actual column names */}
-              <td>{item.start_date}</td>
-              <td>{item.end_date}</td>
-              <td>{item.room_name}</td>
-              <td>{item.email}</td>
-
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                {formatDate(item.start_date)}
+              </td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                {formatDate(item.end_date)}
+              </td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                {item.room_name}
+              </td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                {item.first_name} {item.last_name}
+              </td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>{item.email}</td>
             </tr>
           ))}
         </tbody>

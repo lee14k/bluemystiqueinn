@@ -7,6 +7,7 @@ export default function AdminHome() {
     return (
      <div>
             <Navbar/>
+            <AdminNav/>
       <AdminBlockDates/>
       <ReservationsPageFill/>
      </div>

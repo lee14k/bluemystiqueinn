@@ -3,6 +3,7 @@ import AdminNav from "@/components/AdminDash/AdminNav";
 import Navbar from "@/components/FrontEnd/Navbar";
 import { useUser, withPageAuthRequired } from "@auth0/nextjs-auth0/client";
 import { useRouter } from "next/router";
+import AdminCalendar from "@/components/AdminDash/AdminCalendar";
 
 function Admin() {
   const { user, error, isLoading } = useUser();
@@ -27,6 +28,7 @@ function Admin() {
       <Navbar />
       <AdminNav />
       <MainScreen />
+      <AdminCalendar />
     </div>
   );
 }

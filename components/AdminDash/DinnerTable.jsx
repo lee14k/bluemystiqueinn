@@ -34,20 +34,48 @@ const DinnerTable = () => {
         <thead>
           <tr>
             {/* Replace with your actual column names */}
-            <th>Column 1</th>
-            <th>Column 2</th>
-            <th>Column 3</th>
-            <th>Column 3</th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+              Booking Number
+            </th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+              Guest Name
+            </th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+              Allergies
+            </th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+              Preferences
+            </th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+              Special Occasion
+            </th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+              Dinner Times
+            </th>
           </tr>
         </thead>
         <tbody>
           {data.map((item) => (
             <tr key={item.id}>
               {/* Replace with your actual column names */}
-              <td>{item.start_date}</td>
-              <td>{item.end_date}</td>
-              <td>{item.room_name}</td>
-              <td>{item.email}</td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                {item.booking_id}
+              </td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                {item.guest_name}
+              </td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                {item.allergies}
+              </td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                {item.preferences}
+              </td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                {item.special_occasion}
+              </td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                {item.dinner_time}
+              </td>
             </tr>
           ))}
         </tbody>
