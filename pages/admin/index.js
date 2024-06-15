@@ -33,4 +33,4 @@ function Admin() {
   );
 }
 
-export default withPageAuthRequired(Admin);
+export default Admin

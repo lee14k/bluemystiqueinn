@@ -14,4 +14,4 @@ const Dinner=()=> {
   );
 }
 
-export default withPageAuthRequired(Dinner);
+export default Dinner;
