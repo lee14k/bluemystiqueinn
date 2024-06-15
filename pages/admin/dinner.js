@@ -14,4 +14,4 @@ const Dinner=()=> {
   );
 }
 
-export default withPageAuthRequired(AdminHome);
+export default withPageAuthRequired(Dinner);
