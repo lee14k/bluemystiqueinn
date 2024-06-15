@@ -35,9 +35,9 @@ const FoodCTA = () => {
           </div>
         </div>
       </div>
-      <div className="relative w-full h-full">
+      <div className=" w-full h-full">
         <Image
-          src="/ribgs.jpeg"
+          src="/ribs.jpeg"
           alt="Blue Mystique Inn Room"
           layout="fill"
           objectFit="cover"

@@ -2,7 +2,7 @@ import { Client, Environment } from "square";
 import { supabase } from "../../utils/supabase";
 
 const client = new Client({
-  environment: Environment.Sandbox,
+  environment: Environment.Production,
   accessToken: process.env.SQUARE_ACCESS_TOKEN,
 });
 

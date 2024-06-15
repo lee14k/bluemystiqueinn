@@ -1,7 +1,7 @@
 import { Client, Environment } from "square";
 
 const client = new Client({
-  environment: Environment.Sandbox,
+  environment: Environment.Production,
   accessToken: process.env.SQUARE_ACCESS_TOKEN,
 });
 
