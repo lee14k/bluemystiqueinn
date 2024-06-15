@@ -2,33 +2,49 @@
 @tailwind components;
 @tailwind utilities;
 
-
-.hh-bg{
-    background-image: url('/front-0830.jpg');
-    height:55rem;
-    background-size: cover;
-    background-position: center bottom;
-    position: relative;
+.hh-bg {
+  background-image: url("/front-0830.jpg");
+  height: 55rem;
+  background-size: cover;
+  background-position: center bottom;
+  position: relative;
 }
 
 .hh-bg::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .text-timer {
-    z-index: 10;
+  z-index: 10;
 }
 
 .footerwrapper {
-    background-image: url('/bmfoot.png');
-    height: 25rem;
-    background-size: 40%; /* Increase the size of the background image */
-    background-repeat: no-repeat;
-    background-position: right center;
+  background-image: url("/bmfoot.png");
+  height: 25rem;
+  background-size: 40%; /* Increase the size of the background image */
+  background-repeat: no-repeat;
+  background-position: right center;
+}
+
+.fh-bg {
+  background-image: url("/risotto-9876.jpg");
+  height: 55rem;
+  background-size: cover;
+  background-position: center bottom;
+  position: relative;
+}
+.fh-bg::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
 }

@@ -15,6 +15,17 @@ export default async function handler(req, res) {
     } else {
       res.status(200).json({ data });
     }
+  } else if (req.method === 'GET') {
+    // Add the logic to get existing blocked dates
+    const { data, error } = await supabase
+      .from('room_unavailability')
+      .select('*');
+
+    if (error) {
+      res.status(500).json({ error: error.message });
+    } else {
+      res.status(200).json(data);
+    }
   } else {
     res.status(405).json({ error: 'Method not allowed' });
   }

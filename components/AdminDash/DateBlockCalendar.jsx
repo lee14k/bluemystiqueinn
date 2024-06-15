@@ -4,7 +4,7 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction"; // For date selection
 import axios from "axios";
 
-const AdminCalendar = () => {
+const DateBlockCalendar = () => {
   const [events, setEvents] = useState([]);
 
   useEffect(() => {
@@ -27,17 +27,23 @@ const AdminCalendar = () => {
 
   const handleDateSelect = (selectInfo) => {
     const { startStr, endStr } = selectInfo;
+    const room_id = 1; // Replace with the appropriate room ID
 
-    axios.post("/api/block-dates", { start_date: startStr, end_date: endStr })
+    axios
+      .post("/api/block-dates", {
+        room_id,
+        start_date: startStr,
+        end_date: endStr,
+      })
       .then((response) => {
-        // Add the blocked dates to the calendar for visualization
+        // Add the blocked dates to the calendar
         setEvents((prevEvents) => [
           ...prevEvents,
           {
-            title: "All Rooms Blocked",
+            title: "Blocked",
             start: startStr,
             end: endStr,
-            backgroundColor: 'red', // Optional: to highlight blocked dates
+            backgroundColor: "red", // Optional: to highlight blocked dates
           },
         ]);
       })
@@ -57,4 +63,4 @@ const AdminCalendar = () => {
   );
 };
 
-export default AdminCalendar;
+export default DateBlockCalendar;

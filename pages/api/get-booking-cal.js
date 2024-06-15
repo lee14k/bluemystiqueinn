@@ -1,29 +1,46 @@
-import { supabase } from "../../utils/supabase";
+import { supabase } from '../../utils/supabase';
 
 export default async function handler(req, res) {
-  if (req.method === "GET") {
-    try {
-      const { data, error } = await supabase
-        .from("booking")
-        .select("id, first_name, start_date, end_date");
+  if (req.method === 'POST') {
+    const { start_date, end_date } = req.body;
 
-      if (error) {
-        console.error("Supabase Error:", error);
-        throw error;
-      }
+    // Fetch all room IDs
+    const { data: rooms, error: roomsError } = await supabase
+      .from('rooms')
+      .select('id');
 
-      if (data && data.length > 0) {
-        res.status(200).json(data);
-      } else {
-        console.log("No booking data found");
-        res.status(200).json([]);
-      }
-    } catch (error) {
-      console.error("Server Error:", error);
+    if (roomsError) {
+      return res.status(500).json({ error: roomsError.message });
+    }
+
+    const unavailabilityEntries = rooms.map(room => ({
+      room_id: room.id,
+      start_date,
+      end_date
+    }));
+
+    // Insert all unavailability entries
+    const { data, error } = await supabase
+      .from('room_unavailability')
+      .insert(unavailabilityEntries);
+
+    if (error) {
       res.status(500).json({ error: error.message });
+    } else {
+      res.status(200).json({ data });
+    }
+  } else if (req.method === 'GET') {
+    // Add the logic to get existing blocked dates
+    const { data, error } = await supabase
+      .from('room_unavailability')
+      .select('*');
+
+    if (error) {
+      res.status(500).json({ error: error.message });
+    } else {
+      res.status(200).json(data);
     }
   } else {
-    res.setHeader("Allow", ["GET"]);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
+    res.status(405).json({ error: 'Method not allowed' });
   }
 }

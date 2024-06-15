@@ -12,6 +12,10 @@ const navigation = [
     name: "Book",
     href: "/book",
   },
+  {
+    name: "Chef's Table",
+    href: "/chefs-table",
+  },
   { name: "Contact", href: "/contact", current: false },
 ];
 
@@ -73,7 +77,6 @@ export default function Navbar() {
                               <span className="text-4xl">{item.name}</span>
                             </Link>
                           )}
-                        
                         </div>
                       ))}
                     </div>
