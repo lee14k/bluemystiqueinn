@@ -2,13 +2,11 @@ import { supabase } from '../../utils/supabase';
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
-    const { room_id, start_date, end_date } = req.body;
+    const { unavailabilityEntries } = req.body;
 
     const { data, error } = await supabase
       .from('room_unavailability')
-      .insert([
-        { room_id, start_date, end_date }
-      ]);
+      .insert(unavailabilityEntries);
 
     if (error) {
       res.status(500).json({ error: error.message });
@@ -16,7 +14,6 @@ export default async function handler(req, res) {
       res.status(200).json({ data });
     }
   } else if (req.method === 'GET') {
-    // Add the logic to get existing blocked dates
     const { data, error } = await supabase
       .from('room_unavailability')
       .select('*');

@@ -27,20 +27,22 @@ const DateBlockCalendar = () => {
 
   const handleDateSelect = (selectInfo) => {
     const { startStr, endStr } = selectInfo;
-    const room_id = 1; // Replace with the appropriate room ID
+
+    const roomIDs = [1, 2, 3, 4, 5];
+    const unavailabilityEntries = roomIDs.map((room_id) => ({
+      room_id,
+      start_date: startStr,
+      end_date: endStr,
+    }));
 
     axios
-      .post("/api/block-dates", {
-        room_id,
-        start_date: startStr,
-        end_date: endStr,
-      })
+      .post("/api/block-dates", { unavailabilityEntries })
       .then((response) => {
-        // Add the blocked dates to the calendar
+        // Add the blocked dates to the calendar for visualization
         setEvents((prevEvents) => [
           ...prevEvents,
           {
-            title: "Blocked",
+            title: "All Rooms Blocked",
             start: startStr,
             end: endStr,
             backgroundColor: "red", // Optional: to highlight blocked dates
