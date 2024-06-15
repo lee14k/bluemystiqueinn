@@ -1,5 +1,4 @@
 import { supabase } from "../../utils/supabase";
-import axios from 'axios';
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
@@ -24,7 +23,7 @@ export default async function handler(req, res) {
           // Fetch the booking using the orderId
           const { data: bookingData, error: bookingError } = await supabase
             .from("booking")
-            .select("id, payment_status, email, first_name, last_name, start_date, end_date, room_name")
+            .select("id, payment_status, start_date, end_date, room_name")
             .eq("order_id", orderId)
             .single();
 
@@ -40,7 +39,7 @@ export default async function handler(req, res) {
             return res.status(200).json({ success: true, error: "Booking not found" });
           }
 
-          const { id: bookingId, room_id: roomId, payment_status, email, first_name, last_name, start_date, end_date, room_name } = bookingData;
+          const { id: bookingId, room_id: roomId, payment_status, start_date, end_date, room_name } = bookingData;
 
           console.log("Booking ID:", bookingId);
           console.log("Room ID:", roomId);
@@ -65,28 +64,6 @@ export default async function handler(req, res) {
           }
           console.log("Booking updated successfully:", updatedBooking);
 
-          // Prepare booking details for the email
-          const bookingDetails = {
-            id: bookingId,
-            first_name,
-            last_name,
-            email,
-            start_date,
-            end_date,
-            room_name,
-          };
-
-          // Send confirmation emails
-          try {
-            await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/sendEmail`, {
-              email,
-              bookingDetails,
-            });
-            console.log("Emails sent successfully");
-          } catch (emailError) {
-            console.error("Error sending email:", emailError);
-          }
-
           res.status(200).json({ success: true });
         } else {
           console.log(`Payment status is not completed: ${status}`);
@@ -98,10 +75,10 @@ export default async function handler(req, res) {
       }
     } catch (error) {
       console.error("Error processing webhook:", error);
-      res.status(500).json({ error: error.message });
+      res.status(200).json({ error: error.message });
     }
   } else {
     res.setHeader("Allow", ["POST"]);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
+    res.status(200).end(`Method ${req.method} Not Allowed`);
   }
 }
