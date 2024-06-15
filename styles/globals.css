@@ -36,7 +36,7 @@
   background-image: url("/risotto-9876.jpg");
   height: 55rem;
   background-size: cover;
-  background-position: center bottom;
+  background-position: center;
   position: relative;
 }
 .fh-bg::before {
