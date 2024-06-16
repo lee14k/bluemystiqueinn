@@ -6,6 +6,15 @@ import axios from "axios";
 const AdminCalendar = () => {
   const [events, setEvents] = useState([]);
 
+  // Define a mapping of room IDs to colors
+  const roomColors = {
+    1: "red",
+    2: "blue",
+    3: "green",
+    4: "orange",
+    5: "purple",
+  };
+
   useEffect(() => {
     axios
       .get("/api/get-booking-cal")
@@ -15,6 +24,7 @@ const AdminCalendar = () => {
           title: item.first_name || "No Title",
           start: item.start_date,
           end: item.end_date,
+          color: roomColors[item.room_name] || "gray", // Apply color based on room_id, default to gray if room_id is not mapped
         }));
 
         setEvents(cleanedEvents);

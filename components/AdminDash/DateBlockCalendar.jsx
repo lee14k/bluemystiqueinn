@@ -1,11 +1,19 @@
 import React, { useState, useEffect } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
-import interactionPlugin from "@fullcalendar/interaction"; // For date selection
+import interactionPlugin from "@fullcalendar/interaction";
 import axios from "axios";
 
 const DateBlockCalendar = () => {
   const [events, setEvents] = useState([]);
+
+  const roomColors = {
+    1: "red",
+    2: "blue",
+    3: "green",
+    4: "orange",
+    5: "purple",
+  };
 
   useEffect(() => {
     axios
@@ -16,6 +24,7 @@ const DateBlockCalendar = () => {
           title: item.first_name || "No Title",
           start: item.start_date,
           end: item.end_date,
+          color: roomColors[item.room_name] || "gray",
         }));
 
         setEvents(cleanedEvents);
@@ -38,19 +47,38 @@ const DateBlockCalendar = () => {
     axios
       .post("/api/block-dates", { unavailabilityEntries })
       .then((response) => {
-        // Add the blocked dates to the calendar for visualization
         setEvents((prevEvents) => [
           ...prevEvents,
           {
             title: "All Rooms Blocked",
             start: startStr,
             end: endStr,
-            backgroundColor: "red", // Optional: to highlight blocked dates
+            backgroundColor: "red",
           },
         ]);
       })
       .catch((error) => {
         console.error("Error blocking dates:", error);
+      });
+  };
+
+  const handleDateClick = (clickInfo) => {
+    const startStr = clickInfo.event.start.toISOString();
+    const endStr = clickInfo.event.end.toISOString();
+
+    axios
+      .delete("/api/remove-date-block", {
+        data: { start_date: startStr, end_date: endStr },
+      })
+      .then((response) => {
+        setEvents((prevEvents) =>
+          prevEvents.filter(
+            (event) => event.start !== startStr && event.end !== endStr
+          )
+        );
+      })
+      .catch((error) => {
+        console.error("Error removing date block:", error);
       });
   };
 
@@ -61,6 +89,7 @@ const DateBlockCalendar = () => {
       events={events}
       selectable={true}
       select={handleDateSelect}
+      eventClick={handleDateClick}
     />
   );
 };
