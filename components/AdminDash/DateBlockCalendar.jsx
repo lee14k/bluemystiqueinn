@@ -3,9 +3,12 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import axios from "axios";
+import { Modal, Box, Typography, Button } from "@mui/material";
 
 const DateBlockCalendar = () => {
   const [events, setEvents] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
 
   const roomColors = {
     1: "red",
@@ -21,23 +24,22 @@ const DateBlockCalendar = () => {
       .then((response) => {
         const { bookings, blockedDates } = response.data;
 
-        // Transform bookings into calendar events
         const bookingEvents = bookings.map((item) => ({
+          id: `booking-${item.id}`, // Ensure each event has a unique ID
           title: item.first_name || "Booking",
           start: item.start_date,
           end: item.end_date,
           color: roomColors[item.room_name] || "gray",
         }));
 
-        // Transform blocked dates into calendar events
         const blockedEvents = blockedDates.map((item) => ({
+          id: `blocked-${item.id}`, // Ensure each event has a unique ID
           title: "Blocked",
           start: item.start_date,
           end: item.end_date,
           color: "red", // Color for blocked dates
         }));
 
-        // Combine bookings and blocked events
         setEvents([...bookingEvents, ...blockedEvents]);
       })
       .catch((error) => {
@@ -61,6 +63,7 @@ const DateBlockCalendar = () => {
         setEvents((prevEvents) => [
           ...prevEvents,
           {
+            id: `blocked-${Date.now()}`, // Ensure a unique ID for each new blocked event
             title: "Blocked",
             start: startStr,
             end: endStr,
@@ -73,9 +76,16 @@ const DateBlockCalendar = () => {
       });
   };
 
-  const handleDateClick = (clickInfo) => {
-    const startStr = clickInfo.event.start.toISOString();
-    const endStr = clickInfo.event.end.toISOString();
+  const handleEventClick = (clickInfo) => {
+    if (clickInfo.event.title === "Blocked") {
+      setSelectedEvent(clickInfo.event);
+      setShowModal(true);
+    }
+  };
+
+  const handleConfirmUnblock = () => {
+    const startStr = selectedEvent.start.toISOString();
+    const endStr = selectedEvent.end.toISOString();
 
     axios
       .delete("/api/remove-date-block", {
@@ -83,25 +93,72 @@ const DateBlockCalendar = () => {
       })
       .then((response) => {
         setEvents((prevEvents) =>
-          prevEvents.filter(
-            (event) => event.start !== startStr && event.end !== endStr
-          )
+          prevEvents.filter((event) => event.id !== selectedEvent.id)
         );
+        setShowModal(false);
+        setSelectedEvent(null);
       })
       .catch((error) => {
         console.error("Error removing date block:", error);
+        setShowModal(false);
+        setSelectedEvent(null);
       });
   };
 
+  const handleCancelUnblock = () => {
+    setShowModal(false);
+    setSelectedEvent(null);
+  };
+
   return (
-    <FullCalendar
-      plugins={[dayGridPlugin, interactionPlugin]}
-      initialView="dayGridMonth"
-      events={events}
-      selectable={true}
-      select={handleDateSelect}
-      eventClick={handleDateClick}
-    />
+    <div>
+      <FullCalendar
+        plugins={[dayGridPlugin, interactionPlugin]}
+        initialView="dayGridMonth"
+        events={events}
+        selectable={true}
+        select={handleDateSelect}
+        eventClick={handleEventClick}
+      />
+      <Modal open={showModal} onClose={handleCancelUnblock}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 400,
+            bgcolor: "background.paper",
+            border: "2px solid #000",
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <Typography variant="h6" component="h2">
+            Confirm Unblock Date
+          </Typography>
+          <Typography sx={{ mt: 2 }}>
+            Are you sure you want to unblock this date?
+          </Typography>
+          <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between" }}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleConfirmUnblock}
+            >
+              Yes
+            </Button>
+            <Button
+              variant="outlined"
+              color="secondary"
+              onClick={handleCancelUnblock}
+            >
+              No
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
+    </div>
   );
 };
 
