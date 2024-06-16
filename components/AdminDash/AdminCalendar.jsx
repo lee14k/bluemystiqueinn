@@ -19,21 +19,31 @@ const AdminCalendar = () => {
     axios
       .get("/api/get-booking-cal")
       .then((response) => {
-        const rawData = response.data;
-        const cleanedEvents = rawData.map((item) => ({
-          title: item.first_name || "No Title",
+        const { bookings, blockedDates } = response.data;
+
+        // Transform bookings into calendar events
+        const bookingEvents = bookings.map((item) => ({
+          title: item.first_name || "Booking",
           start: item.start_date,
           end: item.end_date,
-          color: roomColors[item.room_name] || "gray", // Apply color based on room_id, default to gray if room_id is not mapped
+          color: roomColors[item.room_name] || "gray",
         }));
 
-        setEvents(cleanedEvents);
+        // Transform blocked dates into calendar events
+        const blockedEvents = blockedDates.map((item) => ({
+          title: "Blocked",
+          start: item.start_date,
+          end: item.end_date,
+          color: "red", // Color for blocked dates
+        }));
+
+        // Combine bookings and blocked events
+        setEvents([...bookingEvents, ...blockedEvents]);
       })
       .catch((error) => {
         console.error("Error fetching calendar events:", error);
       });
   }, []);
-
   return (
     <FullCalendar
       plugins={[dayGridPlugin]}

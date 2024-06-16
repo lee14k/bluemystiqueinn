@@ -5,7 +5,7 @@ export default async function handler(req, res) {
     const { start_date, end_date } = req.body;
 
     const { data, error } = await supabase
-      .from("booking")
+      .from("room_unavailability")
       .delete()
       .eq("start_date", start_date)
       .eq("end_date", end_date);

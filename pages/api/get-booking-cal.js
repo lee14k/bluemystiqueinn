@@ -14,12 +14,22 @@ export default async function handler(req, res) {
       res.status(200).json({ data });
     }
   } else if (req.method === "GET") {
-    const { data, error } = await supabase.from("booking").select("*");
+    // Fetch bookings
+    const { data: bookings, error: bookingsError } = await supabase
+      .from("booking")
+      .select("*");
 
-    if (error) {
-      res.status(500).json({ error: error.message });
+    // Fetch blocked dates
+    const { data: blockedDates, error: blockedDatesError } = await supabase
+      .from("room_unavailability")
+      .select("*");
+
+    if (bookingsError || blockedDatesError) {
+      res
+        .status(500)
+        .json({ error: bookingsError?.message || blockedDatesError?.message });
     } else {
-      res.status(200).json(data);
+      res.status(200).json({ bookings, blockedDates });
     }
   } else {
     res.status(405).json({ error: "Method not allowed" });
