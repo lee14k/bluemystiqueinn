@@ -4,7 +4,18 @@ export default async function handler(req, res) {
   if (req.method === "POST") {
     const { bookingData, foodData } = req.body;
 
+    // Function to set the time to 12 AM
+    const setToMidnight = (dateString) => {
+      const date = new Date(dateString);
+      date.setHours(0, 0, 0, 0);
+      return date.toISOString();
+    };
+
     try {
+      // Adjust the start and end dates to 12 AM
+      const startDate = setToMidnight(bookingData.startDate);
+      const endDate = setToMidnight(bookingData.endDate);
+
       // Insert the booking data
       const { data: booking, error: bookingError } = await supabase
         .from("booking")
@@ -18,8 +29,8 @@ export default async function handler(req, res) {
           city: bookingData.city,
           street_address: bookingData.streetAddress,
           zip_code: bookingData.zipCode,
-          start_date: bookingData.startDate,
-          end_date: bookingData.endDate,
+          start_date: startDate,
+          end_date: endDate,
           room_name: bookingData.roomId,
           payment_status: bookingData.paymentStatus,
           second_guest_first_name: bookingData.secondGuest?.firstName || null,

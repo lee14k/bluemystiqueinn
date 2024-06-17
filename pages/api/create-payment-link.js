@@ -26,19 +26,20 @@ export default async function handler(req, res) {
       if (!roomName) {
         throw new Error("Room name is undefined. Please check the room data.");
       }
+      const roomRateCents = roomData.rate * 100; // rate in cents
+      const totalAmountCents = roomRateCents * numberOfDays;
+      const feeCents = Math.round(totalAmountCents * 0.026); // 2.6% fee
 
       const lineItems = [
         {
           name: `Room ${roomName}`,
           quantity: String(numberOfDays),
           basePriceMoney: {
-            amount: roomData.rate * 100, // amount in cents
+            amount: roomRateCents, // amount in cents
             currency: "USD",
           },
         },
       ];
-
-      // Create a payment link
       const paymentLinkResponse = await client.checkoutApi.createPaymentLink({
         idempotencyKey: new Date().getTime().toString(),
         order: {
@@ -46,8 +47,18 @@ export default async function handler(req, res) {
           lineItems: lineItems,
           taxes: [
             {
-              name: 'state',
-              percentage: '6',
+              name: "State Sales Tax",
+              percentage: "6",
+            },
+          ],
+          serviceCharges: [
+            {
+              name: "Processing Fee",
+              amountMoney: {
+                amount: feeCents,
+                currency: "USD",
+              },
+              calculationPhase: "SUBTOTAL_PHASE",
             },
           ],
         },
@@ -70,7 +81,9 @@ export default async function handler(req, res) {
         .eq("id", bookingId);
 
       if (error) {
-        throw new Error(`Error updating booking with payment link: ${error.message}`);
+        throw new Error(
+          `Error updating booking with payment link: ${error.message}`
+        );
       }
 
       res.status(200).json({ paymentLink });
