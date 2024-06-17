@@ -18,13 +18,14 @@ export default async (req, res) => {
   });
   const recipients = [
     process.env.RECIPIENT1,
+    process.env.RECIPIENT2,
   ];
   const mailData = {
     from: process.env.SMTP_USER,
     to: recipients, // you can change this to where you want to receive the emails
     subject: "New Contact Form Submission",
     text: `
-      Name: ${firstName}
+      Name: ${firstName} ${lastName}
       Phone Number: ${phoneNumber}
       Message: ${message}
     `,
