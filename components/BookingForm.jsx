@@ -66,7 +66,8 @@ const BookingForm = () => {
       additionalCostAmount += 40;
     }
     setAdditionalCost(additionalCostAmount);
-    const totalAmount = (subtotal + additionalCostAmount) * 1.06; // Apply tax to combined subtotal and additional cost
+    const processingFee = subtotal * 0.026;
+    const totalAmount = (subtotal + processingFee) * 1.06; // Apply tax to combined subtotal and additional cost
     setTotal(totalAmount);
   }, [subtotal, isDinnerSelected, isCharcuterieSelected, secondGuest]);
 
@@ -472,6 +473,13 @@ const BookingForm = () => {
                     (charcuterie ? 40 : 0)) *
                   0.06
                 ).toFixed(2)}
+              </span>
+            </div>
+            <div className="flex justify-between mb-2">
+              <span className="font-bold">Processing Fee:</span>
+              <span>
+                $
+                {(subtotal*0.026).toFixed(2)}
               </span>
             </div>
             <div className="flex justify-between font-bold text-lg">
