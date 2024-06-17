@@ -10,6 +10,46 @@ function classNames(...classes) {
 
 export default function ContactFill() {
   const [agreed, setAgreed] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false); 
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+  
+    // Create a FormData object, passing in the form event target
+    const form = event.target;
+    const formData = new FormData(form);
+  
+    // Retrieve form data using FormData methods
+    const data = {
+      firstName: formData.get('firstName'),
+      lastName: formData.get('lastName'),
+      email: formData.get('email'),
+      phoneNumber: formData.get('phoneNumber'),
+      message: formData.get('message'),
+    };
+    
+    try {
+      const response = await fetch("/api/send-contact-form", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+  
+      if (response.ok) {
+        setIsModalOpen(true);
+        console.log("Form submitted successfully");
+      } else {
+        throw new Error("Form submission failed");
+      }
+    } catch (error) {
+      console.error("There was an error submitting the form:", error);
+    }
+  };
+      const closeModal = () => {
+     setIsModalOpen(false);
+   };
 
   return (
     <div className="isolate bg-white px-6 py-24 sm:py-32 lg:px-8">
@@ -26,7 +66,6 @@ export default function ContactFill() {
         </h2>
       </div>
       <form
-        action="#"
         method="POST"
         className="mx-auto mt-16 max-w-xl sm:mt-20"
       >
@@ -156,6 +195,21 @@ export default function ContactFill() {
             Let's talk
           </button>
         </div>
+        {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div className="modal-bg fixed inset-0 bg-black opacity-50"></div>
+          <div className="modal-content bg-white p-4 rounded-lg shadow-lg z-50">
+            <p className="text-lg font-semibold text-green-600">Submission Successful!</p>
+            <p>Your submission was successful. Thank you!</p>
+            <button
+              onClick={closeModal}
+              className="mt-4 bg-red-600 text-white py-2 px-4 rounded hover:bg-red-500"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
       </form>
     </div>
   );

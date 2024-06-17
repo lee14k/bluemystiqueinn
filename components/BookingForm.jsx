@@ -6,7 +6,7 @@ import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import { useBooking } from "../context/BookingContext";
 import dayjs from "dayjs";
-import DinnerModal from "./DinnerModal"; // Update this import
+import DinnerModal from "./DinnerModal";
 
 const BookingForm = () => {
   const { selectedDates, selectedRoom } = useBooking();
@@ -31,6 +31,17 @@ const BookingForm = () => {
   const [dinner, setDinner] = useState(false);
   const [isDinnerSelected, setIsDinnerSelected] = useState(false);
   const [isCharcuterieSelected, setIsCharcuterieSelected] = useState(false);
+
+  const validateZipCode = (zip) => {
+    const zipCodeRegex = /^\d{5}(-\d{4})?$/;
+    return zipCodeRegex.test(zip);
+  };
+
+  const validatePhoneNumber = (phone) => {
+    const phoneRegex =
+      /^(\+\d{1,2}\s?)?1?\-?\.?\s?\(?\d{3}\)?[\s\-\.]?\d{3}[\s\-\.]?\d{4}$/;
+    return phoneRegex.test(phone);
+  };
 
   const [dinnerDetails, setDinnerDetails] = useState({
     allergies: "",
@@ -76,9 +87,11 @@ const BookingForm = () => {
     if (!firstName) errors.firstName = "First name is required";
     if (!lastName) errors.lastName = "Last name is required";
     if (!email) errors.email = "Email is required";
-    if (dinner) {
-      if (!dinnerDetails.time) errors.dinnerTime = "Dinner time is required";
-    }
+    if (!validatePhoneNumber(phoneNumber))
+      errors.phoneNumber = "Invalid phone number format";
+    if (!validateZipCode(zipCode)) errors.zipCode = "Invalid zip code format";
+    if (dinner && !dinnerDetails.time)
+      errors.dinnerTime = "Dinner time is required";
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -246,8 +259,13 @@ const BookingForm = () => {
             placeholder="Phone Number"
             value={phoneNumber}
             onChange={(e) => setPhoneNumber(e.target.value)}
-            className="mb-4 p-2 border border-gray-300 rounded"
+            className={`mb-4 p-2 border border-gray-300 rounded ${
+              highlightFields && formErrors.phoneNumber ? "border-red-500" : ""
+            }`}
           />
+          {highlightFields && formErrors.phoneNumber && (
+            <span className="text-red-500">{formErrors.phoneNumber}</span>
+          )}
 
           <h1 className="text-2xl font-bold mb-4">Address Information</h1>
 
@@ -284,8 +302,13 @@ const BookingForm = () => {
             placeholder="Zip Code"
             value={zipCode}
             onChange={(e) => setZipCode(e.target.value)}
-            className="mb-4 p-2 border border-gray-300 rounded"
+            className={`mb-4 p-2 border border-gray-300 rounded ${
+              highlightFields && formErrors.zipCode ? "border-red-500" : ""
+            }`}
           />
+          {highlightFields && formErrors.zipCode && (
+            <span className="text-red-500">{formErrors.zipCode}</span>
+          )}
 
           <div className="mb-4">
             <label className="flex items-center space-x-2">
@@ -477,10 +500,7 @@ const BookingForm = () => {
             </div>
             <div className="flex justify-between mb-2">
               <span className="font-bold">Processing Fee:</span>
-              <span>
-                $
-                {(subtotal*0.026).toFixed(2)}
-              </span>
+              <span>${(subtotal * 0.026).toFixed(2)}</span>
             </div>
             <div className="flex justify-between font-bold text-lg">
               <span>Total:</span>
