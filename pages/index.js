@@ -7,25 +7,6 @@ import Footer from "@/components/FrontEnd/Footer";
 import { supabase } from "../utils/supabase";
 import { useEffect } from "react";
 export default function Home() {
-  useEffect(() => {
-    const startSubscription = async () => {
-      try {
-        const response = await fetch('/api/subscribe-to-bookings', {
-          method: 'POST',
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to start subscription');
-        }
-
-        console.log('Subscription started successfully');
-      } catch (error) {
-        console.error('Error starting subscription:', error);
-      }
-    };
-
-    startSubscription();
-  }, []);
   return (
     <div>
       <Navbar />
