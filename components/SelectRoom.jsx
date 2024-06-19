@@ -110,7 +110,7 @@ const SelectRoom = () => {
       const isBooked = bookingData.some((booking) => {
         if (booking.room_name === room.id) {
           const bookedStart = dayjs(booking.start_date);
-          const bookedEnd = dayjs(booking.end_date).add(1, "day");
+          const bookedEnd = dayjs(booking.end_date);
           return (
             dateRange[0].isBefore(bookedEnd) &&
             dateRange[1].isAfter(bookedStart)
@@ -122,7 +122,7 @@ const SelectRoom = () => {
       const isUnavailable = unavailabilityData.some((unavailable) => {
         if (unavailable.room_id === room.id) {
           const unavailableStart = dayjs(unavailable.start_date);
-          const unavailableEnd = dayjs(unavailable.end_date)
+          const unavailableEnd = dayjs(unavailable.end_date);
           return (
             dateRange[0].isBefore(unavailableEnd) &&
             dateRange[1].isAfter(unavailableStart)
