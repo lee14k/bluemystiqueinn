@@ -27,15 +27,6 @@ export default async function handler(req, res) {
         <p>End Date: ${new Date(bookingDetails.end_date).toLocaleDateString()}</p>
         <p>Room: ${bookingDetails.room_name}</p>
       `;
-
-      // Send email to the user
-      await transporter.sendMail({
-        from: `"Blue Mystique Inn" <${process.env.EMAIL_FROM}>`, // sender address
-        to: email, // list of receivers
-        subject: "Booking Confirmation", // Subject line
-        html: emailContent, // html body
-      });
-
       // Send email to the designated user
       await transporter.sendMail({
         from: `"New Booking Alert" <${process.env.EMAIL_FROM}>`, // sender address

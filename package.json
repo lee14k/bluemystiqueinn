@@ -23,7 +23,7 @@
     "@mui/x-date-pickers": "^7.3.2",
     "@mui/x-date-pickers-pro": "^7.3.2",
     "@mui/x-license": "^7.2.0",
-    "@supabase/supabase-js": "^2.42.0",
+    "@supabase/supabase-js": "^2.43.5",
     "auth0": "^4.4.0",
     "axios": "^1.7.2",
     "dayjs": "^1.11.11",

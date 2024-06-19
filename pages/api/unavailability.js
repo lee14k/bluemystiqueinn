@@ -1,5 +1,3 @@
-// pages/api/get-unavailability.js
-
 import { supabase } from '../../utils/supabase';
 
 export default async function handler(req, res) {
