@@ -5,7 +5,8 @@ export default async function handler(req, res) {
     try {
       const { data, error } = await supabase
         .from('booking')
-        .select('*');
+        .select('*')
+        .order('start_date', { ascending: true })
 
       if (error) {
         console.error('Supabase Error:', error);
