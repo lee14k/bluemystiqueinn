@@ -4,8 +4,7 @@ import PhotoGallery from "@/components/FrontEnd/PhotoGallery";
 import HomeCTA from "@/components/HomeCTA";
 import AboutFill from "@/components/FrontEnd/AboutFill";
 import Footer from "@/components/FrontEnd/Footer";
-import { supabase } from "../utils/supabase";
-import { useEffect } from "react";
+
 export default function Home() {
   return (
     <div>
