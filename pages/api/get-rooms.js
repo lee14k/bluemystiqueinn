@@ -3,7 +3,9 @@ import { supabase } from "../../utils/supabase";
 export default async function handler(req, res) {
   if (req.method === "GET") {
     try {
-      const { data, error } = await supabase.from("rooms").select("*");
+      const { data, error } = await supabase
+        .from("rooms")
+        .select("*");
 
       if (error) {
         console.error("Supabase Error:", error);

@@ -52,6 +52,9 @@ const BookingList = () => {
             <th style={{ border: "1px solid #ddd", padding: "8px" }}>
               Guest Email
             </th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+              Guest Phone Number
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -70,7 +73,12 @@ const BookingList = () => {
               <td style={{ border: "1px solid #ddd", padding: "8px" }}>
                 {item.first_name} {item.last_name}
               </td>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>{item.email}</td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                {item.email}
+              </td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                {item.phone_number}
+              </td>
             </tr>
           ))}
         </tbody>

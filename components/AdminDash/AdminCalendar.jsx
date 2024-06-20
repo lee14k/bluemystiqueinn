@@ -20,12 +20,10 @@ const AdminCalendar = () => {
       .get("/api/get-booking-cal")
       .then((response) => {
         const { bookings, blockedDates } = response.data;
-
-        // Transform bookings into calendar events
         const bookingEvents = bookings.map((item) => ({
-          title: item.first_name || "Booking",
-          start: item.start_date,
-          end: item.end_date,
+          title: item.first_name + "  "+item.room_name || "Booking",
+          start: item.start_date.split("T")[0],
+          end: item.end_date.split("T")[0],
           color: roomColors[item.room_name] || "gray",
         }));
 
