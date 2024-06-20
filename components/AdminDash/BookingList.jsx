@@ -26,10 +26,7 @@ const BookingList = () => {
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
-  const formatDate = (dateString) => {
-    const options = { year: "numeric", month: "long", day: "numeric" };
-    return new Date(dateString).toLocaleDateString(undefined, options);
-  };
+
   return (
     <div>
       <h1>Bookings</h1>
@@ -62,10 +59,10 @@ const BookingList = () => {
             <tr key={item.id}>
               {/* Replace with your actual column names */}
               <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                {formatDate(item.start_date)}
+                {item.start_date}
               </td>
               <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                {formatDate(item.end_date)}
+                {item.end_date}
               </td>
               <td style={{ border: "1px solid #ddd", padding: "8px" }}>
                 {item.room_name}
