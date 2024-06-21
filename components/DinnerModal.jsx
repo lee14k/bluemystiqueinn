@@ -30,6 +30,7 @@ const DinnerModal = ({ open, onClose, onYes }) => {
         <h2 className="text-2xl mb-4">
           Would you like dinner with your reservation?
         </h2>
+        <h3>$100 per person. 3 to 6 course Chef's Table experience.</h3>
         <TextField
           label="Allergies"
           name="allergies"

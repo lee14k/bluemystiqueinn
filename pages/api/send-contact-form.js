@@ -13,13 +13,10 @@ export default async (req, res) => {
     secure: true, // use SSL for port 465
     auth: {
       user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASSWORD,
+      pass: process.env.SMTP_PASS,
     },
   });
-  const recipients = [
-    process.env.RECIPIENT1,
-    process.env.RECIPIENT2,
-  ];
+  const recipients = [process.env.RECIPIENT1];
   const mailData = {
     from: process.env.SMTP_USER,
     to: recipients, // you can change this to where you want to receive the emails

@@ -29,7 +29,6 @@ const BookingList = () => {
 
   return (
     <div>
-      <h1>Bookings</h1>
       <table>
         <thead>
           <tr>
