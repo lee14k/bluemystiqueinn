@@ -17,7 +17,7 @@ const AdminNav = () => {
           <Link href="/admin/blocker">Blocker</Link>
         </li>
         <li className="text-4xl text-sky-900 my-2 bg-sky-300 rounded-2xl px-12 py-2 text-neutral-800">
-          <Link href="/admin/blocker">Add Manual Booking</Link>
+          <Link href="/admin/blocker">Manual Booking</Link>
         </li>
       </ul>
     </nav>
