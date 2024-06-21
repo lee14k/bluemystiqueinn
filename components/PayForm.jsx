@@ -86,7 +86,7 @@ const PayForm = ({ bookingId, onPaymentSuccess }) => {
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <ClipLoader size={50} color={"#123abc"} loading={loading} />
+        <ClipLoader size={250} color={"#123abc"} loading={loading} />
       </div>
     );
   }

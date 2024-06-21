@@ -2,6 +2,7 @@ import React from "react";
 import { useRouter } from "next/router";
 import PayForm from "../components/PayForm";
 import { useBooking } from "../context/BookingContext";
+import { ClipLoader } from "react-spinners";
 
 const PaymentPage = () => {
   const router = useRouter();
@@ -29,7 +30,7 @@ const PaymentPage = () => {
 
   return (
     <div>
-      <h1>Complete Your Payment</h1>
+      <ClipLoader color="#000" loading={true} size={150} />
       <PayForm bookingId={bookingId} onPaymentSuccess={handlePaymentSuccess} />
     </div>
   );
