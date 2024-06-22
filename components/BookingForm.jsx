@@ -7,6 +7,9 @@ import Box from "@mui/material/Box";
 import { useBooking } from "../context/BookingContext";
 import dayjs from "dayjs";
 import DinnerModal from "./DinnerModal";
+import ValidationErrorModal from "./ValidationErrorModal";
+import Select from "react-select";
+import CountryStateDropdown from "./CountryStateDropdown";
 
 const BookingForm = () => {
   const { selectedDates, selectedRoom } = useBooking();
@@ -14,8 +17,6 @@ const BookingForm = () => {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [country, setCountry] = useState("");
-  const [state, setState] = useState("");
   const [city, setCity] = useState("");
   const [streetAddress, setStreetAddress] = useState("");
   const [zipCode, setZipCode] = useState("");
@@ -31,6 +32,12 @@ const BookingForm = () => {
   const [dinner, setDinner] = useState(false);
   const [isDinnerSelected, setIsDinnerSelected] = useState(false);
   const [isCharcuterieSelected, setIsCharcuterieSelected] = useState(false);
+  const [highlightFields, setHighlightFields] = useState(false); 
+  const [formErrors, setFormErrors] = useState({});
+  const [showValidationErrorModal, setShowValidationErrorModal] = useState(false); 
+  const [country, setCountry] = useState("");
+  const [state, setState] = useState("");
+  const router = useRouter();
 
   const validateZipCode = (zip) => {
     const zipCodeRegex = /^\d{5}(-\d{4})?$/;
@@ -56,9 +63,6 @@ const BookingForm = () => {
     specialOccasion: "",
     time: "",
   });
-  const [highlightFields, setHighlightFields] = useState(false); // New state for highlighting fields
-  const [formErrors, setFormErrors] = useState({}); // New state for form errors
-  const router = useRouter();
 
   useEffect(() => {
     if (selectedDates.length === 2 && selectedRoom) {
@@ -78,7 +82,7 @@ const BookingForm = () => {
     }
     setAdditionalCost(additionalCostAmount);
     const processingFee = subtotal * 0.026;
-    const totalAmount = (subtotal + processingFee) * 1.06; // Apply tax to combined subtotal and additional cost
+    const totalAmount = (subtotal + processingFee) * 1.06;
     setTotal(totalAmount);
   }, [subtotal, isDinnerSelected, isCharcuterieSelected, secondGuest]);
 
@@ -100,6 +104,7 @@ const BookingForm = () => {
     e.preventDefault();
     if (!validateForm()) {
       setHighlightFields(true);
+      setShowValidationErrorModal(true); 
       return;
     }
 
@@ -191,6 +196,19 @@ const BookingForm = () => {
     setShowCharcuterieModal(false);
   };
 
+  const handleValidationErrorModalClose = () => {
+    setShowValidationErrorModal(false); 
+  };
+
+  const handleCountryChange = (e) => {
+    setCountry(e.target.value);
+    setState("");
+  };
+
+  const handleStateChange = (e) => {
+    setState(e.target.value);
+  };
+
   return (
     <div className="flex flex-col justify-center items-center">
       <h1 className="text-4xl my-12">Complete your booking details</h1>
@@ -268,20 +286,11 @@ const BookingForm = () => {
           )}
 
           <h1 className="text-2xl font-bold mb-4">Address Information</h1>
-
-          <input
-            type="text"
-            placeholder="Country"
-            value={country}
-            onChange={(e) => setCountry(e.target.value)}
-            className="mb-4 p-2 border border-gray-300 rounded"
-          />
-          <input
-            type="text"
-            placeholder="State"
-            value={state}
-            onChange={(e) => setState(e.target.value)}
-            className="mb-4 p-2 border border-gray-300 rounded"
+          <CountryStateDropdown
+            selectedCountry={country}
+            selectedState={state}
+            handleCountryChange={handleCountryChange}
+            handleStateChange={handleStateChange}
           />
           <input
             type="text"
@@ -525,6 +534,11 @@ const BookingForm = () => {
         open={showCharcuterieModal}
         onClose={handleCharcuterieClose}
         onYes={handleCharcuterieYes}
+      />
+      <ValidationErrorModal
+        open={showValidationErrorModal}
+        onClose={handleValidationErrorModalClose}
+        errors={formErrors}
       />
     </div>
   );
