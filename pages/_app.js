@@ -4,7 +4,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers-pro/AdapterDayjs";
 import { LicenseInfo } from "@mui/x-license";
 import { BookingProvider } from "../context/BookingContext";
 import { UserProvider } from "@auth0/nextjs-auth0/client";
-import { isMobileUserAgent } from '../utils/detectMobile';
+import { isMobileUserAgent } from '@/utils/detectMobile';
 
 
 LicenseInfo.setLicenseKey(process.env.NEXT_PUBLIC_MUI_X_LICENSE_KEY);
