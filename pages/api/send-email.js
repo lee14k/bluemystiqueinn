@@ -20,8 +20,8 @@ export default async function handler(req, res) {
 
     // Email content
     const mailOptions = {
-      from: process.env.EMAIL_FROM,
-      to: process.env.EMAIL_FROM, // recipient's email
+      from: process.env.SMTP_USER,
+      to: process.env.SMTP_USER, // recipient's email
       subject: "Booking Confirmation",
       text: `New Booking
 

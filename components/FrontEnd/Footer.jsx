@@ -11,7 +11,7 @@ const Footer = ({isMobile}) => {
           <p>Mobile Footer</p>
         </div> ):
         (
-    <div className={`footerwrapper bg-orange-50 flex flex-col justify-center container mx-auto text-center `}>
+    <div className={`footerwrapper bg-orange-50 lg:flex lg:flex-col justify-center container mx-auto text-center `}>
       <div className="" >
         <h1 className={`${della.className} text-6xl`}>Blue Mystique Inn</h1>
         <p className="text-3xl">230 Arbutus St, Manistique, MI 49854</p>
