@@ -2,9 +2,15 @@ import { Della_Respira } from "next/font/google";
 import FacebookTwoToneIcon from '@mui/icons-material/FacebookTwoTone';
 import Link from "next/link";
 const della = Della_Respira({ subsets: ["latin"], weight: "400" });
-const Footer = () => {
+const Footer = ({isMobile}) => {
   return (
     <div className="">
+        {isMobile ? (
+        <div>
+          {/* Mobile Footer Content */}
+          <p>Mobile Footer</p>
+        </div> ):
+        (
     <div className={`footerwrapper bg-orange-50 grid lg:flex lg:flex-col justify-center  `}>
       <div className="mx-24" >
         <h1 className={`${della.className} text-6xl`}>Blue Mystique Inn</h1>
@@ -18,6 +24,7 @@ const Footer = () => {
       </div>
       </div>
       </div>
+        )}
     </div>
   );
 };
