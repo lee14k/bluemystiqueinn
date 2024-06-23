@@ -48,3 +48,16 @@
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.5);
 }
+
+@media (max-width: 767px) {
+  .footerwrapper {
+    position: relative;
+    height: 20rem;
+    background-size: 0%; /* Increase the size of the background image */
+    background-repeat: no-repeat;
+    background-position: right bottom;
+    overflow: hidden; /* Ensure the gradient does not overflow the container */
+    
+  }
+
+}
