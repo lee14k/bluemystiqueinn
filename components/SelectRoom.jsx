@@ -50,11 +50,7 @@ const SelectRoom = () => {
 
   useEffect(() => {
     if (selectedRoom && dateRange[0] && dateRange[1]) {
-      const days = dateRange[1].diff(dateRange[0], "day");
-      const subtotalAmount = days * selectedRoom.rate;
-      const totalAmount = subtotalAmount * 1.06;
-      setSubtotal(subtotalAmount);
-      setTotal(totalAmount);
+      calculateSubtotalAndTotal();
     }
   }, [selectedRoom, dateRange]);
 
@@ -105,6 +101,22 @@ const SelectRoom = () => {
     }
   };
 
+  const fetchScheduledRates = async (roomId, startDate, endDate) => {
+    try {
+      const response = await fetch(`/api/get-scheduled-rates?roomId=${roomId}&startDate=${startDate}&endDate=${endDate}`);
+      const data = await response.json();
+      if (response.ok) {
+        return data.rate; // Assuming your API returns the applicable rate
+      } else {
+        console.error("Error fetching scheduled rates:", data.error);
+        return null;
+      }
+    } catch (error) {
+      console.error("Error fetching scheduled rates:", error);
+      return null;
+    }
+  };
+  
   const filterAvailableRooms = () => {
     const newAvailableRooms = rooms.map((room) => {
       const isBooked = bookingData.some((booking) => {
@@ -139,6 +151,27 @@ const SelectRoom = () => {
 
     setAvailableRooms(newAvailableRooms);
   };
+
+  const calculateSubtotalAndTotal = async () => {
+    const days = dateRange[1].diff(dateRange[0], "day");
+    let rate = selectedRoom.rate;
+  
+    const scheduledRate = await fetchScheduledRates(
+      selectedRoom.id,
+      dateRange[0].format("YYYY-MM-DD"),
+      dateRange[1].format("YYYY-MM-DD")
+    );
+  
+    if (scheduledRate) {
+      rate = scheduledRate;
+    }
+  
+    const subtotalAmount = days * rate;
+    const totalAmount = subtotalAmount * 1.06;
+    setSubtotal(subtotalAmount);
+    setTotal(totalAmount);
+  };
+  
 
   const handleProceed = () => {
     setSelectedDates(dateRange);
