@@ -3,15 +3,18 @@ import { supabase } from "../../utils/supabase";
 export default async function handler(req, res) {
   if (req.method === "GET") {
     try {
+      // Get today's date
+      const today = new Date().toISOString().split('T')[0];
+
       const { data, error } = await supabase
         .from("booking")
-        .select("*");
+        .select("*")
+        .gte("end_date", today); // Filter to get bookings that have not ended before today
 
       if (error) {
         console.error("Supabase Error:", error);
         throw error;
       }
-
 
       if (data && data.length > 0) {
         res.status(200).json(data);

@@ -8,6 +8,7 @@ const EditBookings = () => {
   const [message, setMessage] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [tempValue, setTempValue] = useState("");
+  const [changedFields, setChangedFields] = useState({});
 
   const columns = ["first_name", "last_name", "start_date", "end_date", "phone_number", "email", "room_name"];
 
@@ -30,12 +31,14 @@ const EditBookings = () => {
     setTempValue(e.target.value);
   };
 
-  const handleBlur = () => {
+  const handleUpdateClick = () => {
     setShowModal(true);
   };
 
   const handleConfirm = async () => {
     const { row, column } = editingCell;
+
+    // Track the changed field
     const updatedBookings = bookings.map((booking, index) =>
       index === row ? { ...booking, [column]: tempValue } : booking
     );
@@ -46,22 +49,30 @@ const EditBookings = () => {
     setMessage("");
 
     try {
+      console.log("Sending update request with booking data:", {
+        bookingId: bookings[row].id,
+        bookingData: { [column]: tempValue },
+      });
+
       const response = await fetch("/api/update-booking", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           bookingId: bookings[row].id,
-          bookingData: updatedBookings[row],
+          bookingData: { [column]: tempValue },
         }),
       });
+
+      const result = await response.json();
+      console.log("Update response", result);
 
       if (response.ok) {
         setMessage("Booking updated successfully!");
       } else {
-        const errorData = await response.json();
-        setMessage(`Error: ${errorData.error}`);
+        setMessage(`Error: ${result.error}`);
       }
     } catch (error) {
+      console.error("Error updating booking", error);
       setMessage(`Error: ${error.message}`);
     } finally {
       setLoading(false);
@@ -98,19 +109,29 @@ const EditBookings = () => {
                 {columns.map((column) => (
                   <td
                     key={column}
-                    onClick={() => handleCellClick(rowIndex, column)}
-                    style={{ border: "1px solid #ddd", padding: "8px" }}
+                    style={{ border: "1px solid #ddd", padding: "8px", position: "relative" }}
                   >
                     {editingCell.row === rowIndex && editingCell.column === column ? (
-                      <input
-                        type={column.includes("date") ? "date" : "text"}
-                        value={tempValue}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        autoFocus
-                      />
+                      <div>
+                        <input
+                          type={column.includes("date") ? "date" : "text"}
+                          value={tempValue}
+                          onChange={handleChange}
+                          autoFocus
+                        />
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={handleUpdateClick}
+                          sx={{ marginLeft: 2 }}
+                        >
+                          Update Now
+                        </Button>
+                      </div>
                     ) : (
-                      booking[column]
+                      <span onClick={() => handleCellClick(rowIndex, column)}>
+                        {booking[column]}
+                      </span>
                     )}
                   </td>
                 ))}

@@ -18,43 +18,27 @@ export default async function handler(req, res) {
       res.status(500).json({ error: error.message });
     }
   } else if (req.method === "PATCH") {
-    const { bookingId, bookingData, foodData } = req.body;
+    const { bookingId, bookingData } = req.body;
 
     if (!bookingId) {
       return res.status(400).json({ error: "Missing bookingId" });
     }
 
     try {
-      // Adjust the start and end dates to 12 AM
-      const startDate = bookingData.startDate;
-      const endDate = bookingData.endDate;
+      console.log("Received bookingData:", bookingData);
 
       // Update the booking data
       const { data: booking, error: bookingError } = await supabase
         .from("booking")
-        .update({
-          first_name: bookingData.firstName,
-          last_name: bookingData.lastName,
-          email: bookingData.email,
-          phone_number: bookingData.phoneNumber,
-          country: bookingData.country,
-          state: bookingData.state,
-          city: bookingData.city,
-          street_address: bookingData.streetAddress,
-          zip_code: bookingData.zipCode,
-          start_date: startDate,
-          end_date: endDate,
-          room_name: bookingData.roomId,
-          second_guest_first_name: bookingData.secondGuest?.firstName || null,
-          second_guest_last_name: bookingData.secondGuest?.lastName || null,
-          second_guest_email: bookingData.secondGuest?.email || null,
-        })
+        .update(bookingData)
         .eq('id', bookingId);
 
       if (bookingError) {
         console.error("Error updating booking:", bookingError);
         return res.status(500).json({ error: bookingError.message });
       }
+
+      console.log("Booking updated successfully:", booking);
 
       // Log the update transaction
       const { error: logError } = await supabase
