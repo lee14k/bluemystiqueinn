@@ -10,7 +10,7 @@ const EditBookings = () => {
   const [tempValue, setTempValue] = useState("");
   const [changedFields, setChangedFields] = useState({});
 
-  const columns = ["first_name", "last_name", "start_date", "end_date", "phone_number", "email", "room_name"];
+  const columns = ["first_name", "last_name", "start_date", "end_date", "phone_number", "email", "room_name", "dinner"];
 
   useEffect(() => {
     const fetchBookings = async () => {
@@ -24,7 +24,7 @@ const EditBookings = () => {
 
   const handleCellClick = (row, column) => {
     setEditingCell({ row, column });
-    setTempValue(bookings[row][column]);
+    setTempValue(bookings[row][column] || ""); // Handle empty cells
   };
 
   const handleChange = (e) => {
@@ -101,6 +101,7 @@ const EditBookings = () => {
               <th style={{ border: "1px solid #ddd", padding: "8px" }}>Phone Number</th>
               <th style={{ border: "1px solid #ddd", padding: "8px" }}>Email</th>
               <th style={{ border: "1px solid #ddd", padding: "8px" }}>Room Number</th>
+              <th style={{ border: "1px solid #ddd", padding: "8px" }}>Dinner?</th>
             </tr>
           </thead>
           <tbody>
@@ -130,7 +131,7 @@ const EditBookings = () => {
                       </div>
                     ) : (
                       <span onClick={() => handleCellClick(rowIndex, column)}>
-                        {booking[column]}
+                        {booking[column] || "N/A"} {/* Handle empty cells */}
                       </span>
                     )}
                   </td>
