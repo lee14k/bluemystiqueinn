@@ -27,8 +27,8 @@ const AdminBlockDates = () => {
         },
         body: JSON.stringify({
           room_id: roomId,
-          start_date: startDate.format("YYYY-MM-DD"),
-          end_date: endDate.format("YYYY-MM-DD"),
+          start_date: dayjs(startDate).format("YYYY-MM-DD"),
+          end_date: dayjs(endDate).format("YYYY-MM-DD"),
         }),
       });
 
