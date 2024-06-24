@@ -16,7 +16,7 @@ export default function Book() {
           We’re so happy to have you! Questions? Send us a
           message. Want more information on our rooms? Click the details button on each card or check out our rooms page.
         </p>
-        <div className="grid lg:grid-cols-2 ">
+        <div className="grid lg:grid-cols-3 ">
         <Link href="/contact">
           {" "}
           <button className="text-xl my-2 text-sky-900 my-2 bg-sky-300 rounded-2xl px-12 py-2 text-neutral-800 rounded-2xl px-12 py-2 text-neutral-800">
@@ -28,6 +28,11 @@ export default function Book() {
           <button className="text-xl my-2 text-sky-900 my-2 bg-sky-300 rounded-2xl px-12 py-2 text-neutral-800 rounded-2xl px-12 py-2 text-neutral-800">
             Our Rooms
           </button>
+        </Link>
+        <Link href="/cancellation-policy">
+          {" "}
+          <button className="text-xl my-2 text-sky-900 my-2 bg-sky-300 rounded-2xl px-12 py-2 text-neutral-800 rounded-2xl px-12 py-2 text-neutral-800">
+Cancellation Policy          </button>
         </Link>
         </div>
       </div>
