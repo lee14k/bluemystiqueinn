@@ -25,11 +25,11 @@
 }
 
 .footerwrapper {
-  background-image: url("/bmfoot.png");
-  height: 25rem;
-  background-size: 40%; /* Increase the size of the background image */
+  background-image: url("/bluewaves.png");
+  height: 20rem;
+  background-size: 60%; /* Increase the size of the background image */
   background-repeat: no-repeat;
-  background-position: right center;
+  background-position: left;
 }
 
 .fh-bg {
