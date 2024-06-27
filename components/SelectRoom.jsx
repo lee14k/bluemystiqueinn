@@ -103,7 +103,14 @@ const SelectRoom = () => {
 
   const fetchScheduledRates = async (roomId, startDate, endDate) => {
     try {
-      const response = await fetch(`/api/get-scheduled-rates?roomId=${roomId}&startDate=${startDate}&endDate=${endDate}`);
+      const response = await fetch('/api/get-scheduled-rates', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ roomId, startDate, endDate }),
+      });
+  
       const data = await response.json();
       if (response.ok) {
         return data.rate; // Assuming your API returns the applicable rate
@@ -117,8 +124,13 @@ const SelectRoom = () => {
     }
   };
   
-  const filterAvailableRooms = () => {
-    const newAvailableRooms = rooms.map((room) => {
+  const filterAvailableRooms = async () => {
+    const startDate = dateRange[0].format("YYYY-MM-DD");
+    const endDate = dateRange[1].format("YYYY-MM-DD");
+  
+    const roomsWithUpdatedRates = await updateRoomRates(rooms, startDate, endDate);
+  
+    const newAvailableRooms = roomsWithUpdatedRates.map((room) => {
       const isBooked = bookingData.some((booking) => {
         if (booking.room_name === room.id) {
           const bookedStart = dayjs(booking.start_date);
@@ -130,7 +142,7 @@ const SelectRoom = () => {
         }
         return false;
       });
-
+  
       const isUnavailable = unavailabilityData.some((unavailable) => {
         if (unavailable.room_id === room.id) {
           const unavailableStart = dayjs(unavailable.start_date);
@@ -142,36 +154,39 @@ const SelectRoom = () => {
         }
         return false;
       });
-
+  
       return {
         ...room,
         availability: isBooked || isUnavailable ? "Unavailable" : "Available",
       };
     });
-
+  
     setAvailableRooms(newAvailableRooms);
   };
+  
 
   const calculateSubtotalAndTotal = async () => {
     const days = dateRange[1].diff(dateRange[0], "day");
     let rate = selectedRoom.rate;
-  
+
+    const startDate = dateRange[0].format("YYYY-MM-DD");
+    const endDate = dateRange[1].format("YYYY-MM-DD");
+
     const scheduledRate = await fetchScheduledRates(
       selectedRoom.id,
-      dateRange[0].format("YYYY-MM-DD"),
-      dateRange[1].format("YYYY-MM-DD")
+      startDate,
+      endDate
     );
-  
+
     if (scheduledRate) {
       rate = scheduledRate;
     }
-  
+
     const subtotalAmount = days * rate;
     const totalAmount = subtotalAmount * 1.06;
     setSubtotal(subtotalAmount);
     setTotal(totalAmount);
   };
-  
 
   const handleProceed = () => {
     setSelectedDates(dateRange);
@@ -193,6 +208,19 @@ const SelectRoom = () => {
     setModalOpen(false);
     setSelectedRoomDetails(null);
   };
+const updateRoomRates = async (rooms, startDate, endDate) => {
+  const updatedRooms = await Promise.all(rooms.map(async (room) => {
+    const scheduledRate = await fetchScheduledRates(room.id, startDate, endDate);
+    const updatedRate = scheduledRate || room.rate;
+
+    return {
+      ...room,
+      rate: updatedRate
+    };
+  }));
+
+  return updatedRooms;
+};
 
   return (
     <div>
