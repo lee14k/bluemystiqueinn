@@ -2,11 +2,14 @@ import Image from 'next/image';
 import { Della_Respira } from 'next/font/google';
 import Link from 'next/link';
 const della = Della_Respira({ subsets: ['latin'], weight: '400' });
+import Navbar from '@/components/FrontEnd/Navbar';
+import Footer from '@/components/FrontEnd/Footer';
 
 const FoodHeader = () => {
 
     return (
         <div>
+            <Navbar />  
         <div className={`fh-bg flex flex-col justify-center items-center pt-24 ${della.className}`}>
        
             <div className="flex flex-col justify-center items-center text-white text-timer pb-24">
@@ -46,6 +49,7 @@ const FoodHeader = () => {
         />
       </div>
     </div>
+    <Footer/>
         </div>
     );
 };

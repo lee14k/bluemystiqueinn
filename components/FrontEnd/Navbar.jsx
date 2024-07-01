@@ -16,6 +16,10 @@ const navigation = [
     name: "Chef's Table",
     href: "/chefs-table",
   },
+  {
+    name: "Events",
+    href: "/events",
+  },
   { name: "Contact", href: "/contact", current: false },
 ];
 
