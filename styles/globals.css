@@ -48,7 +48,22 @@
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.5);
 }
-
+.ee-bg {
+  background-image: url("/Full-Group-Wide-8546.jpg");
+  height: 55rem;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+.ee-bg::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+}
 @media (max-width: 767px) {
   .footerwrapper {
     position: relative;
@@ -57,7 +72,5 @@
     background-repeat: no-repeat;
     background-position: right bottom;
     overflow: hidden; /* Ensure the gradient does not overflow the container */
-    
   }
-
 }
