@@ -21,7 +21,9 @@ const AdminCalendar = () => {
       .then((response) => {
         const { bookings, blockedDates } = response.data;
         const bookingEvents = bookings.map((item) => ({
-          title: item.first_name + " "+ item.last_name + "  " + item.room_name || "Booking",
+          title:
+            item.first_name + " " + item.last_name + "  " + item.room_name ||
+            "Booking",
           start: item.start_date.split("T")[0],
           end: item.end_date.split("T")[0],
           color: roomColors[item.room_name] || "gray",
@@ -29,7 +31,7 @@ const AdminCalendar = () => {
 
         // Transform blocked dates into calendar events
         const blockedEvents = blockedDates.map((item) => ({
-          title: "Blocked",
+          title: "Blocked" + item.room_name,
           start: item.start_date,
           end: item.end_date,
           color: "red", // Color for blocked dates
