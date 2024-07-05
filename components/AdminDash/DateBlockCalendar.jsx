@@ -34,7 +34,7 @@ const DateBlockCalendar = () => {
 
         const blockedEvents = blockedDates.map((item) => ({
           id: `blocked-${item.id}`, // Ensure each event has a unique ID
-          title: "Blocked",
+          title: "Blocked" + item.room_id,
           start: item.start_date,
           end: item.end_date,
           color: "red", // Color for blocked dates
