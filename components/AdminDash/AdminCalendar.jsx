@@ -31,7 +31,7 @@ const AdminCalendar = () => {
 
         // Transform blocked dates into calendar events
         const blockedEvents = blockedDates.map((item) => ({
-          title: "Blocked" + item.room_name,
+          title: "Blocked" + item.room_id,
           start: item.start_date,
           end: item.end_date,
           color: "red", // Color for blocked dates
