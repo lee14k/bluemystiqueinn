@@ -12,6 +12,7 @@ const AdminBlockDates = () => {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [message, setMessage] = useState("");
+  const [memo, setMemo] = useState("");
 
   const handleBlockDates = async () => {
     if (!roomId || !startDate || !endDate) {
@@ -65,6 +66,11 @@ const AdminBlockDates = () => {
           onChange={(newValue) => setEndDate(newValue)}
           renderInput={(params) => <TextField {...params} fullWidth />}
         />
+        <TextField
+          label="Memo"
+          value={memo}
+          onChange={(e) => setMemo(e.target.value)}
+          fullWidth/>
         <Button variant="contained" color="primary" onClick={handleBlockDates}>
           Block Dates
         </Button>
