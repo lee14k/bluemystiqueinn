@@ -26,7 +26,9 @@ const DateBlockCalendar = () => {
 
         const bookingEvents = bookings.map((item) => ({
           id: `booking-${item.id}`, // Ensure each event has a unique ID
-          title: item.first_name || "Booking",
+          title:
+            item.first_name + " " + item.last_name + "  " + item.room_name ||
+            "Booking",
           start: item.start_date,
           end: item.end_date,
           color: roomColors[item.room_name] || "gray",
