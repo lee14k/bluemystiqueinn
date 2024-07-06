@@ -29,6 +29,7 @@ const SelectRoom = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [subtotal, setSubtotal] = useState(0);
   const [total, setTotal] = useState(0);
+  const [error, setError] = useState(null); // State for error message
 
   useEffect(() => {
     fetchRooms();
@@ -103,14 +104,14 @@ const SelectRoom = () => {
 
   const fetchScheduledRates = async (roomId, startDate, endDate) => {
     try {
-      const response = await fetch('/api/get-scheduled-rates', {
-        method: 'POST',
+      const response = await fetch("/api/get-scheduled-rates", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ roomId, startDate, endDate }),
       });
-  
+
       const data = await response.json();
       if (response.ok) {
         return data.rate; // Assuming your API returns the applicable rate
@@ -123,13 +124,17 @@ const SelectRoom = () => {
       return null;
     }
   };
-  
+
   const filterAvailableRooms = async () => {
     const startDate = dateRange[0].format("YYYY-MM-DD");
     const endDate = dateRange[1].format("YYYY-MM-DD");
-  
-    const roomsWithUpdatedRates = await updateRoomRates(rooms, startDate, endDate);
-  
+
+    const roomsWithUpdatedRates = await updateRoomRates(
+      rooms,
+      startDate,
+      endDate
+    );
+
     const newAvailableRooms = roomsWithUpdatedRates.map((room) => {
       const isBooked = bookingData.some((booking) => {
         if (booking.room_name === room.id) {
@@ -142,7 +147,7 @@ const SelectRoom = () => {
         }
         return false;
       });
-  
+
       const isUnavailable = unavailabilityData.some((unavailable) => {
         if (unavailable.room_id === room.id) {
           const unavailableStart = dayjs(unavailable.start_date);
@@ -154,16 +159,15 @@ const SelectRoom = () => {
         }
         return false;
       });
-  
+
       return {
         ...room,
         availability: isBooked || isUnavailable ? "Unavailable" : "Available",
       };
     });
-  
+
     setAvailableRooms(newAvailableRooms);
   };
-  
 
   const calculateSubtotalAndTotal = async () => {
     const days = dateRange[1].diff(dateRange[0], "day");
@@ -208,19 +212,26 @@ const SelectRoom = () => {
     setModalOpen(false);
     setSelectedRoomDetails(null);
   };
-const updateRoomRates = async (rooms, startDate, endDate) => {
-  const updatedRooms = await Promise.all(rooms.map(async (room) => {
-    const scheduledRate = await fetchScheduledRates(room.id, startDate, endDate);
-    const updatedRate = scheduledRate || room.rate;
 
-    return {
-      ...room,
-      rate: updatedRate
-    };
-  }));
+  const updateRoomRates = async (rooms, startDate, endDate) => {
+    const updatedRooms = await Promise.all(
+      rooms.map(async (room) => {
+        const scheduledRate = await fetchScheduledRates(
+          room.id,
+          startDate,
+          endDate
+        );
+        const updatedRate = scheduledRate || room.rate;
 
-  return updatedRooms;
-};
+        return {
+          ...room,
+          rate: updatedRate,
+        };
+      })
+    );
+
+    return updatedRooms;
+  };
 
   return (
     <div>
@@ -231,8 +242,14 @@ const updateRoomRates = async (rooms, startDate, endDate) => {
             endText="End Date"
             value={dateRange}
             onChange={(newRange) => {
-              setDateRange(newRange);
-              setSelectedDates(newRange); // Update selectedDates when date range changes
+              if (newRange[0].isSame(newRange[1], "day")) {
+                setError("Start and end dates cannot be the same.");
+                setDateRange([null, null]);
+              } else {
+                setError(null);
+                setDateRange(newRange);
+                setSelectedDates(newRange); // Update selectedDates when date range changes
+              }
             }}
             renderInput={(startProps, endProps) => (
               <>
@@ -242,6 +259,7 @@ const updateRoomRates = async (rooms, startDate, endDate) => {
               </>
             )}
           />
+          {error && <Typography color="error">{error}</Typography>}
         </Box>
       </LocalizationProvider>
       <div className="grid lg:grid-cols-2">
