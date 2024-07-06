@@ -17,7 +17,8 @@ export default async function handler(req, res) {
     // Fetch bookings
     const { data: bookings, error: bookingsError } = await supabase
       .from("booking")
-      .select("*");
+      .select("*")
+      .in("payment_status", ["completed", "confirmed"]);
 
     // Fetch blocked dates
     const { data: blockedDates, error: blockedDatesError } = await supabase

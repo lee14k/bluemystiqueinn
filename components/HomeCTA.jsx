@@ -12,9 +12,9 @@ const HomeCTA = () => {
             Lakeside Luxury with Cozy Comfort
           </h1>
           <p className="my-8 text-2xl mx-12">
-            The Blue Mystique Inn is a beautiful, 5-bedroom historic home in
+            The Blue Mystique Inn is a beautiful, 5-bedroom historic bed & breakfast in
             downtown Manistique - the heart of the Upper Peninsula. Built in the
-            early 1900's, the recently renovated home is central to many of the
+            early 1900's, the recently renovated bed & breakfast is central to many of the
             UP's attractions - including Big Springs and Pictured Rocks - and
             just steps away from parks, trails, dining, shopping, and nightlife,
             After you're done hiking, biking, swimming, waterfall hunting, fall
