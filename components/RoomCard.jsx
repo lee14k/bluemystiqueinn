@@ -1,12 +1,13 @@
 import React from 'react';
 import { Della_Respira } from "next/font/google";
 const della = Della_Respira({ subsets: ["latin"], weight: "400" });
-const RoomCard = ({ roomName, occupancy, rate, image, onSelect, selected, availability, onDetails }) => {
-  const isAvailable = availability === 'Available';
+
+const RoomCard = ({ roomName, occupancy, rate, image, onSelect, selected, availability, onDetails, isDateRangeValid }) => {
+  const isAvailable = availability === 'Available' && isDateRangeValid;
 
   return (
     <div
-      className={`room-card ${selected ? 'selected' : ''}`}
+      className={`room-card ${selected ? 'selected' : ''} ${!isAvailable ? 'room-card-disabled' : ''}`}
       onClick={isAvailable ? onSelect : null}
       style={{
         backgroundColor: isAvailable ? 'white' : 'lightgray',
@@ -54,6 +55,10 @@ const RoomCard = ({ roomName, occupancy, rate, image, onSelect, selected, availa
         }
         .available {
           color: green;
+        }
+        .room-card-disabled {
+          opacity: 0.5;
+          pointer-events: none;
         }
       `}</style>
     </div>

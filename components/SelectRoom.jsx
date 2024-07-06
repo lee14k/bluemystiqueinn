@@ -198,7 +198,7 @@ const SelectRoom = () => {
   };
 
   const handleRoomSelect = (room) => {
-    if (room.availability === "Available") {
+    if (room.availability === "Available" && isDateRangeValid) {
       setSelectedRoom(room);
     }
   };
@@ -232,6 +232,8 @@ const SelectRoom = () => {
 
     return updatedRooms;
   };
+
+  const isDateRangeValid = dateRange[0] && dateRange[1] && !dateRange[0].isSame(dateRange[1], 'day');
 
   return (
     <div>
@@ -274,6 +276,7 @@ const SelectRoom = () => {
             onSelect={() => handleRoomSelect(room)}
             selected={selectedRoom?.id === room.id}
             onDetails={() => handleDetails(room)}
+            isDateRangeValid={isDateRangeValid} // Pass the prop to RoomCard
           />
         ))}
         <div className="flex flex-col gap-4">
