@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import RoomCard from "@/components/RoomCard";
+import { Della_Respira } from "next/font/google";
 import Footer from "@/components/FrontEnd/Footer";
 import Navbar from "@/components/FrontEnd/Navbar";
 import Box from "@mui/material/Box";
@@ -7,13 +8,13 @@ import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import CardMedia from "@mui/material/CardMedia";
+const della = Della_Respira({ subsets: ["latin"], weight: "400" });
 
 export default function Rooms() {
   const [rooms, setRooms] = useState([]);
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedRoomDetails, setSelectedRoomDetails] = useState(null);
-
 
   const fetchRooms = async () => {
     try {
@@ -37,7 +38,6 @@ export default function Rooms() {
     setSelectedRoom(room);
   };
 
-
   const handleDetails = (room) => {
     setSelectedRoomDetails(room);
     setModalOpen(true);
@@ -51,12 +51,15 @@ export default function Rooms() {
   return (
     <div>
       <Navbar />
-      <h1>Our Rooms</h1>
-      <p>
-        All of our rooms are located on a second floor, please call or contact
-        us if you have further questions.
-      </p>
-      <p>Click each card to learn more about our rooms.</p>
+      <div className="flex flex-col justify-center items-center text-center container mx-auto">
+        <h1 className={`text-6xl ${della.className}`}>Our Rooms</h1>
+        <p>
+          All of our rooms are located on a second floor, please call or contact
+          us if you have further questions.
+        </p>
+        <p>Click each card to learn more about our rooms.</p>
+      </div>
+
       {rooms.map((room) => (
         <RoomCard
           key={room.id}
@@ -71,8 +74,7 @@ export default function Rooms() {
         />
       ))}
 
-
-<Modal
+      <Modal
         open={modalOpen}
         onClose={handleClose}
         aria-labelledby="room-details-title"
@@ -134,7 +136,6 @@ export default function Rooms() {
         </Box>
       </Modal>
       <Footer />
-
     </div>
   );
 }
