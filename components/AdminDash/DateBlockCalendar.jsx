@@ -12,6 +12,7 @@ const DateBlockCalendar = () => {
   const [memo, setMemo] = useState("");
   const [selectedRange, setSelectedRange] = useState({ startStr: "", endStr: "" });
   const [selectedRoom, setSelectedRoom] = useState("all");
+  const [showRemoveModal, setShowRemoveModal] = useState(false);
 
   const roomColors = {
     1: "red",
@@ -91,17 +92,48 @@ const DateBlockCalendar = () => {
   };
 
   const handleEventClick = (clickInfo) => {
-    console.log("Event clicked:", clickInfo);
     if (clickInfo.event.title.startsWith("Blocked")) {
       setSelectedEvent(clickInfo.event);
-      setShowModal(true);
+      setShowRemoveModal(true);
     }
   };
+
+  const handleConfirmUnblock = () => {
+    const { id, start, end } = selectedEvent;
+    const room_id = id.split("-")[1]; // Extract the room_id from the event ID
+  
+    axios
+      .delete("/api/remove-date-block", {
+        data: {
+          room_id,
+          start_date: start.toISOString(),
+          end_date: end.toISOString(),
+        },
+      })
+      .then((response) => {
+        setEvents((prevEvents) =>
+          prevEvents.filter((event) => event.id !== selectedEvent.id)
+        );
+        setShowRemoveModal(false);
+        setSelectedEvent(null);
+      })
+      .catch((error) => {
+        console.error("Error removing date block:", error);
+        setShowRemoveModal(false);
+        setSelectedEvent(null);
+      });
+  };
+  
 
   const handleCancel = () => {
     setShowModal(false);
     setMemo("");
     setSelectedRoom("all");
+  };
+
+  const handleCancelRemove = () => {
+    setShowRemoveModal(false);
+    setSelectedEvent(null);
   };
 
   return (
@@ -168,6 +200,45 @@ const DateBlockCalendar = () => {
               onClick={handleCancel}
             >
               Cancel
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
+
+      <Modal open={showRemoveModal} onClose={handleCancelRemove}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 400,
+            bgcolor: "background.paper",
+            border: "2px solid #000",
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <Typography variant="h6" component="h2">
+            Confirm Unblock Date
+          </Typography>
+          <Typography sx={{ mt: 2 }}>
+            Are you sure you want to unblock this date?
+          </Typography>
+          <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between" }}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleConfirmUnblock}
+            >
+              Yes
+            </Button>
+            <Button
+              variant="outlined"
+              color="secondary"
+              onClick={handleCancelRemove}
+            >
+              No
             </Button>
           </Box>
         </Box>
