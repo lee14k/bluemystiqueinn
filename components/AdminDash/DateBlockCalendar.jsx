@@ -3,12 +3,15 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import axios from "axios";
-import { Modal, Box, Typography, Button } from "@mui/material";
+import { Modal, Box, Typography, Button, TextField, MenuItem, Select, InputLabel, FormControl } from "@mui/material";
 
 const DateBlockCalendar = () => {
   const [events, setEvents] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const [memo, setMemo] = useState("");
+  const [selectedRange, setSelectedRange] = useState({ startStr: "", endStr: "" });
+  const [selectedRoom, setSelectedRoom] = useState("all");
 
   const roomColors = {
     1: "red",
@@ -51,12 +54,18 @@ const DateBlockCalendar = () => {
 
   const handleDateSelect = (selectInfo) => {
     const { startStr, endStr } = selectInfo;
+    setSelectedRange({ startStr, endStr });
+    setShowModal(true);
+  };
 
-    const roomIDs = [1, 2, 3, 4, 5];
+  const handleConfirmBlock = () => {
+    const { startStr, endStr } = selectedRange;
+    const roomIDs = selectedRoom === "all" ? [1, 2, 3, 4, 5] : [selectedRoom];
     const unavailabilityEntries = roomIDs.map((room_id) => ({
       room_id,
       start_date: startStr,
       end_date: endStr,
+      memo,
     }));
 
     axios
@@ -64,14 +73,17 @@ const DateBlockCalendar = () => {
       .then((response) => {
         setEvents((prevEvents) => [
           ...prevEvents,
-          {
-            id: `blocked-${Date.now()}`, // Ensure a unique ID for each new blocked event
-            title: "Blocked",
+          ...roomIDs.map((room_id) => ({
+            id: `blocked-${Date.now()}-${room_id}`, // Ensure a unique ID for each new blocked event
+            title: `Blocked Room ${room_id}`,
             start: startStr,
             end: endStr,
             backgroundColor: "red",
-          },
+          })),
         ]);
+        setShowModal(false);
+        setMemo("");
+        setSelectedRoom("all");
       })
       .catch((error) => {
         console.error("Error blocking dates:", error);
@@ -79,37 +91,17 @@ const DateBlockCalendar = () => {
   };
 
   const handleEventClick = (clickInfo) => {
-    if (clickInfo.event.title === "Blocked") {
+    console.log("Event clicked:", clickInfo);
+    if (clickInfo.event.title.startsWith("Blocked")) {
       setSelectedEvent(clickInfo.event);
       setShowModal(true);
     }
   };
 
-  const handleConfirmUnblock = () => {
-    const startStr = selectedEvent.start.toISOString();
-    const endStr = selectedEvent.end.toISOString();
-
-    axios
-      .delete("/api/remove-date-block", {
-        data: { start_date: startStr, end_date: endStr },
-      })
-      .then((response) => {
-        setEvents((prevEvents) =>
-          prevEvents.filter((event) => event.id !== selectedEvent.id)
-        );
-        setShowModal(false);
-        setSelectedEvent(null);
-      })
-      .catch((error) => {
-        console.error("Error removing date block:", error);
-        setShowModal(false);
-        setSelectedEvent(null);
-      });
-  };
-
-  const handleCancelUnblock = () => {
+  const handleCancel = () => {
     setShowModal(false);
-    setSelectedEvent(null);
+    setMemo("");
+    setSelectedRoom("all");
   };
 
   return (
@@ -122,7 +114,7 @@ const DateBlockCalendar = () => {
         select={handleDateSelect}
         eventClick={handleEventClick}
       />
-      <Modal open={showModal} onClose={handleCancelUnblock}>
+      <Modal open={showModal} onClose={handleCancel}>
         <Box
           sx={{
             position: "absolute",
@@ -137,25 +129,45 @@ const DateBlockCalendar = () => {
           }}
         >
           <Typography variant="h6" component="h2">
-            Confirm Unblock Date
+            Add Block Memo
           </Typography>
-          <Typography sx={{ mt: 2 }}>
-            Are you sure you want to unblock this date?
-          </Typography>
+          <FormControl fullWidth sx={{ mt: 2 }}>
+            <InputLabel id="room-select-label">Select Room</InputLabel>
+            <Select
+              labelId="room-select-label"
+              value={selectedRoom}
+              onChange={(e) => setSelectedRoom(e.target.value)}
+              label="Select Room"
+            >
+              <MenuItem value="all">All Rooms</MenuItem>
+              <MenuItem value={1}>Room 1</MenuItem>
+              <MenuItem value={2}>Room 2</MenuItem>
+              <MenuItem value={3}>Room 3</MenuItem>
+              <MenuItem value={4}>Room 4</MenuItem>
+              <MenuItem value={5}>Room 5</MenuItem>
+            </Select>
+          </FormControl>
+          <TextField
+            label="Memo"
+            fullWidth
+            value={memo}
+            onChange={(e) => setMemo(e.target.value)}
+            sx={{ mt: 2 }}
+          />
           <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between" }}>
             <Button
               variant="contained"
               color="primary"
-              onClick={handleConfirmUnblock}
+              onClick={handleConfirmBlock}
             >
-              Yes
+              Block Dates
             </Button>
             <Button
               variant="outlined"
               color="secondary"
-              onClick={handleCancelUnblock}
+              onClick={handleCancel}
             >
-              No
+              Cancel
             </Button>
           </Box>
         </Box>
