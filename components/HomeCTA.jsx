@@ -18,8 +18,7 @@ const HomeCTA = () => {
             UP's attractions - including Big Springs and Pictured Rocks - and
             just steps away from parks, trails, dining, shopping, and nightlife,
             After you're done hiking, biking, swimming, waterfall hunting, fall
-            color touring, or enjoying snow sports, relax and make yourself at
-            home.
+            color touring, or enjoying snow sports, relax and make yourself at home at this wonderful bed and breakfast
           </p>
           <div className={`${della.className}`}>
             <button className="bg-white rounded-2xl px-12 py-2 mx-16 my-10 text-4xl">

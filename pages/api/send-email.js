@@ -36,7 +36,7 @@ Check-out Date: ${bookingData.end_date}
 We look forward to welcoming you.
 
 Best regards,
-Your Company`,
+The Blue Mystique Inn.`,
     };
 
     // Send the email
