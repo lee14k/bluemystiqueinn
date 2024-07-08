@@ -56,7 +56,7 @@ const FoodCTA = () => {
             Arriving late and need a pick me up?
           </h1>
           <p className="my-8 text-2xl mx-12">
-          Do your travels have you arriving a bit later? For the lighter fare we offer charcuterie boards $40  A variety of meats & cheeses. When available, locally smoked fish, and a selection of fruit. Please call ahead to request
+          Do your travels have you arriving a bit later? For the lighter fare we offer charcuterie boards for $40. Includes a variety of meats & cheeses. When available, locally smoked fish, and a selection of fruit. Please call ahead to request
           </p>
           <div className={`${della.className}`}>
             <button className="bg-white rounded-2xl px-12 py-2 mx-16 my-10 text-4xl">
