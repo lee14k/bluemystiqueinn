@@ -3,14 +3,27 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import axios from "axios";
-import { Modal, Box, Typography, Button, TextField, MenuItem, Select, InputLabel, FormControl } from "@mui/material";
+import {
+  Modal,
+  Box,
+  Typography,
+  Button,
+  TextField,
+  MenuItem,
+  Select,
+  InputLabel,
+  FormControl,
+} from "@mui/material";
 
 const DateBlockCalendar = () => {
   const [events, setEvents] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [memo, setMemo] = useState("");
-  const [selectedRange, setSelectedRange] = useState({ startStr: "", endStr: "" });
+  const [selectedRange, setSelectedRange] = useState({
+    startStr: "",
+    endStr: "",
+  });
   const [selectedRoom, setSelectedRoom] = useState("all");
   const [showRemoveModal, setShowRemoveModal] = useState(false);
 
@@ -39,8 +52,8 @@ const DateBlockCalendar = () => {
         }));
 
         const blockedEvents = blockedDates.map((item) => ({
-          id: `blocked-${item.id}`, // Ensure each event has a unique ID
-          title: "Blocked" + item.room_id,
+          id: `blocked-${item.id}-${item.room_id}`, // Ensure each event has a unique ID
+          title: `Blocked Room ${item.room_id}`,
           start: item.start_date,
           end: item.end_date,
           color: "red", // Color for blocked dates
@@ -100,16 +113,26 @@ const DateBlockCalendar = () => {
 
   const handleConfirmUnblock = () => {
     const { id, start, end } = selectedEvent;
-    const room_id = id.split("-")[1]; // Extract the room_id from the event ID
-  
+    const idParts = id.split('-');
+    const block_id = idParts[1]; // Extract the block_id from the event ID
+    const room_id = idParts[2]; // Extract the room_id from the event ID
+
+    if (!block_id || !room_id) {
+      console.error('Block ID or Room ID is undefined. Event ID:', id);
+      return;
+    }
+
+    const requestData = {
+      id: block_id,
+      room_id,
+      start_date: start.toISOString(),
+      end_date: end.toISOString(),
+    };
+
+    console.log("Sending DELETE request with data:", requestData);
+
     axios
-      .delete("/api/remove-date-block", {
-        data: {
-          room_id,
-          start_date: start.toISOString(),
-          end_date: end.toISOString(),
-        },
-      })
+      .delete("/api/remove-date-block", { data: requestData })
       .then((response) => {
         setEvents((prevEvents) =>
           prevEvents.filter((event) => event.id !== selectedEvent.id)
@@ -123,7 +146,6 @@ const DateBlockCalendar = () => {
         setSelectedEvent(null);
       });
   };
-  
 
   const handleCancel = () => {
     setShowModal(false);
@@ -194,11 +216,7 @@ const DateBlockCalendar = () => {
             >
               Block Dates
             </Button>
-            <Button
-              variant="outlined"
-              color="secondary"
-              onClick={handleCancel}
-            >
+            <Button variant="outlined" color="secondary" onClick={handleCancel}>
               Cancel
             </Button>
           </Box>

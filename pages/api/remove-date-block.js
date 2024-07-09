@@ -19,17 +19,20 @@ export default async function handler(req, res) {
       res.status(200).json({ data });
     }
   } else if (req.method === 'DELETE') {
-    const { room_id, start_date, end_date } = req.body;
+    const { id, room_id, start_date, end_date } = req.body;
 
-    if (!room_id || !start_date || !end_date) {
+    if (!id || !room_id || !start_date || !end_date) {
+      console.log('Received DELETE request with missing fields:', req.body); // Log received data
       res.status(400).json({ error: 'Missing required fields' });
       return;
     }
 
+    console.log(`Deleting block with data: ${JSON.stringify(req.body)}`); // Log received data
+
     const { data, error } = await supabase
       .from('room_unavailability')
       .delete()
-      .match({ room_id, start_date, end_date });
+      .match({ id, room_id, start_date, end_date });
 
     if (error) {
       res.status(500).json({ error: error.message });
