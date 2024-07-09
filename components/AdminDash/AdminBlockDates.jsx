@@ -27,9 +27,14 @@ const AdminBlockDates = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          room_id: roomId,
-          start_date: dayjs(startDate).format("YYYY-MM-DD"),
-          end_date: dayjs(endDate).format("YYYY-MM-DD"),
+          unavailabilityEntries: [
+            {
+              room_id: roomId,
+              start_date: startDate.toISOString(),
+              end_date: endDate.toISOString(),
+              memo: memo,
+            },
+          ],
         }),
       });
 
