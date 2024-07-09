@@ -28,7 +28,7 @@ const DateBlockCalendar = () => {
   const [showRemoveModal, setShowRemoveModal] = useState(false);
 
   const roomColors = {
-    1: "red",
+    1: "magenta",
     2: "blue",
     3: "green",
     4: "orange",
@@ -52,8 +52,7 @@ const DateBlockCalendar = () => {
         }));
 
         const blockedEvents = blockedDates.map((item) => ({
-          id: `blocked-${item.id}-${item.room_id}`, // Ensure each event has a unique ID
-          title: `Blocked Room ${item.room_id}`,
+          title: "Blocked" + " "+ item.room_id + (item.memo ? ` ${item.memo}` : ""),
           start: item.start_date,
           end: item.end_date,
           color: "red", // Color for blocked dates
@@ -88,8 +87,8 @@ const DateBlockCalendar = () => {
         setEvents((prevEvents) => [
           ...prevEvents,
           ...roomIDs.map((room_id) => ({
-            id: `blocked-${Date.now()}-${room_id}`, // Ensure a unique ID for each new blocked event
-            title: `Blocked Room ${room_id}`,
+            id: `blocked-${Date.now()}-${room_id} `, // Ensure a unique ID for each new blocked event
+            title: `Blocked Room ${room_id} ${memo}`,
             start: startStr,
             end: endStr,
             backgroundColor: "red",
@@ -113,12 +112,12 @@ const DateBlockCalendar = () => {
 
   const handleConfirmUnblock = () => {
     const { id, start, end } = selectedEvent;
-    const idParts = id.split('-');
+    const idParts = id.split("-");
     const block_id = idParts[1]; // Extract the block_id from the event ID
     const room_id = idParts[2]; // Extract the room_id from the event ID
 
     if (!block_id || !room_id) {
-      console.error('Block ID or Room ID is undefined. Event ID:', id);
+      console.error("Block ID or Room ID is undefined. Event ID:", id);
       return;
     }
 

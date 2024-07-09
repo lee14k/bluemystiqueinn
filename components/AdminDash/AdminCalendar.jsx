@@ -8,7 +8,7 @@ const AdminCalendar = () => {
 
   // Define a mapping of room IDs to colors
   const roomColors = {
-    1: "red",
+    1: "magenta",
     2: "blue",
     3: "green",
     4: "orange",
@@ -22,8 +22,12 @@ const AdminCalendar = () => {
         const { bookings, blockedDates } = response.data;
         const bookingEvents = bookings.map((item) => ({
           title:
-            item.first_name + " " + item.last_name + "  " + item.room_name ||
-            "Booking",
+            item.first_name +
+              " " +
+              item.last_name +
+              "  " +
+              item.room_name +
+              item.memo || "Booking",
           start: item.start_date.split("T")[0],
           end: item.end_date.split("T")[0],
           color: roomColors[item.room_name] || "gray",
@@ -31,7 +35,7 @@ const AdminCalendar = () => {
 
         // Transform blocked dates into calendar events
         const blockedEvents = blockedDates.map((item) => ({
-          title: "Blocked" + item.room_id,
+          title: "Blocked" + item.room_id + (item.memo ? ` ${item.memo}` : ""),
           start: item.start_date,
           end: item.end_date,
           color: "red", // Color for blocked dates
