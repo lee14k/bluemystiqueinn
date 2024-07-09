@@ -233,7 +233,8 @@ const SelectRoom = () => {
     return updatedRooms;
   };
 
-  const isDateRangeValid = dateRange[0] && dateRange[1] && !dateRange[0].isSame(dateRange[1], 'day');
+  const isDateRangeValid =
+    dateRange[0] && dateRange[1] && !dateRange[0].isSame(dateRange[1], "day");
 
   return (
     <div>
@@ -244,13 +245,17 @@ const SelectRoom = () => {
             endText="End Date"
             value={dateRange}
             onChange={(newRange) => {
-              if (newRange[0].isSame(newRange[1], "day")) {
+              if (
+                newRange &&
+                newRange[0] &&
+                newRange[1] &&
+                newRange[0].isSame(newRange[1], "day")
+              ) {
                 setError("Start and end dates cannot be the same.");
                 setDateRange([null, null]);
               } else {
                 setError(null);
                 setDateRange(newRange);
-                setSelectedDates(newRange); // Update selectedDates when date range changes
               }
             }}
             renderInput={(startProps, endProps) => (
