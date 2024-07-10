@@ -52,7 +52,10 @@ const DateBlockCalendar = () => {
         }));
 
         const blockedEvents = blockedDates.map((item) => ({
-          title: "Blocked" + " "+ item.room_id + (item.memo ? ` ${item.memo}` : ""),
+          id: `blocked-${item.id}-${item.room_id}`, // Generate a unique ID with block ID and room ID
+          title: `Blocked Room ${item.room_id} ${
+            item.memo ? ` - ${item.memo}` : ""
+          }`,
           start: item.start_date,
           end: item.end_date,
           color: "red", // Color for blocked dates
@@ -87,7 +90,7 @@ const DateBlockCalendar = () => {
         setEvents((prevEvents) => [
           ...prevEvents,
           ...roomIDs.map((room_id) => ({
-            id: `blocked-${Date.now()}-${room_id} `, // Ensure a unique ID for each new blocked event
+            id: `blocked-${Date.now()}-${room_id}`, // Ensure a unique ID for each new blocked event
             title: `Blocked Room ${room_id} ${memo}`,
             start: startStr,
             end: endStr,
@@ -104,7 +107,7 @@ const DateBlockCalendar = () => {
   };
 
   const handleEventClick = (clickInfo) => {
-    if (clickInfo.event.title.startsWith("Blocked")) {
+    if (clickInfo.event.id.startsWith("blocked-")) {
       setSelectedEvent(clickInfo.event);
       setShowRemoveModal(true);
     }
