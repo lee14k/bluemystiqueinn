@@ -36,10 +36,20 @@ export const BookingProvider = ({ children }) => {
     }
   }, [selectedRoom]);
 
+  // Function to clear the booking context and local storage
+  const clearBooking = () => {
+    setSelectedDates([null, null]);
+    setSelectedRoom(null);
+    setPaymentId(null);
+    localStorage.removeItem('selectedDates');
+    localStorage.removeItem('selectedRoom');
+    localStorage.removeItem('paymentId');
+  };
+
   return (
-    <BookingContext.Provider value={{ selectedDates, setSelectedDates, selectedRoom, setSelectedRoom, paymentId, setPaymentId }}>
-      {children}
-    </BookingContext.Provider>
+      <BookingContext.Provider value={{ selectedDates, setSelectedDates, selectedRoom, setSelectedRoom, paymentId, setPaymentId, clearBooking }}>
+        {children}
+      </BookingContext.Provider>
   );
 };
 
