@@ -29,6 +29,7 @@ const SelectRoom = () => {
     const [notificationModalOpen, setNotificationModalOpen] = useState(false);
     const [invalidDateModalOpen, setInvalidDateModalOpen] = useState(false);
     const [noDateSelectedModalOpen, setNoDateSelectedModalOpen] = useState(false);
+    const [unavailableRoomModalOpen, setUnavailableRoomModalOpen] = useState(false);
 
     useEffect(() => {
         fetchRooms();
@@ -158,6 +159,12 @@ const SelectRoom = () => {
         });
 
         setAvailableRooms(newAvailableRooms);
+
+        // Check if the selected room is still available for the new date range
+        const selectedRoomUpdated = newAvailableRooms.find((room) => room.id === selectedRoom?.id);
+        if (selectedRoomUpdated?.availability !== "Available") {
+            setSelectedRoom(null);
+        }
     };
 
     const calculateSubtotalAndTotal = async () => {
@@ -184,6 +191,8 @@ const SelectRoom = () => {
             setNotificationModalOpen(true);
         } else if (!isDateRangeValid) {
             setNoDateSelectedModalOpen(true);
+        } else if (selectedRoom.availability === "Unavailable") {
+            setUnavailableRoomModalOpen(true);
         } else {
             setSelectedDates(dateRange);
             router.push("/complete-your-booking");
@@ -193,6 +202,8 @@ const SelectRoom = () => {
     const handleRoomSelect = (room) => {
         if (room.availability === "Available" && isDateRangeValid) {
             setSelectedRoom(room);
+        } else {
+            setUnavailableRoomModalOpen(true);
         }
     };
 
@@ -443,6 +454,37 @@ const SelectRoom = () => {
                         Please select a valid date range before proceeding to booking.
                     </Typography>
                     <Button onClick={() => setNoDateSelectedModalOpen(false)} variant="contained" color="primary" sx={{ mt: 2 }}>
+                        Close
+                    </Button>
+                </Box>
+            </Modal>
+
+            <Modal
+                open={unavailableRoomModalOpen}
+                onClose={() => setUnavailableRoomModalOpen(false)}
+                aria-labelledby="unavailable-room-modal-title"
+                aria-describedby="unavailable-room-modal-description"
+            >
+                <Box
+                    sx={{
+                        position: "absolute",
+                        top: "50%",
+                        left: "50%",
+                        transform: "translate(-50%, -50%)",
+                        width: { xs: "90%", sm: 400, md: 500 },
+                        bgcolor: "background.paper",
+                        border: "2px solid #000",
+                        boxShadow: 24,
+                        p: { xs: 2, md: 4 },
+                    }}
+                >
+                    <Typography id="unavailable-room-modal-title" variant="h6" component="h2">
+                        Room Unavailable
+                    </Typography>
+                    <Typography id="unavailable-room-modal-description" sx={{ mt: 2 }}>
+                        The selected room is unavailable. Please select a different room.
+                    </Typography>
+                    <Button onClick={() => setUnavailableRoomModalOpen(false)} variant="contained" color="primary" sx={{ mt: 2 }}>
                         Close
                     </Button>
                 </Box>
