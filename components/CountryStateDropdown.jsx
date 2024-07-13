@@ -83,11 +83,10 @@ const CountryStateDropdown = ({ selectedCountry, selectedState, handleCountryCha
   };
 
   return (
-    <div>
-      <h1>Complete your booking details</h1>
+    <div >
       <div>
         <label>Country</label>
-        <Select value={selectedCountry} onChange={handleCountryChange}>
+        <Select value={selectedCountry} onChange={handleCountryChange} className="mx-4 my-2">
           <MenuItem value="">
             <em>Select Country</em>
           </MenuItem>
