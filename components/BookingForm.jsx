@@ -46,7 +46,7 @@ const BookingForm = () => {
 
   const validatePhoneNumber = (phone) => {
     const phoneRegex =
-      /^(\+\d{1,2}\s?)?1?\-?\.?\s?\(?\d{3}\)?[\s\-\.]?\d{3}[\s\-\.]?\d{4}$/;
+        /^(\+\d{1,2}\s?)?1?\-?\.?\s?\(?\d{3}\)?[\s\-\.]?\d{3}[\s\-\.]?\d{4}$/;
     return phoneRegex.test(phone);
   };
 
