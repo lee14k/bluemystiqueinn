@@ -1,40 +1,54 @@
-import { supabase } from '@/utils/supabase';
+// pages/api/get-room-rate.js
+
+import { supabase } from "../../utils/supabase";
+
+async function getScheduledRate(roomId, startDate, endDate) {
+  const { data, error } = await supabase
+      .from("scheduled_rates")
+      .select("rate")
+      .eq("room_id", roomId)
+      .lte("start_date", startDate)
+      .gte("end_date", endDate)
+      .single();
+
+  if (error) {
+    console.error("Error fetching scheduled rate:", error.message);
+    return null;
+  }
+
+  return data ? data.rate : null;
+}
+
+async function getRoomRate(roomId) {
+  const { data, error } = await supabase
+      .from("rooms")
+      .select("rate")
+      .eq("id", roomId)
+      .single();
+
+  if (error) {
+    console.error("Error fetching room rate:", error.message);
+    throw new Error("Error fetching room rate");
+  }
+
+  return data.rate;
+}
 
 export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: "Method not allowed" });
-  }
+  if (req.method === "POST") {
+    const { roomId, startDate, endDate } = req.body;
 
-  const { roomId, startDate, endDate } = req.body;
+    try {
+      const scheduledRate = await getScheduledRate(roomId, startDate, endDate);
+      const roomRate = scheduledRate || await getRoomRate(roomId);
 
-  // Check if the required parameters are provided
-  if (!roomId || !startDate || !endDate) {
-    return res.status(400).json({ error: "Missing required parameters" });
-  }
-
-  // Log the received parameters to debug
-  console.log("Received parameters:", { roomId, startDate, endDate });
-
-  // Query to fetch the scheduled rates from the rate_picker table
-  const { data, error } = await supabase
-    .from('rate_picker')
-    .select('rate')
-    .eq('room_id', roomId)
-    .or(`start_date.lte.${endDate},end_date.gte.${startDate}`);
-
-  // Log the query result
-  console.log("Query result:", { data, error });
-
-  // Handle errors
-  if (error) {
-    console.error("Supabase error:", error);
-    return res.status(500).json({ error: error.message });
-  }
-
-  // Return the rate if found, otherwise return null
-  if (data.length > 0) {
-    return res.status(200).json({ rate: data[0].rate });
+      res.status(200).json({ rate: roomRate });
+    } catch (error) {
+      console.error("Failed to fetch room rate:", error);
+      res.status(500).json({ error: error.message });
+    }
   } else {
-    return res.status(200).json({ rate: null });
+    res.setHeader("Allow", ["POST"]);
+    res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 }

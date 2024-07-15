@@ -7,6 +7,8 @@ export default async function handler(req, res) {
         .from('booking')
         .select('*')
         .order('start_date', { ascending: true })
+          .in("payment_status", ["completed", "confirmed"]);
+
 
       if (error) {
         console.error('Supabase Error:', error);

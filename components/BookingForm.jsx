@@ -139,28 +139,55 @@ const BookingForm = () => {
             specialOccasion: dinnerDetails.specialOccasion,
         };
 
-        const requestData = {bookingData, foodData};
+        const requestData = { bookingData, foodData };
 
         try {
-            const response = await fetch("/api/create-booking", {
+            // Fetch the correct rate
+            const rateResponse = await fetch("/api/get-scheduled-rates", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(requestData),
+                body: JSON.stringify({
+                    roomId: selectedRoom.id,
+                    startDate: selectedDates[0].toISOString(),
+                    endDate: selectedDates[1].toISOString(),
+                }),
             });
 
-            if (response.ok) {
-                const result = await response.json();
+            if (!rateResponse.ok) {
+                const errorText = await rateResponse.text();
+                throw new Error(`Failed to fetch room rate: ${errorText}`);
+            }
+
+            const { rate } = await rateResponse.json();
+
+            // Proceed with creating the payment link
+            const paymentResponse = await fetch("/api/create-payment-link", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    amount: rate,
+                    bookingId,
+                    roomId: selectedRoom.id,
+                    numberOfDays: dayjs(selectedDates[1]).diff(dayjs(selectedDates[0]), "day"),
+                }),
+            });
+
+            if (paymentResponse.ok) {
+                const result = await paymentResponse.json();
                 router.push(`/payment?bookingId=${result.bookingId}`);
             } else {
-                const errorText = await response.text();
-                console.error("Failed to save booking:", errorText);
+                const errorText = await paymentResponse.text();
+                console.error("Failed to create payment:", errorText);
             }
         } catch (error) {
-            console.error("Error during booking submission:", error);
+            console.error("Error during payment creation:", error);
         }
     };
+
 
     const handleDinnerYes = (details) => {
         setDinner(true);
