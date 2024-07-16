@@ -1,10 +1,10 @@
-import React, {useState, useEffect} from "react";
-import {useRouter} from "next/router";
-import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
-import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/router";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
-import {useBooking} from "../context/BookingContext";
+import { useBooking } from "../context/BookingContext";
 import dayjs from "dayjs";
 import DinnerModal from "./DinnerModal";
 import ValidationErrorModal from "./ValidationErrorModal";
@@ -12,7 +12,7 @@ import Select from "react-select";
 import CountryStateDropdown from "./CountryStateDropdown";
 
 const BookingForm = () => {
-    const {selectedDates, selectedRoom} = useBooking();
+    const { selectedDates, selectedRoom } = useBooking();
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
@@ -141,9 +141,26 @@ const BookingForm = () => {
 
         const requestData = { bookingData, foodData };
 
+        try {
+            const response = await fetch("/api/create-booking", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(requestData),
+            });
 
+            if (response.ok) {
+                const result = await response.json();
+                router.push(`/payment?bookingId=${result.bookingId}`);
+            } else {
+                const errorText = await response.text();
+                console.error("Failed to save booking:", errorText);
+            }
+        } catch (error) {
+            console.error("Error during booking submission:", error);
+        }
     };
-
 
     const handleDinnerYes = (details) => {
         setDinner(true);
@@ -202,15 +219,15 @@ const BookingForm = () => {
                         value={
                             selectedDates[0] ? selectedDates[0].format("YYYY-MM-DD") : ""
                         }
-                        InputProps={{readOnly: true}}
+                        InputProps={{ readOnly: true }}
                     />
-                    <Box sx={{mx: 2}}>to</Box>
+                    <Box sx={{ mx: 2 }}>to</Box>
                     <TextField
                         label="End Date"
                         value={
                             selectedDates[1] ? selectedDates[1].format("YYYY-MM-DD") : ""
                         }
-                        InputProps={{readOnly: true}}
+                        InputProps={{ readOnly: true }}
                     />
                 </Box>
                 <form
@@ -269,12 +286,11 @@ const BookingForm = () => {
                     )}
 
                     <h1 className="text-2xl font-bold mb-4">Address Information</h1>
-                    <input
-                        type="text"
-                        placeholder="Street Address"
-                        value={streetAddress}
-                        onChange={(e) => setStreetAddress(e.target.value)}
-                        className="mb-4 p-2 border border-gray-300 rounded"
+                    <CountryStateDropdown
+                        selectedCountry={country}
+                        selectedState={state}
+                        handleCountryChange={handleCountryChange}
+                        handleStateChange={handleStateChange}
                     />
                     <input
                         type="text"
@@ -283,13 +299,13 @@ const BookingForm = () => {
                         onChange={(e) => setCity(e.target.value)}
                         className="mb-4 p-2 border border-gray-300 rounded"
                     />
-                    <CountryStateDropdown
-                        selectedCountry={country}
-                        selectedState={state}
-                        handleCountryChange={handleCountryChange}
-                        handleStateChange={handleStateChange}
+                    <input
+                        type="text"
+                        placeholder="Street Address"
+                        value={streetAddress}
+                        onChange={(e) => setStreetAddress(e.target.value)}
+                        className="mb-4 p-2 border border-gray-300 rounded"
                     />
-
                     <input
                         type="text"
                         placeholder="Zip Code"
@@ -401,7 +417,7 @@ const BookingForm = () => {
                                 placeholder="Dinner Time"
                                 value={dinnerDetails.time}
                                 onChange={(e) =>
-                                    setDinnerDetails({...dinnerDetails, time: e.target.value})
+                                    setDinnerDetails({ ...dinnerDetails, time: e.target.value })
                                 }
                                 className={`mb-4 p-2 border border-gray-300 rounded ${
                                     highlightFields && formErrors.dinnerTime
